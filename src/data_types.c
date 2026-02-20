@@ -1,11 +1,23 @@
 // Definition of needed data types and structs. 
 
+// Boolean because wtf c
+typedef enum Boolean {
+    True = 1,
+    False = 0,
+} Boolean;
+
+
+// Maybe an idea also for statistics? ^^
+typedef enum Car_Type {
+    BMW, VW, SKODA, RENAULT, CITRÖN, TOYOTA,
+} Car_Type;
+
 
 // time
 // - time unit -> variable
 // - max parking time
 typedef struct Time_Unit {
-    float step;
+    float step_number; // I'm stuck
 } Time_Unit;
 
 // parking cell
@@ -13,7 +25,7 @@ typedef struct Time_Unit {
 // - id in array for better administration? 
 // Usable both as fixed time point or as time point difference
 typedef struct Parking_Cell {
-    int free; // boolean in the future
+    Boolean is_free; // boolean in the future
     //?: unsigned int id;
 } Parking_Cell;
 
@@ -36,7 +48,7 @@ typedef struct Carpark {
 // - start time of parking
 typedef struct Car {
     int id;
-    char type[20]; // should get its own enum
+    Car_Type type; // should get its own enum
     Time_Unit parking_time_left;
     Time_Unit start_parking_time;
 } Car;
