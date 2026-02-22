@@ -1,72 +1,85 @@
-/* clear.c ... */
+ //to run: gcc statistics_test.c -o test.exe -I "../external/SDL/i686-w64-mingw32/include" -L "../external/SDL/i686-w64-mingw32/lib" -lSDL3
 
-/*
- * This example code creates an SDL window and renderer, and then clears the
- * window to a different color every frame, so you'll effectively get a window
- * that's smoothly fading between colors.
- *
- * This code is public domain. Feel free to use it for any purpose!
- */
-
- // @brief to run: gcc statistics_test.c -o test.exe -I "../external/SDL/x86_64-w64-mingw32/include"
-
-#define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 #include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
+#include <math.h>
+#include <stdbool.h>
 
-/* We will use this renderer to draw into this window every frame. */
-static SDL_Window *window = NULL;
-static SDL_Renderer *renderer = NULL;
+#define PI 3.14159265f
+#define WIDTH 800
+#define HEIGHT 600
 
-/* This function runs once at startup. */
-SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
-{
-    SDL_SetAppMetadata("Example Renderer Clear", "1.0", "com.example.renderer-clear");
+int main() {
 
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
-        SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
-        return SDL_APP_FAILURE;
+    // tries to initialize SDL frame output
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        SDL_Log("SDL_Init failed: %s", SDL_GetError());
+        return -1;
     }
 
-    if (!SDL_CreateWindowAndRenderer("examples/renderer/clear", 640, 480, SDL_WINDOW_RESIZABLE, &window, &renderer)) {
-        SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
-        return SDL_APP_FAILURE;
+    //creates a window acording to the parameters
+    SDL_Window *window = SDL_CreateWindow("SDL3 Sine Wave", WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
+
+    // checks if the window was created successfully
+    if (window != NULL) {
+        SDL_Log("SDL_CreateWindow failed: %s", SDL_GetError());
+        SDL_Quit();
+        return -1;
     }
-    SDL_SetRenderLogicalPresentation(renderer, 640, 480, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
-    return SDL_APP_CONTINUE;  /* carry on with the program! */
-}
+    //creates a renderer for graphical output in the window
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
-/* This function runs when a new event (mouse input, keypresses, etc) occurs. */
-SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
-{
-    if (event->type == SDL_EVENT_QUIT) {
-        return SDL_APP_SUCCESS;  /* end the program, reporting success to the OS. */
+    //checks if the renderer was created successfully
+    if (renderer != NULL) {
+        SDL_Log("SDL_CreateRenderer failed: %s", SDL_GetError());
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return -1;
     }
-    return SDL_APP_CONTINUE;  /* carry on with the program! */
-}
 
-/* This function runs once per frame, and is the heart of the program. */
-SDL_AppResult SDL_AppIterate(void *appstate)
-{
-    const double now = ((double)SDL_GetTicks()) / 1000.0;  /* convert from milliseconds to seconds. */
-    /* choose the color for the frame we will draw. The sine wave trick makes it fade between colors smoothly. */
-    const float red = (float) (0.5 + 0.5 * SDL_sin(now));
-    const float green = (float) (0.5 + 0.5 * SDL_sin(now + SDL_PI_D * 2 / 3));
-    const float blue = (float) (0.5 + 0.5 * SDL_sin(now + SDL_PI_D * 4 / 3));
-    SDL_SetRenderDrawColorFloat(renderer, red, green, blue, SDL_ALPHA_OPAQUE_FLOAT);  /* new color, full alpha. */
+    bool running = true;
+    SDL_Event event = {0};
 
-    /* clear the window to the draw color. */
-    SDL_RenderClear(renderer);
+    // loop to keep the window open and handle events 
+    while (running) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT)
+                running = false;
+        }
 
-    /* put the newly-cleared rendering on the screen. */
-    SDL_RenderPresent(renderer);
+        //setup for drawing the sine wave
+        int width, height;
+        SDL_GetWindowSize(window, &width, &height);
 
-    return SDL_APP_CONTINUE;  /* carry on with the program! */
-}
+        SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
+        SDL_RenderClear(renderer);
 
-/* This function runs once at shutdown. */
-void SDL_AppQuit(void *appstate, SDL_AppResult result)
-{
-    /* SDL will clean up the window/renderer for us. */
+        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+
+        float freq = 2.0f;
+        float amplitude = height / 3.0f;
+
+        int prev_x = 0;
+        int prev_y = height / 2;
+
+        // loop to draw the sine wave across the width of the window
+        for (int x = 1; x < width; x++) {
+            float t = (float)x / (float)width;
+            float y = sinf(t * freq * 2 * PI);
+            int py = (int)(height / 2 - y * amplitude);
+
+            SDL_RenderLine(renderer, prev_x, prev_y, x, py);
+
+            prev_x = x;
+            prev_y = py;
+        }
+
+        SDL_RenderPresent(renderer);
+    }
+
+    // cleanup memory and quit SDL
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
 }
