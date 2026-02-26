@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include <string.h>
+#include "types/data_types.h"
 
+// Global variables:
+t_Time g_simulation_time;
+float g_car_probability;
+int rand_seed(); // should be uint8 in the end!
+
+
+// remove to main menu module
 void handle_user_input(char * input);
 
 
