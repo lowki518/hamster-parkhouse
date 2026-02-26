@@ -1,0 +1,17 @@
+# Build output
+build/
+output/
+
+
+# Executables and object files
+*.out
+*.exe
+
+
+# IDE Files
+.vscode/
+
+
+# logs and temp files
+*.log
+*.tmp
