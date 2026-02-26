@@ -1,0 +1,19 @@
+# Build output
+build/*
+!build/.gitkeep
+data/*
+!data/.gitkeep
+
+
+# Executables and object files
+*.out
+*.exe
+
+
+# IDE Files
+.vscode/
+
+
+# logs and temp files
+*.log
+*.tmp
