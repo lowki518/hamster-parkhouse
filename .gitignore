@@ -1,6 +1,6 @@
 # Build output
-build/
-output/
+build/*
+data/*
 
 
 # Executables and object files
