@@ -1,3 +1,4 @@
+
 /**
 * @brief Describes the format for the arrival of new cars.
 *
@@ -10,13 +11,15 @@
 /*
 FUNCTION car_arrival (float prob. of arrival)
     FOR (i =< prob. of arrival) DO
-        new car
+        
+    car = new car
         
         IF (car cell free) THEN
-            car parks
+            car parks in free cell
         ELSE
             car gets into queue
         END IF
+
 
     END FOR
 

@@ -1,3 +1,4 @@
+
 /**
 * @brief Control the queue flow.
 *
@@ -6,7 +7,6 @@
 * (Ausgabe/Zeiger)
 * @return Beschreibung des Rueckgabewerts
 */
-
 
 /*
 FUNCTION check_queue (queue)
