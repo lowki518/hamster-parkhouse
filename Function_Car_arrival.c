@@ -1,24 +1,23 @@
+/**
+* @brief Describes the format for the arrival of new cars.
+*
+* @param[1] param1 probability of arriving cars
+
+* @return sets pointer for new car or NULL for no new car
+*/
+
+
 /*
+FUNCTION car_arrival (float prob. of arrival)
+    FOR (i =< prob. of arrival) DO
+        new car
+        
+        IF (car cell free) THEN
+            car parks
+        ELSE
+            car gets into queue
+        END IF
 
-
-FUNCTION car_arrival (max cars arriving)
-    RAND(0-max cars arriving) = i
-    
-    FOR (i > 0) DO 
-        RAND(0-100) = x
-
-        FOR (x =< prob. of arrival) DO
-            new car
-            
-            IF (car cell free) THEN
-                car parks
-            ELSE
-                car gets into queue
-            END IF
-
-        END FOR
-
-        i-1
     END FOR
 
 END FUNCTION

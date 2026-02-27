@@ -1,5 +1,13 @@
+/**
+* @brief Allows the user to change the simulation parameters
+*
+* @param[out] param2 Beschreibung von Parameter 2
+* (Ausgabe/Zeiger)
+* @return input changed or NULL for wrong input
+*/
+
 /*
-FUNCTION imput_parameters (overview of parameters)
+FUNCTION imput_parameters ()
     PRINT (overview of parameters)
 
     WHILE (TRUE)
@@ -7,7 +15,9 @@ FUNCTION imput_parameters (overview of parameters)
 
         IF (value input correct) THEN
             PRINT ("Done?")
-            IF (TRUE) THEN
+            INPUT (decision)
+
+            IF (decision) THEN
                 RETURN
             ELSE DO
                 Print ("Incorrect Input")
