@@ -1,4 +1,3 @@
-
 /**
 * @brief Allows the user to change the simulation parameters
 *

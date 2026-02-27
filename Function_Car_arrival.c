@@ -1,4 +1,3 @@
-
 /**
 * @brief Describes the format for the arrival of new cars.
 *
@@ -19,7 +18,6 @@ FUNCTION car_arrival (float prob. of arrival)
         ELSE
             car gets into queue
         END IF
-
 
     END FOR
 
