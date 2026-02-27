@@ -65,16 +65,20 @@ typedef struct {
     Time_Unit start_parking_time;
 } t_Car;
 
-typedef struct{
-    
-    
-}t_carnode;
+//car node for queue
+//sets pointer for next car
+typedef struct {    
+    t_Car * pt_Car;
+    struct t_carnode *pNext; 
+} t_carnode;
+
 
 // queue
-// each car is a node
+// length of queue
+// sets pointer for first car
 typedef struct {
-    struct t_Car *next_car;
-
+    int t_qlength; 
+    t_carnode *first_car; 
 } queue;
 
 
