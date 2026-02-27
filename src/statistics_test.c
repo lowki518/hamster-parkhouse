@@ -8,15 +8,9 @@ To run this version of gcc is needed: i686-w64-mingw32 and this command
 gcc statistics_test.c -o test.exe -I "../external/SDL/i686-w64-mingw32/include" -I "../external/SDL3_ttf/i686-w64-mingw32/include" -L "../external/SDL/i686-w64-mingw32/lib"  -L "../external/SDL3_ttf/i686-w64-mingw32/lib"  -lSDL3 -lSDL3_ttf
 
 */
-// Build with SDL3 + SDL3_ttf
-// Example (clang): clang main.c -o app `sdl3-config --cflags --libs` -lSDL3_ttf
-// Make sure SDL3_ttf is available and your font path is correct.
-
-// Build with SDL3 + SDL3_ttf
-// Example (clang): clang main.c -o app `sdl3-config --cflags --libs` -lSDL3_ttf
-// Make sure SDL3_ttf is available and your FONT_PATH is correct.
 
 #include "statistics_output_lib.h"
+#include <time.h>
 
 // ================== Layout ==================
 #define WIDTH             1500
@@ -34,31 +28,35 @@ gcc statistics_test.c -o test.exe -I "../external/SDL/i686-w64-mingw32/include" 
 #define CLOSE_MARGIN       8.0f
 
 // ================== Booleans ==================
-#define TRUE  1
-#define FALSE 0
+#define TRUE                  1
+#define FALSE                 0
 
 // ================== Data ==================
 
+// Just for testing
 #define DATASET_COUNT 5
-static Series datasets[DATASET_COUNT];
-static int currentDataset = 0;
-char dataset_name[DATASET_COUNT][32] = {"Data1", "Data2", "Data3", "Data4", "Data5"};
+#define DATASET_SIZE 100 
 
 int main() {
+    srand((unsigned) time(NULL));
+
+    int currentDataset = 0;
+    float dataset[DATASET_SIZE];
+    char dataset_name[DATASET_COUNT][32] = {"Data1", "Data2", "Data3", "Data4", "Data5"};
+
+    //Fill dataset with random values
+    for(int i = 0; i < DATASET_SIZE; ++i) {
+        dataset[i] = (float) rand() / RAND_MAX * 100.0f;
+        printf("dataset[%d] = %f\n", i, dataset[i]);
+    }
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_Log("SDL init failed: %s", SDL_GetError());
         return -1;
     }
 
-    // Seed RNG
-    srand((unsigned)time(NULL));
-
-    // Prepare datasets
-    for (int i = 0; i < DATASET_COUNT; ++i) {
-        createRandomDataset(&datasets[i],
-                            /*nMin=*/120, /*nMax=*/600,  // 2 to 10 hours of minutes
-                            /*vMin=*/0.0f, /*vMax=*/100.0f);
-    }
+    
+    
 
     // Borderless window
     SDL_Window *window = SDL_CreateWindow("Plotter", WIDTH, HEIGHT, SDL_WINDOW_BORDERLESS);
@@ -71,8 +69,9 @@ int main() {
                                    renderer);
 
     TTF_Font * font = openFont(FONT_PATH, FONT_SIZE);
+    
+    // Check if font was loaded successfully
     if (!font) {
-        for (int i = 0; i < DATASET_COUNT; ++i) freeDataset(&datasets[i]);
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();
@@ -95,19 +94,22 @@ int main() {
 
     int running = TRUE;
     SDL_Event event;
-    Uint64 last = 0;
+    int last = 0;
 
     while (running) {
-        Uint64 now = SDL_GetTicks();
-        float dt = (last == 0) ? 0.016f : (float)(now - last) / 1000.0f;
+        int now = SDL_GetTicks();
+        float dt = 0.016f; // For safety, assumed 60 FPS
+        
+        if (last != 0) {
+            dt = (float)(now - last) / 1000.0f;
+        }
+
         last = now;
 
-        int width, height;
-        SDL_GetWindowSize(window, &width, &height);
 
         // Layout
         LayoutMetrics L;
-        computeLayout(width, height, &L, &plot, &leftBtn, &rightBtn, &closeBtn);
+        computeLayout(WIDTH, HEIGHT, &L, &plot, &leftBtn, &rightBtn, &closeBtn);
 
         float mouseX, mouseY;
         SDL_GetMouseState(&mouseX, &mouseY);
@@ -118,6 +120,7 @@ int main() {
 
         int leftClicked = 0, rightClicked = 0;
 
+        // Event handling
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) running = FALSE;
 
@@ -131,14 +134,7 @@ int main() {
             }
         }
 
-        // Change dataset on clicks (wrap 0..4)
-        if (leftClicked) {
-            currentDataset = (currentDataset + DATASET_COUNT - 1) % DATASET_COUNT;
-        }
-        if (rightClicked) {
-            currentDataset = (currentDataset + 1) % DATASET_COUNT;
-        }
-
+    
         updateButtonAnimation(&leftBtn, dt);
         updateButtonAnimation(&rightBtn, dt);
         updateButtonAnimation(&closeBtn, dt);
@@ -146,18 +142,14 @@ int main() {
         // Resample if needed (inner width or dataset changed)
         float left, right, top, bottom;
         innerBounds(&plot, &left, &right, &top, &bottom);
-        int innerPixelWidth = (int)fmaxf(2.0f, floorf(right - left));
-
-        if (innerPixelWidth != lastInnerPixelWidth || currentDataset != lastDatasetIndex) {
-            if (resampled) { free(resampled); resampled = NULL; }
-            Series *S = &datasets[currentDataset];
-            resampled = resampleUniform(S->v, S->n, innerPixelWidth);
-            resampledCount = innerPixelWidth;
-            lastInnerPixelWidth = innerPixelWidth;
-            lastDatasetIndex = currentDataset;
+        int innerPixelWidth = (int) fmaxf(2.0f, floorf(right - left));
+    
+        for (int i = 0; i < DATASET_SIZE; ++i) {            
+            
+            dataset[i] = lerp(dataset[i], DATASET_SIZE, WIDTH);
 
             // Recompute Y range for the *original* dataset (smoother labels)
-            computeYRange(S->v, S->n, &yMin, &yMax);
+            computeYRange(dataset, DATASET_SIZE, &yMin, &yMax);
         }
 
         // Draw frame
@@ -169,17 +161,14 @@ int main() {
 
         // Grid & ticks (with the requested rules)
         drawYTicksAndGrid(renderer, font, &plot, yMin, yMax);
-        drawXTicksAndGridMinutes(renderer, font, &plot, datasets[currentDataset].n);
+        drawXTicksAndGridMinutes(renderer, font, &plot, DATASET_SIZE);
 
         // Axes and labels
         drawAxesWithArrows(renderer, &plot);
         drawAxisLabels(renderer, font, &plot, "Minutes", dataset_name[currentDataset]);
 
-        // Graph (resampled for smoothness)
-        drawGraph(renderer, &plot,
-                  resampled ? resampled : datasets[currentDataset].v,
-                  resampled ? resampledCount : datasets[currentDataset].n,
-                  yMin, yMax);
+        // Graph
+        drawGraph(renderer, &plot,dataset, DATASET_SIZE, yMin, yMax);
 
         // UI: nav buttons
         drawButton(renderer, &leftBtn);
@@ -194,9 +183,6 @@ int main() {
         SDL_RenderPresent(renderer);
     }
 
-    if (resampled) free(resampled);
-    for (int i = 0; i < DATASET_COUNT; ++i) freeDataset(&datasets[i]);
-
     TTF_CloseFont(font);
     TTF_Quit();
 
@@ -206,3 +192,16 @@ int main() {
 
     return 0;
 }
+
+
+/*
+
+for() {
+do_module1;
+do2_module2
+do...;
+do_ubfunction1;
+do_subfunction2;
+do_module3;
+}
+*/
