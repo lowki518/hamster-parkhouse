@@ -3,85 +3,81 @@
 
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
-// Boolean because wtf c
-// maybe using stdbool.h instead but will stay at this for now. 
+
+
+// Boolean Values
 #define TRUE 1
 #define FALSE 2
 
 
-// Maybe an idea also for statistics? ^^
+// Used for Statistics
 typedef enum {
     BMW, VW, SKODA, RENAULT, CITROEN, 
     TOYOTA, AUDI, MERCERDES, PEUGEOT, 
     MAYBACH, ALPINA, NISSAN, HONDA, 
     SAAB, VOLVO, OPEL, DACIA, FORD, 
     FIAT, ALFA_ROMEO, PORSCHE, KIA, 
-    HYUNDAI, MAZDA, SEAT, SUBARU, SUZUKI,
+    HYUNDAI, MAZDA, SEAT, SUBARU, SUZUKI
 } Car_Brand;
 
 
-// time
-// - time unit -> variable
-// should it be a struct actually? 
- 
+// Time as unsigned int for better overview
 typedef unsigned int t_Time;
 
+
+// Car_Park Struct
+// Number of parking cells
+// Number of free parking cells
+// Maximum parking duration
+// Pointer to first parking cell 
 typedef struct {
-    int step_number; // I'm stuck
-} Time_Unit;
-
-
-// parking cell
-// - boolean: free or not free
-// - id in array for better administration? 
-typedef struct {
-    int is_free; // Is either TRUE or FALSE
-    //?: unsigned int id;
-} t_Parking_Cell;
-
-
-// car park
-// - # parking cells
-// - Array of parking cells
-// - maybe also # free parking cells? 
-typedef struct {
-    int max_parking_cells; // should be global variable or not? 
-    // similarly max parking duration could be fitting here?
-    t_Parking_Cell * administration;
+    int max_parking_cells; 
+    int free_parking_cells;
+    t_Time max_parking_duration; 
+    t_Parking_Cell *first_parking_cell;
 } t_Car_Park;
 
 
-
-// cars
-// - id
-// - car brand
-// - parking time left
-// - start time of parking
+// Car struct
+// Unique ID
+// Cell index
+// Brand of the car
+// How long the car will park
+// When the car started parking
 typedef struct {
     int id;
-    int cell_index; // if not in parking_cell value should be -1
-    Car_Brand brand; // should get its own enum
-    Time_Unit parking_time_left;
+    int cell_index; // should be -1 when car is in queue
+    Car_Brand brand; 
+    Time_Unit parking_time;
     Time_Unit start_parking_time;
 } t_Car;
 
-//car node for queue
-//sets pointer for next car
+
+// Car_Node Struct
+// Pointer to cointained car
+// Pointer to next Node
 typedef struct {    
-    t_Car * pt_Car;
+    t_Car *pCar;
     struct t_carnode *pNext; 
-} t_carnode;
+} t_Car_Node;
 
 
-// queue
-// length of queue
-// sets pointer for first car
+// Queue struct
+// Length of queue
+// Pointer to first node
 typedef struct {
-    int t_qlength; 
-    t_carnode *first_car; 
-} queue;
+    int q_length; 
+    t_carnode *first_pos; 
+} t_Queue;
 
 
+// Parking_Cell Struct
+// (Boolean) Is the cell free
+// Pointer to the car in the cell
+typedef struct {
+    int is_free;
+    t_Car *car_in_cell;
+} t_Parking_Cell;
 
 
 #endif
