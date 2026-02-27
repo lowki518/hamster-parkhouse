@@ -2,16 +2,6 @@
 #include <stdio.h>
 
 /*
-@brief generates a new car with an id
-
-@param[1] lastID An integer with the ID of the last car
-
-@return a new car
-*/
-t_Car *new_car (int *lastID);
-
-
-/*
 @brief parks a car in an allocated parking cell
 
 @param[1] car A pointer to the car that needs to be parked
@@ -19,7 +9,11 @@ t_Car *new_car (int *lastID);
 
 @return  void
 */
-void park_car (t_Car *car, t_Parking_Cell *cell);
+void park_car (t_Car *car, t_Parking_Cell *cell) {
+    /*
+        *car = *cell //car parks in cell
+    */
+}
 
 
 /*
@@ -30,7 +24,13 @@ void park_car (t_Car *car, t_Parking_Cell *cell);
 
 @return void
 */
-void unpark_car(t_Car *car, t_Parking_Cell *cell);
+void unpark_car(t_Car *car, t_Parking_Cell *cell) {
+    /*
+        car leaves
+        *cell = free
+        car gets free/deleted
+    */
+}
 
 
 /*
@@ -39,10 +39,19 @@ void unpark_car(t_Car *car, t_Parking_Cell *cell);
 The generating of a new car is based on the users choice of arrival chances in percentage.
 
 @param[1] percentage The users choice of arrival chances
+@param[2] lastID The last ID given to a car
 
 @return  the car or not
 */
-t_Car * car_arrives (float percentage);
+t_Car * car_arrives (float percentage, int *lastID, t_Time max_parking) {
+    /*
+        FOR (rand(0-100) < percentage) DO
+            generate new car = new_car
+            new_car get one more ID 
+            new_car gets a max parking time assigned
+        END FOR
+    */    
+}
 
 /*
 @brief Checks if parking time of a car is over 
@@ -52,4 +61,10 @@ t_Car * car_arrives (float percentage);
 
 @return wether a car needs to leave or not
 */
-int check_parking_time(t_Car *car, t_Time time);
+int check_parking_time(t_Car *car, t_Time time) {
+    /*
+        IF car parking time over THEN
+            car leaves
+        END IF 
+    */
+}

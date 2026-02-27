@@ -4,16 +4,6 @@
 #include "data_types.h"
 
 /*
-@brief generates a new car with an id
-
-@param[1] lastID An integer with the ID of the last car
-
-@return a new car
-*/
-t_Car *new_car (int *lastID);
-
-
-/*
 @brief parks a car in an allocated parking cell
 
 @param[1] car A pointer to the car that needs to be parked
@@ -41,10 +31,11 @@ void unpark_car(t_Car *car, t_Parking_Cell *cell);
 The generating of a new car is based on the users choice of arrival chances in percentage.
 
 @param[1] percentage The users choice of arrival chances
+@param[2] lastID The last ID given to a car
 
 @return  the car or not
 */
-t_Car * car_arrives (float percentage);
+t_Car * car_arrives (float percentage, int *lastID);
 
 /*
 @brief Checks if parking time of a car is over 
