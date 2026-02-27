@@ -1,7 +1,5 @@
-#ifndef CAR_LIB_H
-#define CAR_LIB_H
-
-#include "data_types.h"
+#include "car_lib.h"
+#include <stdio.h>
 
 /*
 @brief generates a new car with an id
@@ -55,6 +53,3 @@ t_Car * car_arrives (float percentage);
 @return wether a car needs to leave or not
 */
 int check_parking_time(t_Car *car, t_Time time);
-
-
-#endif

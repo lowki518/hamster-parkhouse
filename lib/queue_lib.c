@@ -1,4 +1,5 @@
 #include "queue_lib.h"
+#include <stdlib.h>
 
 /*
 @brief creates a new node for the queue

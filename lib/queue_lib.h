@@ -2,7 +2,6 @@
 #define QUEUE_LIB_H
 
 #include "data_types.h"
-#include <stdlib.h>
 
 /*
 @brief creates a new node for the queue
