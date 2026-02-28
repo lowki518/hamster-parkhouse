@@ -29,47 +29,29 @@ This data is needed to determine which statistic can be drawn from it.
 ## File format
 
 The calculated statistics will be put into a __.txt__ file when the simulation is exited. The format will be like this:
-----
-10;2;1200  
-**timestep;**  
-**units of timestep (seconds, minutes, hours, weeks -> 1, 2, 3, 4);**  
-**duration of the simulation in timesteps**  
-550;50;82;3;8571265  
-**parking spaces;**  
-**maximum parking time in timesteps;**  
-**probability of new cars arriving in percent;**  
-**maximum amount of new cars per timestep;**  
-**seed used for randomness**  
 
-230;20;0;1;5690;VW  
-**cars currently parked**  
-**average parking time**     
-**cars waiting in line**  
-**how often the parkhouse was full**  
-**amount of cars during simulation**  
-**most parked car brand**  
 
-----
-5;2;5000  
-600;60;60;10;6728495
-
-0;0;0;0;0;NULL  
-...  
-600;40;5;100;10460;BMW  
-
+![File of Statistics output](img/statistics_file.png)
 
 ## Output format
 The priority is to get the code running so the primary output is a terminal output like this:  
 
+![Terminal of Statistics output](img/statistics_terminal.png)
 
-| Timestep | Parked Cars | Avg. Parking Time | Simulated Cars | Cars Waiting | Full House Steps | Most Parked Brand |
-|----------|-------------|-------------------|----------------|--------------|-------------------|--------------------|
-|1|2|0|2|0|0|PEUGEOT|  
-|2|3|0|3|0|0|PEUGEOT|
-|...|...|...|...|...|...|...|
-|234|400|46|1245|0|2|MERCEDES|
+----
 
 ### Bonus
 A secondary goal is to get a GUI running with plotted graphs and buttons to switch between them.  
-## TODO
-Add image of graph visualization
+This is not a graph of data, it's just randomly generated numbers.
+
+![Graph of Statistics output](img/statistics_graph.png)
+
+## Justification
+
+At first, we thought about a normal parking garage and which data the owner and users would like to have.
+
+We thought about the simplest, yet most elegant way to display the data.
+Hence the console output and the file are identical and structured for the best visibility.
+
+We decided that a better visualization for long simulations would also be nice. So we searched across the web for a good solution
+to visualize a graph for the data. We found the method of using Dear ImGui, but we didn't like the looks of it, so we decided to use the very basic libraries SDL3 and SDL3_TTF for fonts. This made the Visualization a bit harder, since we needed our own functions for __everything__. The given GUI is also just a basic version, since it was done as fast as possible, to just get an idea of how it will look.
