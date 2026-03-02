@@ -1,10 +1,10 @@
 # Plan
 1. I/O Modules for configurations [(link to docs)](doc/cli.md)
- - CLI to choose config
-2. Simulation
- - Simulate data and output per timestep
-3. Statistics Outputgit 
-- open GUI with data
+   - CLI to choose config and run the simulation
+2. Simulation [(link to docs)](doc/simulation.md)
+   - Simulate data and output per timestep
+3. Statistics Outputgit [(link to docs)](doc/statistics_overview.md)
+   - open GUI with data
 
 ## TODO: 
 - Uniform naming
