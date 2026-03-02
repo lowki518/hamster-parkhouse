@@ -2,11 +2,12 @@
 #include <stdio.h>
 
 
-/**
- * @brief Read user input and error handling for bad input
- * 
- * @param[in] p_input pointer on input string (char *) 
- * @return 0 if successful, otherwise 1
+/*
+  @brief Read user input and error handling for bad input
+  
+  @param[1] p_input A pointer on input string (char *) 
+ 
+  @return 0 if successful, otherwise 1
  */
 int read_user_input(char *p_input) {
     if (!scanf("%255[^\n]%*c", p_input)) {
@@ -18,11 +19,12 @@ int read_user_input(char *p_input) {
     return 0;
 }
 
-/**
- * @brief Handle user input commands
- * 
- * @param[in] p_input pointer on input string (char *) 
- * @return 0 if successful, otherwise 1
+/*
+  @brief Handle user input commands
+  
+  @param[1] p_input A pointer on input string (char *) 
+ 
+  @return 0 if successful, otherwise 1
  */
 int handle_user_input(char *p_input) {
     /*
@@ -46,27 +48,33 @@ int handle_user_input(char *p_input) {
     return 0;
 }
 
-/** 
- * @brief Print command overview
+/* 
+  @brief Print command overview
+ 
+  @return void
  */
 void print_help() {
     // Print all the possible commands and usage
     // TODO: make nice looking menu for that
 }
 
-/**
- * @brief Print configs + value
- * 
- * @param p_<config_variable> Pointer to config variable 
- * ...
+/*
+  @brief Print configs + value
+ 
+  @param[1] p_<config_variable> A pointer to config variable 
+  ...
+
+  @return void
  */
 void print_config() {
     // print all name and values of config_variables in a nice fashion
 }
 
 
-/**
- * @brief Print start menu (UI) and wait for user input
+/*
+  @brief Print start menu (UI) and wait for user input
+
+  @return void
  */
 void start_menu() {
     // Standard text visualisation

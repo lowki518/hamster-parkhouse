@@ -1,4 +1,5 @@
 #include "queue_lib.h"
+#include "../data_types.h"
 #include <stdlib.h>
 
 /*

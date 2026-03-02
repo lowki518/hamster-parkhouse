@@ -1,5 +1,7 @@
-#include "car_lib.h"
-#include <stdio.h>
+#ifndef CAR_LIB_H
+#define CAR_LIB_H
+
+#include "../data_types.h"
 
 /*
 @brief parks a car in an allocated parking cell
@@ -9,11 +11,7 @@
 
 @return  void
 */
-void park_car (t_Car *car, t_Parking_Cell *cell) {
-    /*
-        *car = *cell //car parks in cell
-    */
-}
+void park_car (t_Car *car, t_Parking_Cell *cell);
 
 
 /*
@@ -24,13 +22,7 @@ void park_car (t_Car *car, t_Parking_Cell *cell) {
 
 @return void
 */
-void unpark_car(t_Car *car, t_Parking_Cell *cell) {
-    /*
-        car leaves
-        *cell = free
-        car gets free/deleted
-    */
-}
+void unpark_car(t_Car *car, t_Parking_Cell *cell);
 
 
 /*
@@ -43,15 +35,7 @@ The generating of a new car is based on the users choice of arrival chances in p
 
 @return  the car or not
 */
-t_Car * car_arrives (float percentage, int *lastID, t_Time max_parking) {
-    /*
-        FOR (rand(0-100) < percentage) DO
-            generate new car = new_car
-            new_car get one more ID 
-            new_car gets a max parking time assigned
-        END FOR
-    */    
-}
+t_Car * car_arrives (float percentage, int *lastID);
 
 /*
 @brief Checks if parking time of a car is over 
@@ -61,10 +45,7 @@ t_Car * car_arrives (float percentage, int *lastID, t_Time max_parking) {
 
 @return wether a car needs to leave or not
 */
-int check_parking_time(t_Car *car, t_Time time) {
-    /*
-        IF car parking time over THEN
-            car leaves
-        END IF 
-    */
-}
+int check_parking_time(t_Car *car, t_Time time);
+
+
+#endif
