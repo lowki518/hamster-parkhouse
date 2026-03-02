@@ -31,12 +31,12 @@ This data is needed to determine which statistic can be drawn from it.
 The calculated statistics will be put into a __.txt__ file when the simulation is exited. The format will be like this:
 
 
-![File of Statistics output](img/statistics_file.png)
+![File of Statistics output](img/statistics/statistics_file.png)
 
 ## Output format
 The priority is to get the code running so the primary output is a terminal output like this:  
 
-![Terminal of Statistics output](img/statistics_terminal.png)
+![Terminal of Statistics output](img/statistics/statistics_terminal.png)
 
 ----
 
@@ -44,7 +44,7 @@ The priority is to get the code running so the primary output is a terminal outp
 A secondary goal is to get a GUI running with plotted graphs and buttons to switch between them.  
 This is not a graph of data, it's just randomly generated numbers.
 
-![Graph of Statistics output](img/statistics_graph.png)
+![Graph of Statistics output](img/statistics/statistics_graph.png)
 
 ## Justification
 

@@ -1,4 +1,4 @@
-#include "../types/data_types.h"
+#include "../data_types.h"
 #include <sys/types.h>
 #include <stdint.h>
 

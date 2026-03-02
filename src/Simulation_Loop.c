@@ -1,6 +1,6 @@
-#include "../lib/queue_lib.h"
-#include "../lib/car_lib.h"
-#include "../lib/data_types.h"
+#include "queue/queue_lib.h"
+#include "car/car_lib.h"
+#include "data_types.h"
 
 /**
 @brief The complete setup of the full simulation

@@ -1,20 +1,15 @@
-#include "data_types.h"
-#include "file_manager_lib.h"
-#include <stdlib.h>
+#ifndef FILE_MANAGER_H
+#define FILE_MANAGER_H
+
+#include "../data_types.h"
+
 
 /*
 @brief Gets the number (Simulation_X.txt) of the last file in results.
 
 @return Returns the number of the last file
 */
-int get_last_file_number () {
-    /*
-    number = LOOK IN "../data" FOR HIGHEST FILE NUMBER
-    
-    return number;
-    */
-    return NULL; // placeholder
-}
+int get_last_file_number ();
 
 
 /*
@@ -30,13 +25,8 @@ int get_last_file_number () {
 
 @return void
 */
-void create_new_file_with_head_data (int file_number, t_Time number_of_simulations, int parking_spaces, t_Time maximum_parking_time, float new_car_prob, int new_cars_per_step, unsigned int seed) {
-    /*
-    file = CREATE NEW FILE BY NUMBER
-        WRITE HEADER data IN file
-    CLOSE file
-    */
-}
+void create_new_file_with_head_data (int file_number, t_Time number_of_simulations, int parking_spaces, t_Time maximum_parking_time, float new_car_prob, int new_cars_per_step, unsigned int seed);
+
 
 /*
 @brief Appends the data for every simulated step to the file.
@@ -52,13 +42,7 @@ void create_new_file_with_head_data (int file_number, t_Time number_of_simulatio
 
 @return void
 */
-void append_data_per_timestep (int file_number, t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) {
-    /*
-    file = OPEN FILE BY NUMBER
-        PRINT IN FILE : DATA
-    CLOSE FILE
-    */
-}
+void append_data_per_timestep (int file_number, t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand);
 
 
 /*
@@ -71,17 +55,8 @@ void append_data_per_timestep (int file_number, t_Time timestep, int cars_parked
 @param[5] max_cars_arriving The maximum amount of cars arriving in one step.
 @param[6] seed The seed used to generate the randomness within the simulation.
 
-@return void
 */
-void write_config_data (int parking_cells, t_Time max_parking_duration, t_Time sim_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
-    /*
-    file = OPEN CONFIG FILE
-        FOR DATA in File
-            DATA (in File) = NEW DATA
-        END FOR
-    CLOSE file
-    */
-}
+void write_config_data (int parking_cells, t_Time max_parking_duration, t_Time sim_duration, float new_car_prob, int max_cars_arriving, unsigned int seed);
 
 
 /*
@@ -94,15 +69,8 @@ void write_config_data (int parking_cells, t_Time max_parking_duration, t_Time s
 @param[5] max_cars_arriving A pointer to where the maximum amount of cars arriving in one step will be stored.
 @param[6] seed A pointer to where the seed will be stored.
 
-@return void
 */
-void read_config_data (int *parking_cells, t_Time *max_parking_duration, t_Time *sim_duration, float *new_car_prob, int *max_cars_arriving, unsigned int *seed) {
-    /*
-    file = OPEN CONFIG FILE
-        FOR DATA in File
-            *data = DATA FROM FILE
-        END FOR
-    close file
-    */
+void read_config_data (int *parking_cells, t_Time *max_parking_duration, t_Time *sim_duration, float *new_car_prob, int *max_cars_arriving, unsigned int *seed);
 
- }
+
+#endif
