@@ -7,7 +7,9 @@
 
 // Boolean Values
 #define TRUE 1
+
 #define FALSE 0
+
 
 
 // Used for Statistics
@@ -48,8 +50,10 @@ typedef struct {
     int id;
     int cell_index; // should be -1 when car is in queue
     Car_Brand brand; 
+
     t_Time parking_time;
     t_Time start_parking_time;
+
 } t_Car;
 
 
