@@ -61,9 +61,9 @@ typedef struct {
 } LayoutMetrics;
 
 /*
-@brief Rewrites the dataset with new data based of the index and the Filepath.
+@brief Rewrites the dataset with new data based on the index and the Filepath.
 
-@param[1] datasetIndex An integer representing the index of the dataset to load.
+@param[1] datasetIndex An integer representing the index on the dataset to load.
 @param[2] filepath A pointer to a string representing the path to the file containing the new data.
 
 @return A pointer 

@@ -1,9 +1,9 @@
 #include "statistics_output_lib.h"
 
 /*
-@brief Rewrites the dataset with new data based of the index.
+@brief Rewrites the dataset with new data based on the index.
 
-@param[1] datasetIndex An integer representing the index of the dataset to load.
+@param[1] datasetIndex An integer representing the index on the dataset to load.
 
 @return A pointer 
 */
