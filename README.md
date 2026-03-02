@@ -19,7 +19,7 @@
 - Documentation of everything!!!!!!!!!!!!!111!!11!!1!!!!
 
 
-
+The minmal amount of timesteps needs to be 4, or else the visualization breaks
 
 
 ```main.c:
