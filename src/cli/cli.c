@@ -12,7 +12,7 @@
 int read_user_input(char *p_input) {
     if (!scanf("%255[^\n]%*c", p_input)) {
         // Error handling - TODO
-        printf("Error uwu");
+        printf("Invalid user imput\n");
         return 1;
     }
     

@@ -11,9 +11,7 @@
 @return  void
 */
 void park_car (t_Car *car, t_Parking_Cell *cell) {
-    /*
-        *car = *cell //car parks in cell
-    */
+    car->cell_index = cell[i];
 }
 
 
@@ -26,11 +24,12 @@ void park_car (t_Car *car, t_Parking_Cell *cell) {
 @return void
 */
 void unpark_car(t_Car *car, t_Parking_Cell *cell) {
-    /*
-        car leaves
-        *cell = free
-        car gets free/deleted
-    */
+    // car leaves
+
+    cell->is_free = TRUE;  // cell is emptied
+    
+    free (car);
+
 }
 
 
@@ -45,13 +44,14 @@ The generating of a new car is based on the users choice of arrival chances in p
 @return  the car or not
 */
 t_Car * car_arrives (float percentage, int *lastID, t_Time max_parking) {
-    /*
-        FOR (rand(0-100) < percentage) DO
-            generate new car = new_car
-            new_car get one more ID 
-            new_car gets a max parking time assigned
-        END FOR
-    */    
+    if (((rand()%(10000+1))/100) < percentage) {
+        t_Car *new_car = malloc(sizeof(t_Car));
+
+        new_car->id = g_id;
+        g_id =g_id++;
+
+        new_car->parking_time = rand()%(max_parking + 1);
+    }
 }
 
 /*
@@ -63,9 +63,9 @@ t_Car * car_arrives (float percentage, int *lastID, t_Time max_parking) {
 @return wether a car needs to leave or not
 */
 int check_parking_time(t_Car *car, t_Time time) {
-    /*
-        IF car parking time over THEN
-            car leaves
-        END IF 
-    */
+    if(car->parking_time + car->start_parking_time <= time) {
+        return TRUE;
+    }
+    return FALSE;
 }
+
