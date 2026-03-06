@@ -37,7 +37,7 @@ struct configure_map config_table[] = {
 int read_user_input(char *p_input) {
     if (!fgets(p_input, 255, stdin)) {
         // Error handling - TODO
-        printf("Error");
+        printf("Invalid user imput\n");
         return 1;
     }
     return 0;
