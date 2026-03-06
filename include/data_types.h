@@ -62,7 +62,7 @@ typedef struct {
 // Pointer to next Node
 typedef struct {    
     t_Car *pCar;
-    struct t_carnode *pNext; 
+    struct t_Car_Node *pNext; 
 } t_Car_Node;
 
 
@@ -71,7 +71,7 @@ typedef struct {
 // Pointer to first node
 typedef struct {
     int q_length; 
-    t_Car_Node *first_pos; 
+    t_Car_Node *first_pos;
 } t_Queue;
 
 

@@ -46,6 +46,9 @@ The generating of a new car is based on the users choice of arrival chances in p
 t_Car * car_arrives (float percentage, int *lastID, t_Time max_parking) {
     if (((rand()%(10000+1))/100) < percentage) {
         t_Car *new_car = malloc(sizeof(t_Car));
+        if(!t_Car) {
+            return -1;
+        }
 
         new_car->id = g_id;
         g_id =g_id++;
