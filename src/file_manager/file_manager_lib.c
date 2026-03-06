@@ -1,26 +1,43 @@
 #include "../data_types.h"
 #include "file_manager_lib.h"
 #include <stdlib.h>
+#include <dirent.h>
 
 /*
 @brief Gets the number (Simulation_X.txt) of the last file in results.
 
 @return Returns the number of the last file
 */
-int get_last_file_number () {
-    /*
-    number = LOOK IN "../data" FOR HIGHEST FILE NUMBER
-    
-    return number;
-    */
-    return NULL; // placeholder
+int get_last_file_number(const char *folder) {
+    DIR *dir = opendir(folder);  //go to folder
+
+    struct dirent *past_sim;  //pointer to files in folder
+    int max_file_nr = 0;
+
+    if (dir == NULL) {
+        printf("The given directory could not be opened");
+        return -1;
+    }
+
+    while ((past_sim = readdir(dir)) != NULL) {     //goes through all files in "data"
+        int file_nr;
+        
+        if (sscanf(past_sim->d_name, "%d", &file_nr) == 1) {     //saves biggest nr of filenames
+            if (file_nr > max_file_nr)
+                max_file_nr = file_nr;
+        }
+    }
+
+    closedir(dir);
+    new_file_number = max_file_nr + 1;
+    return new_file_number;
 }
 
 
 /*
 @brief Creates the new file for saving the simulation data with the sim. parameters.
 
-@param[1] file_number The number of the File to write.
+@param[1] new_file_number The number of the File to write.
 @param[2] number_of_simulations The total amount of simulations done.
 @param[3] parking_spaces The amount of parking_spaces.
 @param[4] maximum_parking_time The maximum parking time for the cars.
@@ -30,7 +47,11 @@ int get_last_file_number () {
 
 @return void
 */
-void create_new_file_with_head_data (int file_number, t_Time number_of_simulations, int parking_spaces, t_Time maximum_parking_time, float new_car_prob, int new_cars_per_step, unsigned int seed) {
+void create_new_file_with_head_data (int new_file_number, t_Time number_of_simulations, int parking_spaces, t_Time maximum_parking_time, float new_car_prob, int new_cars_per_step, unsigned int seed) {
+    new_file_number;
+
+    
+    
     /*
     file = CREATE NEW FILE BY NUMBER
         WRITE HEADER data IN file
