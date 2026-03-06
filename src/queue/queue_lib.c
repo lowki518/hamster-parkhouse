@@ -28,7 +28,7 @@ t_Car_Node *new_Node(t_Car *car) {
 
 @return returns the initialized queue.
 */
-t_Queue *init_queue(t_Car_Node *node) {
+t_Queue *init_queue() {
     t_Queue *queue = malloc(sizeof(queue));
     if(!queue) {
         return -1;
@@ -36,14 +36,12 @@ t_Queue *init_queue(t_Car_Node *node) {
  
     queue->q_length = g_q; //global variable for queue length
 
-    node->pNext = NULL;
     queue->first_pos = NULL;
-
-    //does it need anything else for intitialization?????
+    queue->last_pos = NULL;
 
     return queue;
 
-    return NULL; // Placeholder
+    return NULL; // Placeholder // necessary???
 }
 
 
@@ -54,14 +52,23 @@ t_Queue *init_queue(t_Car_Node *node) {
 
 @return void
 */
-void de_queue(t_Queue *queue,t_Car_Node *node) {
-    node->pNext
+void de_queue(t_Queue *queue, t_Car_Node *node) {  //is there a better way where we dont need to include the t_Car_Node *node?if not needs to be changed in .h
+    if (queue->first_pos == NULL && queue->last_pos == NULL) {
+        return -1;
+    }
+    else {
+    queue ->first_pos = node;
+
+    t_Queue *pTmp = queue->first_pos;
+    queue->first_pos = pTmp->pNext;
+    pTmp->pNext = NULL;
+    }
+
+    //do we want to change the cars index value here?
+
+    free (pTmp);
     
-    
-    /*
-    RENEW QUEUE HEAD
-    DELETE/FREE REMOVED NODE
-    */
+    //does it make sense?
 }
 
 
@@ -73,16 +80,22 @@ void de_queue(t_Queue *queue,t_Car_Node *node) {
 
 @return void
 */
-void en_queue(t_Queue *queue, t_Car *car) {
+void en_queue(t_Queue *queue, t_Car_Node *node) {  //same thing here with t_Car_Node
+
     pNewNode->pNext = pNode->pNext;
     pNode->pNext = pNewNode;
 
-    *node
-    node->
+    node->pNext = NULL;
 
-/*
-    GOTO LAST ELEMENT IN QUEUE -> ADD new_node(car)
-    */
+    if (queue->first_pos == NULL && queue->last_pos == NULL) {
+        queue->first_pos = node;
+        queue->last_pos = node;
+    }
+    else {
+        queue->last_pos->pNext = node;
+        queue->last_pos = node;
+    }
+
 }
 
 
@@ -94,14 +107,9 @@ void en_queue(t_Queue *queue, t_Car *car) {
 @return void
 */
 void clear_queue(t_Queue *queue) {
-    for (g_q > FALSE, int i) {
-        free (node);
-        node=next
+    while (queue->first_pos != NULL) {
+        de_queue(queue);
     }
-    
 
-    /*
-    DELETE/FREE EVERY ELEMENT IN queue
-    DELETE/FREE queue
-    */
+    free (queue);
 }

@@ -72,6 +72,7 @@ typedef struct {
 typedef struct {
     int q_length; 
     t_Car_Node *first_pos;
+    t_Car_Node *last_pos;     //added tail to our queue
 } t_Queue;
 
 

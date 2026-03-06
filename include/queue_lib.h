@@ -39,7 +39,7 @@ void de_queue(t_Queue *queue);
 
 @return void
 */
-void en_queue(t_Queue *queue, t_Car *car);
+void en_queue(t_Queue *queue, t_Car *node);
 
 
 /*
