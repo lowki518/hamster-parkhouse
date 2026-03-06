@@ -1,7 +1,7 @@
 #ifndef QUEUE_LIB_H
 #define QUEUE_LIB_H
 
-#include "../data_types.h"
+#include "data_types.h"
 
 /*
 @brief creates a new node for the queue
