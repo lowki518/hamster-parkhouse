@@ -8,28 +8,33 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Include-folders
 
+add_subdirectory(external)
+
+#external
+
 #internal
-include_directories(include)
+include_directories(../include)
 
 # --------------------------------------------------
 # Library
 # --------------------------------------------------
 
-add_library(playlist
-    src/playlist.c
-)
+add_library(car src/car.c)
+add_library(cli ../src/cli.c)
+add_library(config ../src/config.c)
+add_library(file_manager ../src/file_manager.c)
+add_library(statistics_output ../src/statistics_output.c)
+
 
 # --------------------------------------------------
 # Unit-Test-Executable
 # --------------------------------------------------
 
-add_executable(test_playlist
-    test/test_playlist.c
-)
+add_executable(test_vis ../test/visualization_test.c)
+add_executable(test_cli ../test/cli_test.c)
+add_executable(test_sim ../test/simulation_test.c)
 
-target_link_libraries(test_playlist
-    playlist
-)
+target_link_libraries(test_vis playlist)
 
 # --------------------------------------------------
 # Activate CTest

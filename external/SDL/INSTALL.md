@@ -1,21 +1,14 @@
+# To build and use SDL:
 
-# Using this package
+SDL supports a number of development environments:
+- [CMake](docs/INTRO-cmake.md)
+- [Visual Studio on Windows](docs/INTRO-visualstudio.md)
+- [gcc on Windows](docs/INTRO-mingw.md)
+- [Xcode on Apple platforms](docs/INTRO-xcode.md)
+- [Android Studio](docs/INTRO-androidstudio.md)
+- [Emscripten for web](docs/INTRO-emscripten.md)
 
-This package contains SDL3 built for the mingw-w64 toolchain.
-
-The files for 32-bit architecture are in i686-w64-mingw32
-The files for 64-bit architecture are in x86_64-w64-mingw32
-
-You can install them to another location, just type `make` for help.
-
-To use this package, point your include path at _arch_/include and your library path at _arch_/lib, link with the SDL3 library and copy _arch_/bin/SDL3.dll next to your executable.
-
-e.g.
-```sh
-gcc -o hello.exe hello.c -Ix86_64-w64-mingw32/include -Lx86_64-w64-mingw32/lib -lSDL3
-cp x86_64-w64-mingw32/bin/SDL3.dll .
-./hello.exe
-```
+SDL is also usable in other environments. The basic steps are to use CMake to build the library and then use the headers and library that you built in your project. You can search online to see if anyone has specific steps for your setup.
 
 # Documentation
 
@@ -25,9 +18,11 @@ https://wiki.libsdl.org/SDL3
 
 # Example code
 
-There are simple example programs available at:
+There are simple example programs in the examples directory, and you can view them online at:
 
 https://examples.libsdl.org/SDL3
+
+More in-depth test programs are available in the tests directory and can be built by adding `-DSDL_TESTS=ON` to the CMake command line when building SDL.
 
 # Discussions
 
