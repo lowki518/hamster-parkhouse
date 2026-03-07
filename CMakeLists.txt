@@ -6,11 +6,13 @@ project(hamster_parkhouse C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+# Configuration
+set(SDL_X11 OFF CACHE BOOL "" FORCE)
+
 # Include-folders
 
 add_subdirectory(external)
 
-#external
 
 #internal
 include_directories(../include)
