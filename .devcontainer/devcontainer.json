@@ -1,6 +1,6 @@
 {
-  "name": "hamster",
-  "build": {
-    "dockerfile": "Dockerfile"
-  }
+  "name": "Visualization Codespace",
+  "build": { "dockerfile": "Dockerfile" },
+  "forwardPorts": [6080],
+  "postCreateCommand": "echo 'Codespace ready! Open port 6080 to view SDL windows.'"
 }
