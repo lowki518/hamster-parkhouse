@@ -1,6 +1,11 @@
 {
-  "name": "Visualization Codespace",
+  "name": "SDL Codespace",
   "build": { "dockerfile": "Dockerfile" },
   "forwardPorts": [6080],
-  "postCreateCommand": "echo 'Codespace ready! Open port 6080 to view SDL windows.'"
+  "postCreateCommand": "echo 'SDL Codespace ready! Open port 6080 to view windows in browser.'",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-vscode.cpptools"]
+    }
+  }
 }
