@@ -1,11 +1,12 @@
 {
-  "name": "SDL Codespace",
-  "build": { "dockerfile": "Dockerfile" },
+  "name": "SDL3 Desktop",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "remoteUser": "root",
   "forwardPorts": [6080],
-  "postCreateCommand": "echo 'SDL Codespace ready! Open port 6080 to view windows in browser.'",
-  "customizations": {
-    "vscode": {
-      "extensions": ["ms-vscode.cpptools"]
+  "portsAttributes": {
+    "6080": {
+      "label": "noVNC",
+      "onAutoForward": "openBrowser"
     }
   }
 }
