@@ -11,7 +11,9 @@
 @return  void
 */
 void park_car (t_Car *car, t_Parking_Cell *cell) {
-    car->cell_index = cell[i];
+    cell->car_in_cell = *car;
+    
+    car->cell_index = *cell;
 }
 
 
@@ -28,6 +30,7 @@ void unpark_car(t_Car *car, t_Parking_Cell *cell) {
 
     cell->is_free = TRUE;  // cell is emptied
     
+    free(*car); 
     free (car);
 
 }
@@ -43,17 +46,21 @@ The generating of a new car is based on the users choice of arrival chances in p
 
 @return  the car or not
 */
-t_Car * car_arrives (float percentage, int *lastID, t_Time max_parking) {
-    if (((rand()%(10000+1))/100) < percentage) {
+t_Car * car_arrives (float percentage, t_Time max_parking) {
+    
+    //if rand nr 0-100 is smaller than the car arrival chances, a car arrives
+    if (((rand()%(10000+1))/100) =< percentage) {
         t_Car *new_car = malloc(sizeof(t_Car));
         if(!t_Car) {
-            return -1;
+            return NULL;
         }
 
         new_car->id = g_id;
-        g_id =g_id++;
+        g_id++;
 
         new_car->parking_time = rand()%(max_parking + 1);
+
+        return new_car;
     }
 }
 

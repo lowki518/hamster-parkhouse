@@ -35,7 +35,7 @@ The generating of a new car is based on the users choice of arrival chances in p
 
 @return  the car or not
 */
-t_Car * car_arrives (float percentage, int *lastID);
+t_Car * car_arrives (float percentage, t_Time max_parking);
 
 /*
 @brief Checks if parking time of a car is over 

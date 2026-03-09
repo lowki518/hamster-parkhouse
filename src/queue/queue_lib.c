@@ -16,10 +16,8 @@ t_Car_Node *new_Node(t_Car *car) {
     }
 
     node->pCar = *car;
-    node->pNext
+    node->pNext = NULL;
     return node;
-
-    return NULL; // Placeholder
 }
 
 
@@ -31,7 +29,7 @@ t_Car_Node *new_Node(t_Car *car) {
 t_Queue *init_queue() {
     t_Queue *queue = malloc(sizeof(queue));
     if(!queue) {
-        return -1;
+        return NULL;
     }
  
     queue->q_length = g_q; //global variable for queue length
@@ -40,8 +38,6 @@ t_Queue *init_queue() {
     queue->last_pos = NULL;
 
     return queue;
-
-    return NULL; // Placeholder // necessary???
 }
 
 
