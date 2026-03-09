@@ -1,5 +1,5 @@
-#ifndef CONFIG
-#define CONFIG
+#ifndef CONFIG_LIB_H
+#define CONFIG_LIB_H
 #include "data_types.h"
 #include <sys/types.h>
 #include <stdint.h>
