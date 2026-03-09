@@ -2,6 +2,9 @@
 
 set -e
 
+# ===== Fix Git Ownership Issue =====
+git config --global --add safe.directory /workspaces/hamster-parkhouse
+
 # ===== Set German Keyboard Layout =====
 echo "Configuring German keyboard layout..."
 export DEBIAN_FRONTEND=noninteractive
@@ -61,7 +64,8 @@ apt-get install -y -qq \
   libx11-dev libxext-dev libxrandr-dev libxinerama-dev \
   libxcursor-dev libxi-dev libxfixes-dev libxss-dev \
   libxtst-dev libwayland-dev libxkbcommon-dev \
-  libdbus-1-dev libudev-dev libgl1-mesa-dev libasound2-dev
+  libdbus-1-dev libudev-dev libgl1-mesa-dev libasound2-dev \
+  libfreetype6-dev libharfbuzz-dev
 
 echo "✓ Dependencies installed"
 echo ""
@@ -69,7 +73,7 @@ echo ""
 # ===== Step 2 : Submodules =====
 echo "[2/4] Initializing SDL3 submodule..."
 
-cd /workspaces/Test
+cd /workspaces/hamster-parkhouse
 
 # Check if .git directory exists
 if [ ! -d ".git" ]; then
