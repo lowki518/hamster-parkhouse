@@ -16,69 +16,92 @@ add_subdirectory(external/SDL_ttf)
 
 
 #internal
-include_directories(../include)
+include_directories(include)
 
 # --------------------------------------------------
 # Library
 # --------------------------------------------------
 
-#add_library(car src/car.c)
-#add_library(cli ../src/cli.c)
-#add_library(config ../src/config.c)
-#add_library(file_manager ../src/file_manager.c)
-#add_library(statistics_output ../src/statistics_output.c)
+add_library(car src/car/car_lib.c)
+add_library(cli src/cli/cli_lib.c)
+add_library(config src/config/config_lib.c)
+add_library(file_manager src/file_manager/file_manager_lib.c)
+add_library(queue src/queue/queue_lib.c)
+add_library(statistics_output src/statistics_gui/statistics_output_lib.c)
+add_library(simulation_loop src/simulation_loop.c)
 
 
 # --------------------------------------------------
 # Unit-Test-Executable
 # --------------------------------------------------
 
-#add_executable(test_vis ../test/visualization_test.c)
-#add_executable(test_cli ../test/cli_test.c)
-#add_executable(test_sim ../test/simulation_test.c)
+add_executable(test_vis test/visualization_test.c)
+add_executable(test_cli test/cli_test.c)
+add_executable(test_sim test/simulation_test.c)
 
-#target_link_libraries(test_vis playlist)
+# --------------------------------------------------
+# Libraries Link For Tests
+# --------------------------------------------------
+
+target_link_libraries(test_vis SDL3::SDL3 SDL3_ttf::SDL3_ttf statistics_output file_manager)
+target_link_libraries(test_cli cli config file_manager)
+target_link_libraries(test_sim car queue file_manager)
 
 # --------------------------------------------------
 # Activate CTest
 # --------------------------------------------------
 
-#enable_testing()
+enable_testing()
 
-#add_test(
-#    NAME PlaylistUnitTests
-#    COMMAND test_playlist
-#)
+add_test(
+    NAME VisualisationUnitTest
+    COMMAND test_u_vis
+)
+
+add_test(
+    NAME CliUnitTest
+    COMMAND test_u_cli
+)
+
+add_test(
+    NAME SimulationUnitTest
+    COMMAND test_u_sim
+)
 
 # --------------------------------------------------
 # Ensure testing before each build
 # --------------------------------------------------
 
 # Custom Target to execute tests
-#add_custom_target(run_tests
-#    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-#    DEPENDS test_playlist
-#    COMMENT "Running unit tests"
-#)
+add_custom_target(run_tests
+    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+    DEPENDS test_u_vis
+    DEPENDS test_u_cli
+    DEPENDS test_u_sim
+    COMMENT "Running unit tests"
+)
 
 # --------------------------------------------------
 #  Main
 # --------------------------------------------------
 
-add_executable(test src/test.c)
+add_executable(main src/main.c)
 
-target_link_libraries(test SDL3::SDL3)
-target_link_libraries(test SDL3_ttf::SDL3_ttf)
 
 # Executable
-#add_executable(playlist_app
-#    main.c
-#    src/playlist.c
-#)
+add_executable(tot_simulation
+    src/main.c
+    src/car/car_lib.c
+    src/cli/cli_lib.c
+    src/config/config_lib.c
+    src/file_manager/file_manager_lib.c
+    src/queue/queue_lib.c
+    src/statistics_gui/statistics_output_lib.c
+    src/simulation_loop.c
+)
 
-#target_link_libraries(playlist_app
-#    playlist
-#)
+target_link_libraries(tot_simulation car cli config file_manager queue statistics_output simulation_loop SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+
 
 # only build main if tests successful
-#add_dependencies(playlist_app run_tests)
+add_dependencies(tot_simulation run_tests)

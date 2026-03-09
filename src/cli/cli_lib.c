@@ -46,11 +46,12 @@ struct configure_map config_table[] = {
   @return 0 if successful, otherwise 1
  */
 int read_user_input(char *p_input) {
-    if (!fgets(p_input, 255, stdin)) {
+    if (!scanf("%255[^\n]%*c", p_input)) {
         // Error handling - TODO
-        printf("Invalid user imput\n");
+        printf("Error uwu");
         return 1;
     }
+    
     return 0;
 }
 
