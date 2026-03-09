@@ -108,4 +108,5 @@ void clear_queue(t_Queue *queue) {
     }
 
     free (queue);
+    *queue = NULL;
 }
