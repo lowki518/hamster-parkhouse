@@ -1,5 +1,9 @@
+//#include "cli.h"
 #include "cli.h"
+#include <string.h>
 #include <stdio.h>
+#include "../include/config.h"
+
 
 
 /*
@@ -12,10 +16,9 @@
 int read_user_input(char *p_input) {
     if (!scanf("%255[^\n]%*c", p_input)) {
         // Error handling - TODO
-        printf("Error uwu");
+        printf("Error");
         return 1;
     }
-    
     return 0;
 }
 
@@ -27,6 +30,28 @@ int read_user_input(char *p_input) {
   @return 0 if successful, otherwise 1
  */
 int handle_user_input(char *p_input) {
+    // Our commands are at most 2 words long. 
+    // first: split input by space and remove all whitespace
+    char *first_arg = strtok(p_input, " ");
+    char *second_arg = strtok(NULL, "");
+
+
+    // Switch case does not work for strings, only ints (or chars).
+    // Thus we use if else construction with strcmp.
+    // Hashtable might also be possible but might also be overkill. 
+    if (!strcmp(first_arg, "quit")) {
+        // TODO: Implement Quitting
+        printf("Quitting");
+        return 0;
+    } else if (!strcmp(first_arg, "start")) {
+        // TODO: Implement Starting simulation
+        printf("Start simulation");
+        return 0;
+    } else if (!strcmp(first_arg, "help")) {
+        print_help();
+        return 0;
+    }
+    printf("Input was invalid. Please try again. ");
     /*
     input_array = split input by "space"    
 
@@ -45,6 +70,7 @@ int handle_user_input(char *p_input) {
         default: 
             print "Did not understand", help menu
     */
+
     return 0;
 }
 
@@ -53,9 +79,11 @@ int handle_user_input(char *p_input) {
  
   @return void
  */
+
 void print_help() {
     // Print all the possible commands and usage
     // TODO: make nice looking menu for that
+    printf("Hello, I am under da water. Please help.");
 }
 
 /*
@@ -68,6 +96,7 @@ void print_help() {
  */
 void print_config() {
     // print all name and values of config_variables in a nice fashion
+    printf("All names and values in a nice fashion");
 }
 
 
@@ -76,6 +105,7 @@ void print_config() {
 
   @return void
  */
+
 void start_menu() {
     // Standard text visualisation
     printf("Hello, this will be our start menu. ");
@@ -86,4 +116,11 @@ void start_menu() {
     // read and handle user input
     char *user_input; // do we need to m/calloc?
     read_user_input(user_input);
+}
+
+int main() {
+    char input[256];
+    read_user_input(input);
+    handle_user_input(input);
+    return 0;
 }
