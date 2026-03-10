@@ -1,11 +1,10 @@
 //#include "cli.h"
-#include "cli.h"
+#include "../../include/cli.h"
 #include <string.h>
 #include <stdio.h>
 //#include "../include/config.h"
 
-// This probably should be put into the cli.h file, but doing that later. 
-// since I'm using t_Time it will not compile either way because of course... >:(
+// this function is just so I can try quitting.
 void print_quit() {
     printf("quit");
 }

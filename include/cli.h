@@ -1,7 +1,7 @@
 #ifndef CLI 
 #define CLI
 
-#include "../data_types.h"
+#include "data_types.h"
 
 // Union of all argument types possible in command functions
 typedef union {
