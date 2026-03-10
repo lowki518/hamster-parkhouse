@@ -56,6 +56,13 @@ int handle_user_input(char * input);
 void start_menu();
 
 
+/*
+  @brief Print looped menu (UI) and wait for user input
+
+  @return void
+ */
+void looped_menu();
+
 /* 
   @brief Print command overview
  
