@@ -2,9 +2,24 @@
 #include "cli.h"
 #include <string.h>
 #include <stdio.h>
-#include "../include/config.h"
+//#include "../include/config.h"
 
+// This probably should be put into the cli.h file, but doing that later. 
+// since I'm using t_Time it will not compile either way because of course... >:(
 
+static struct command_map command_table[6] = {
+    {"help", print_help}
+};
+// Return index of config var in config variable names array if any, else -1.
+static int which_config_variable(char *input) {
+    // 6 because it is the size of the config variable name array
+    for (int i = 0; i < 6; i++) {
+        if (!strcmp(input, config_variable_names[i])) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 /*
   @brief Read user input and error handling for bad input
@@ -50,7 +65,7 @@ int handle_user_input(char *p_input) {
     } else if (!strcmp(first_arg, "help")) {
         print_help();
         return 0;
-    }
+    } else if (!strcmp(const char *s1, const char *s2))
     printf("Input was invalid. Please try again. ");
     /*
     input_array = split input by "space"    
@@ -80,9 +95,10 @@ int handle_user_input(char *p_input) {
   @return void
  */
 
-void print_help() {
+void print_help(Command_Arg* arg) {
     // Print all the possible commands and usage
     // TODO: make nice looking menu for that
+    (void)arg;
     printf("Hello, I am under da water. Please help.");
 }
 
@@ -94,7 +110,7 @@ void print_help() {
 
   @return void
  */
-void print_config() {
+void print_config(Command_Arg* arg) {
     // print all name and values of config_variables in a nice fashion
     printf("All names and values in a nice fashion");
 }

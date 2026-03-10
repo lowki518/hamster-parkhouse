@@ -1,6 +1,26 @@
 #ifndef CLI 
 #define CLI
 
+// Union of all argument types possible in command functions
+typedef union {
+    int int_config;
+    t_Time time_config;
+    float float_config;
+    char * path_config;
+    void *nothing;
+} Command_Arg;
+
+// Structure for a mapping from string (command input) to a function
+// with Command_Arg type argument
+struct command_map {
+    char *config_name;
+    int (*p_config_change)(Command_Arg arg);
+};
+
+
+
+
+
 /*
   @brief Read user input and error handling for bad input
   
