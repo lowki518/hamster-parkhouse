@@ -6,20 +6,16 @@
 
 // This probably should be put into the cli.h file, but doing that later. 
 // since I'm using t_Time it will not compile either way because of course... >:(
-
-static struct command_map command_table[6] = {
-    {"help", print_help}
-};
-// Return index of config var in config variable names array if any, else -1.
-static int which_config_variable(char *input) {
-    // 6 because it is the size of the config variable name array
-    for (int i = 0; i < 6; i++) {
-        if (!strcmp(input, config_variable_names[i])) {
-            return i;
-        }
-    }
-    return -1;
+void print_quit() {
+    printf("quit");
 }
+
+static struct print_map print_table[3] = {
+    {"help", print_help},
+    {"config", print_config},
+    {"quit", print_quit}
+};
+
 
 /*
   @brief Read user input and error handling for bad input
@@ -51,22 +47,24 @@ int handle_user_input(char *p_input) {
     char *second_arg = strtok(NULL, "");
 
 
-    // Switch case does not work for strings, only ints (or chars).
-    // Thus we use if else construction with strcmp.
-    // Hashtable might also be possible but might also be overkill. 
-    if (!strcmp(first_arg, "quit")) {
-        // TODO: Implement Quitting
-        printf("Quitting");
-        return 0;
-    } else if (!strcmp(first_arg, "start")) {
-        // TODO: Implement Starting simulation
-        printf("Start simulation");
-        return 0;
-    } else if (!strcmp(first_arg, "help")) {
-        print_help();
-        return 0;
-    } else if (!strcmp(const char *s1, const char *s2))
-    printf("Input was invalid. Please try again. ");
+    // Function pointers are fucking awesome lol
+    // iterate first over table of print functions, then over table of config changers
+    for (int i = 0; i < (sizeof(print_table) / sizeof(print_table[0])); i++) {
+        if (!strcmp(first_arg, print_table[i].print_name)) {
+            print_table[i].p_print_fun();
+            return 0;
+        }
+    }
+    /*
+    for (int i = 0; i < (sizeof(config_table) / sizeof(config_table[0])); i++) {
+        if (!strcmp(first_arg, config_table[i].config_name)) {
+            config_table[i].p_config_fun(second_arg);
+            return 0;
+        }
+    }
+    */
+    printf(" \"\"\" %s \"\"\" did not fit any known command. ", first_arg);
+    return 1;
     /*
     input_array = split input by "space"    
 
@@ -85,8 +83,6 @@ int handle_user_input(char *p_input) {
         default: 
             print "Did not understand", help menu
     */
-
-    return 0;
 }
 
 /* 
@@ -95,11 +91,25 @@ int handle_user_input(char *p_input) {
   @return void
  */
 
-void print_help(Command_Arg* arg) {
+void print_help() {
     // Print all the possible commands and usage
     // TODO: make nice looking menu for that
-    (void)arg;
-    printf("Hello, I am under da water. Please help.");
+    printf("How to use: \n"
+    "> help         print help menu (this menu)\n"
+    "> config       print all configs and their values\n"
+    "> start        start the simulation with chosen configs\n"
+    "> ...\n"
+    "To change configs: \n"
+    "> $config_name $new_value\n"
+    "Allowed types for configurations: \n"
+    "   - max_car_cells     unsigned int, e.g. 100\n"
+    "   - max_parking_time  unsigned int, e.g. 20\n"
+    "   - simulation_time   unsigned int, e.g. 200\n"
+    "   - car_probability   float, e.g. 0.5\n"
+    "   - random_seed       int, e.g. 12308964\n"
+    "   - output_path       string describing path, e.g. output/my_file_name\n"
+    );
+
 }
 
 /*
@@ -110,11 +120,11 @@ void print_help(Command_Arg* arg) {
 
   @return void
  */
-void print_config(Command_Arg* arg) {
+void print_config() {
     // print all name and values of config_variables in a nice fashion
+    // need to know how to get to the values: global vars? or not?
     printf("All names and values in a nice fashion");
 }
-
 
 /*
   @brief Print start menu (UI) and wait for user input

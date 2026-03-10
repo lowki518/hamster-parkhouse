@@ -103,3 +103,22 @@ int main() {
     return 0;
 }
 ```
+Change of plans: I found out that c has function pointers. 
+
+Since switch case doesn't work for strings (only for ints and chars which are kinda the same thing) we have to choose another way. 
+
+For that we build up a table of key-value pairs with key as string-type and value as function-type. 
+
+We save these pairs in an array and for each input we check each pair until we find a match and run the specified function. 
+
+It had to be split into print functions with void return type and config changers with return type int, because different return types and argument types are just dumb to implement. We will first iterate over the print table and then over the config changer table. 
+
+## How do we get to config values?
+Since we have to be able to first of all change the configs (in configs.c) and also print them we have to have a way of reading them. 
+
+This has to be discussed as it is not clear to me. 
+
+I see two possibilities: 
+
+1. We define getter and setter functions for each variable, in which we have to give over a pointer to the variable or
+2. We define the variables/structs as global variables so that we can directly change them. 
