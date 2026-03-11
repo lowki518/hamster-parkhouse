@@ -1,5 +1,5 @@
 #include "../../include/data_types.h"
-#include "../../include/config.h"
+#include "../../include/config_lib.h"
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>

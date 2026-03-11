@@ -22,14 +22,17 @@ void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time) {
 @brief Unparks a car from its allocated parking cell
 
 @param[1] cell A pointer to the cell of the car
+@param[2] park A pointer to the car park
 
 @return void
 */
-void unpark_car(t_Parking_Cell *cell) {
+void unpark_car(t_Parking_Cell *cell, t_Car_Park *park) {
 
     free(cell->p_car_in_cell);
 
     cell->p_car_in_cell = NULL;
+
+    park->free_parking_cells++;
 
 }
 

@@ -10,6 +10,7 @@
 @param[2] cell A pointer to the parking cell where the car should be parked
 @param[3] time The current time
 
+//TODO rewrite function to automatically iterate
 @return  void
 */
 void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time);
@@ -19,10 +20,13 @@ void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time);
 @brief Unparks a car from its allocated parking cell
 
 @param[1] cell A pointer to the cell of the car
+@param[2] park A pointer to the car park
+
+//TODO rewrite function to automatically iterate
 
 @return void
 */
-void unpark_car(t_Parking_Cell *cell);
+void unpark_car(t_Parking_Cell *cell, t_Car_Park *park);
 
 
 /*

@@ -1,19 +1,30 @@
-#include "../../include/cli.h"
-#include "../../include/config.h"
+#include "../../include/cli_lib.h"
+#include "../../include/config_lib.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
+int quit = FALSE;
+int start = FALSE;
+
 // this function is just so I can try quitting.
-void print_quit() {
-    printf("quit backslash n");
+void return_quit() {
+    printf("Quiting...\n");
+    quit = TRUE;
+}
+
+void return_start() {
+    printf("Starting simulation...\n");
+    quit = TRUE;
+    start = TRUE;
 }
 
 // Map for print functions
 static struct print_map print_table[3] = {
     {"help", print_help},
     {"config", print_config},
-    {"quit", print_quit}
+    {"quit", return_quit},
+    {"start", return_start}
 };
 // Map for configuration changer functions
 struct configure_map config_table[] = {
@@ -143,8 +154,6 @@ void start_menu() {
     // Standard text visualisation
     printf("Hello, this will be our start menu.\n");
     print_help();
-    
-    looped_menu();
 }
 
 
@@ -158,4 +167,5 @@ void looped_menu() {
     char *user_input; // do we need to m/calloc?
     printf("Please enter your command: \n> ");
     read_user_input(user_input);
+    handle_user_input(user_input);
 }

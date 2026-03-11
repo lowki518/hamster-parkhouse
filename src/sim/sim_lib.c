@@ -1,4 +1,5 @@
-#include "../../include/init_lib.h"
+#include "../../include/sim_lib.h"
+#include "../../include/config_lib.h"
 #include <stdlib.h>
 
 
@@ -65,4 +66,49 @@ void clear_car_park(t_Car_Park *car_park) {
     }
 
     free(car_park);
+}
+
+/*
+@brief The complete setup of the full simulation
+
+@param[1] time_steps User defined number of time steps (length of sim)
+
+@return void
+*/
+void start_simulation (t_Time time_steps) {
+
+    t_Car_Park *park = init_car_park(max_car_cells);
+    t_Parking_Cell *cell = park->first_parking_cell;
+    
+    for (int i = 0; i <= time_steps; i++) {
+        
+    }
+    
+
+    /*
+    print_simulation_data()
+
+        FOR i FROM 0 To time_steps {
+
+            FOR EVERY parking_cell {
+                IF CELL IS FREE -> continue
+
+                IF IS PARKING TIME OVER? THEN
+                    car_leaves()
+                    CELL = FREE
+            }
+
+            IF CAR IS WAITING IN QUEUE THEN
+                check_free_parking_cells() -> car_parks()
+
+            IF A NEW CAR ARRIVES THEN
+                check_free_parking_cells() -> car_parks()
+                ELSE go_into_queue()
+
+            print_timestep_data()
+            save_timestep_data()
+        }
+
+        visualize_total_data()
+    */
 }
