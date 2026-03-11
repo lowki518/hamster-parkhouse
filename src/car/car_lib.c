@@ -1,5 +1,5 @@
-#include "car_lib.h"
-#include "../data_types.h"
+#include "../../include/car_lib.h"
+#include "../../include/data_types.h"
 #include <stdio.h>
 
 /*
@@ -7,31 +7,28 @@
 
 @param[1] car A pointer to the car that needs to be parked
 @param[2] cell A pointer to the parking cell where the car should be parked
+@param[3] time The current time
 
 @return  void
 */
-void park_car (t_Car *car, t_Parking_Cell *cell) {
-    cell->car_in_cell = *car;
-    
-    car->cell_index = *cell;
+void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time) {
+    cell->car_in_cell = car;
+    car->start_parking_time = time;
 }
 
 
 /*
 @brief Unparks a car from its allocated parking cell
 
-@param[1] car A pointer to the car that should be unparked
-@param[2] cell A pointer to the cell of the car
+@param[1] cell A pointer to the cell of the car
 
 @return void
 */
-void unpark_car(t_Car *car, t_Parking_Cell *cell) {
-    // car leaves
+void unpark_car(t_Parking_Cell *cell) {
 
-    cell->is_free = TRUE;  // cell is emptied
-    
-    free(*car); 
-    free (car);
+    free(cell->car_in_cell);
+
+    cell->car_in_cell = NULL;
 
 }
 
@@ -42,26 +39,29 @@ void unpark_car(t_Car *car, t_Parking_Cell *cell) {
 The generating of a new car is based on the users choice of arrival chances in percentage.
 
 @param[1] percentage The users choice of arrival chances
-@param[2] lastID The last ID given to a car
+@param[2] id A pointer to the ID for the car
+@param[3] max_parking The maximum allowed parking time
 
 @return  the car or not
 */
-t_Car * car_arrives (float percentage, t_Time max_parking) {
+t_Car * car_arrives (float percentage, unsigned int *id, t_Time max_parking) {
     
-    //if rand nr 0-100 is smaller than the car arrival chances, a car arrives
-    if (((rand()%(10000+1))/100) =< percentage) {
+    //generates random number between 0 and 10000 abd converts percentage to int
+    int rand = rand() % 10001;
+    if (rand <= (int) (percentage*100)) {
         t_Car *new_car = malloc(sizeof(t_Car));
         if(!t_Car) {
             return NULL;
         }
 
-        new_car->id = g_id;
-        g_id++;
+        new_car->id = *id;
+        (*id)++;
 
         new_car->parking_time = rand()%(max_parking + 1);
 
         return new_car;
     }
+    return NULL;
 }
 
 /*

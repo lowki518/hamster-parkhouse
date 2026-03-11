@@ -1,5 +1,5 @@
-#include "../data_types.h"
-#include "file_manager_lib.h"
+#include "../../include/data_types.h"
+#include "../../include/file_manager_lib.h"
 #include <stdlib.h>
 #include <dirent.h>
 #include <stdio.h>
@@ -7,11 +7,9 @@
 /*
 @brief Gets the number (Simulation_X.txt) of the last file in results.
 
-@param[1] folder A pointer to the folder to check
-
 @return Returns the number of the last file
 */
-int get_new_file_number(const char *folder) {
+int get_new_file_number() {
     const char *folder = "../data";
     
     DIR *dir = opendir(folder);  //go to folder
@@ -135,6 +133,14 @@ void append_data_per_timestep (int new_file_number, t_Time timestep, int cars_pa
 }
 
 
+
+
+
+
+//possibly not necessary as the configs should also be saved in the simulations file
+
+
+
 /*
 @brief writes the new config data into the config file.
 
@@ -146,7 +152,7 @@ void append_data_per_timestep (int new_file_number, t_Time timestep, int cars_pa
 @param[6] seed The seed used to generate the randomness within the simulation.
 
 @return void
-*/
+
 void write_config_data (int parking_cells, t_Time max_parking_duration, t_Time sim_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
     char sim_duration_s[] = "Simulated Steps";
     char parking_cells_s[] = "Parking Cells";
@@ -169,17 +175,27 @@ void write_config_data (int parking_cells, t_Time max_parking_duration, t_Time s
 
     fclose(fptr);
 
-    /*
+    
     file = OPEN CONFIG FILE
         FOR DATA in File                        //why do we need a FOR loop? can't we just write in the file (automaticlaly deletes the old stuff anyways)
             DATA (in File) = NEW DATA
         END FOR
     CLOSE file
-    */
+    
 }
 
 
-/*
+
+
+
+
+// needs to either be deleted or done at the verrryyyy end
+
+
+
+
+
+
 @brief Reads the config file
 
 @param[1] parking_cells A pointer to where the amount of parking cells will be stored.
@@ -190,7 +206,7 @@ void write_config_data (int parking_cells, t_Time max_parking_duration, t_Time s
 @param[6] seed A pointer to where the seed will be stored.
 
 @return void
-*/
+
 void read_config_data (int *parking_cells, t_Time *max_parking_duration, t_Time *sim_duration, float *new_car_prob, int *max_cars_arriving, unsigned int *seed) {
 
     /*
@@ -199,6 +215,8 @@ void read_config_data (int *parking_cells, t_Time *max_parking_duration, t_Time 
             *data = DATA FROM FILE
         END FOR
     close file
-    */
+    
 
  }
+
+ */

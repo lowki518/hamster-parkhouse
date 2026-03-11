@@ -1,28 +1,28 @@
 #ifndef CAR_LIB_H
 #define CAR_LIB_H
 
-#include "../data_types.h"
+#include "data_types.h"
 
 /*
 @brief parks a car in an allocated parking cell
 
 @param[1] car A pointer to the car that needs to be parked
 @param[2] cell A pointer to the parking cell where the car should be parked
+@param[3] time The current time
 
 @return  void
 */
-void park_car (t_Car *car, t_Parking_Cell *cell);
+void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time);
 
 
 /*
 @brief Unparks a car from its allocated parking cell
 
-@param[1] car A pointer to the car that should be unparked
-@param[2] cell A pointer to the cell of the car
+@param[1] cell A pointer to the cell of the car
 
 @return void
 */
-void unpark_car(t_Car *car, t_Parking_Cell *cell);
+void unpark_car(t_Parking_Cell *cell);
 
 
 /*
@@ -31,7 +31,8 @@ void unpark_car(t_Car *car, t_Parking_Cell *cell);
 The generating of a new car is based on the users choice of arrival chances in percentage.
 
 @param[1] percentage The users choice of arrival chances
-@param[2] lastID The last ID given to a car
+@param[2] id A pointer to the ID for the car
+@param[3] max_parking The maximum allowed parking time
 
 @return  the car or not
 */

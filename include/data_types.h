@@ -26,6 +26,14 @@ typedef enum {
 // Time as unsigned int for better overview
 typedef unsigned int t_Time;
 
+// Parking_Cell Struct
+// Pointer to the car in the cell
+// Pointer to next cell
+typedef struct {
+    t_Car *p_car_in_cell;
+    struct t_Parking_Cell *pNext;
+} t_Parking_Cell;
+
 
 // Car_Park Struct
 // Number of parking cells
@@ -42,18 +50,14 @@ typedef struct {
 
 // Car struct
 // Unique ID
-// Cell index
 // Brand of the car
 // How long the car will park
 // When the car started parking
 typedef struct {
     int id;
-    int cell_index; // should be -1 when car is in queue
     Car_Brand brand; 
-
     t_Time parking_time;
     t_Time start_parking_time;
-
 } t_Car;
 
 
@@ -71,18 +75,10 @@ typedef struct {
 // Pointer to first node
 typedef struct {
     int q_length; 
-    t_Car_Node *first_pos;
-    t_Car_Node *last_pos;     //added tail to our queue
+    t_Car_Node *p_first_pos;
+    t_Car_Node *p_last_pos;     //added tail to our queue
 } t_Queue;
 
-
-// Parking_Cell Struct
-// (Boolean) Is the cell free
-// Pointer to the car in the cell
-typedef struct {
-    int is_free;
-    t_Car *car_in_cell;
-} t_Parking_Cell;
 
 
 #endif
