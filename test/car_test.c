@@ -17,13 +17,13 @@ void test_car_arrives() {
 
     assert(car->id == 0);
     assert(car->parking_time <= 50);
-    assert(0 <= car->brand <= 26);
+    assert(0 <= car->brand <= 26); // 26 is the number of brands
 
     t_Car *car_2 = car_arrives(100.00f, id, 20);
 
     assert(car_2->id == 1);
     assert(car->parking_time <= 20);
-    assert(0 <= car_2->brand <= 26);
+    assert(0 <= car_2->brand <= 26); // 26 is the number of brands
 
     free(car);
     free(car_2);
