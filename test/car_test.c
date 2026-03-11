@@ -6,19 +6,27 @@
 
 
 
-
 /*
 @brief tests the car_arrives function
 */
 void test_car_arrives() {
-    g_id = 0;
+    unsigned int *id;
+    *id = 0;
 
-    t_Car *car = car_arrives(100.00f, 50);
+    t_Car *car = car_arrives(100.00f, id, 50);
 
     assert(car->id == 0);
     assert(car->parking_time <= 50);
+    assert(0 <= car->brand <= 26);
+
+    t_Car *car_2 = car_arrives(100.00f, id, 20);
+
+    assert(car_2->id == 1);
+    assert(car->parking_time <= 20);
+    assert(0 <= car_2->brand <= 26);
 
     free(car);
+    free(car_2);
 
 }
 
@@ -27,8 +35,10 @@ void test_car_arrives() {
 @brief tests the check_parking_time function
 */
 void test_check_parking_time() {
+    unsigned int *id;
+    *id = 0;
 
-    t_Car *car = car_arrives(100.00f, 50);
+    t_Car *car = car_arrives(100.00f, id, 50);
     car->parking_time = 50;
     car->start_parking_time = 50;
 
