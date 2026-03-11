@@ -26,6 +26,19 @@ typedef enum {
 // Time as unsigned int for better overview
 typedef unsigned int t_Time;
 
+
+// Car struct
+// Unique ID
+// Brand of the car
+// How long the car will park
+// When the car started parking
+typedef struct {
+    int id;
+    Car_Brand brand; 
+    t_Time parking_time;
+    t_Time start_parking_time;
+} t_Car;
+
 // Parking_Cell Struct
 // Pointer to the car in the cell
 // Pointer to next cell
@@ -33,7 +46,6 @@ typedef struct {
     t_Car *p_car_in_cell;
     struct t_Parking_Cell *pNext;
 } t_Parking_Cell;
-
 
 // Car_Park Struct
 // Number of parking cells
@@ -48,18 +60,6 @@ typedef struct {
 } t_Car_Park;
 
 
-// Car struct
-// Unique ID
-// Brand of the car
-// How long the car will park
-// When the car started parking
-typedef struct {
-    int id;
-    Car_Brand brand; 
-    t_Time parking_time;
-    t_Time start_parking_time;
-} t_Car;
-
 
 // Car_Node Struct
 // Pointer to cointained car
@@ -73,10 +73,11 @@ typedef struct {
 // Queue struct
 // Length of queue
 // Pointer to first node
+// Pointer to last node
 typedef struct {
     int q_length; 
     t_Car_Node *p_first_pos;
-    t_Car_Node *p_last_pos;     //added tail to our queue
+    t_Car_Node *p_last_pos;
 } t_Queue;
 
 

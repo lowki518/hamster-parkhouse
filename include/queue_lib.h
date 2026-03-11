@@ -26,9 +26,9 @@ t_Queue *init_queue();
 
 @param[1] queue A pointer to the queue to dequeue from.
 
-@return void
+@return the car that leaves the queue
 */
-void de_queue(t_Queue *queue);
+t_Car *de_queue(t_Queue *queue);
 
 
 /*
@@ -39,7 +39,7 @@ void de_queue(t_Queue *queue);
 
 @return void
 */
-void en_queue(t_Queue *queue, t_Car *node);
+void en_queue(t_Queue *queue, t_Car *car);
 
 
 /*

@@ -7,12 +7,13 @@
 /*
 @brief Gets the number (Simulation_X.txt) of the last file in results.
 
+@param[1] folder The path to the folder to search in
+
 @return Returns the number of the last file
 */
-int get_new_file_number() {
-    const char *folder = "../data";
+int get_new_file_number(char *folder) {
     
-    DIR *dir = opendir(folder);  //go to folder
+    DIR *dir = opendir(*folder);  //go to folder
 
     struct dirent *past_sim;  //pointer to files in folder
     int max_file_nr = 0;
@@ -41,28 +42,27 @@ int get_new_file_number() {
 /*
 @brief Creates the new file for saving the simulation data with the sim. parameters.
 
-@param[1] new_file_number The number of the File to write.
-@param[2] sim_duration The total amount of time steps done.
-@param[3] parking_cells The amount of parking_spaces.
-@param[4] max_parking_duration The maximum parking time for the cars.
-@param[5] new_car_prob The probability of a new car arriving (in percent).
-@param[6] max_cars_arriving How many cars can arrive in a simulation step.
-@param[7] seed The seed used to generate randomness within this simulation.
+@param[1] path The path to the folder to save the file in
+@param[2] new_file_number The number of the File to write.
+@param[3] sim_duration The total amount of time steps done.
+@param[4] parking_cells The amount of parking_spaces.
+@param[5] max_parking_duration The maximum parking time for the cars.
+@param[6] new_car_prob The probability of a new car arriving (in percent).
+@param[7] max_cars_arriving How many cars can arrive in a simulation step.
+@param[8] seed The seed used to generate randomness within this simulation.
 
 @return void
 */
-void create_new_file_with_head_data (int new_file_number, t_Time sim_duration, int parking_cells, t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
-    char filename[50];
+void create_new_file_with_head_data (char *path,int new_file_number, t_Time sim_duration, int parking_cells, t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
+    char filename[60];
 
-    sprintf(filename, "Simulation_%d.txt", new_file_number);
+    sprintf(filename, "%sSimulation_%d.txt", *path, new_file_number);
 
-    FILE *fptr;                 //can I use the same fptr?
-    fptr = fopen(filename, "w");
+    FILE *fptr = fopen(filename, "w");
     if (fptr == NULL) {
-        printf("Error creating file");
+        printf("Error creating file.\n");
         return 1;
-    }
-    fclose(fptr);    
+    }   
     
     char sim_duration_s[] = "Simulated Steps";
     char parking_cells_s[] = "Parking Cells";
@@ -79,7 +79,6 @@ void create_new_file_with_head_data (int new_file_number, t_Time sim_duration, i
     char tot_sim_car_s[] = "Cars Simulated";
     char most_brand_s[] = "Most Brand";
 
-    fptr = fopen(filename, "w");
 
     fprintf(fptr, "\n");
     fprintf(fptr, "Simulation Nr. %i:\n", new_file_number);
@@ -88,16 +87,10 @@ void create_new_file_with_head_data (int new_file_number, t_Time sim_duration, i
     fprintf(fptr, "|%15s|%15s|%19s|%15s|%15s|%15s|\n", sim_duration_s, parking_cells_s, max_parking_duration_s, new_car_prob_s, max_cars_arriving_s, seed_s);
     fprintf(fptr, "|%15i|%15i|%19i|%14.2f%%|%15i|%15i|\n", sim_duration, parking_cells, max_parking_duration, new_car_prob, max_cars_arriving, seed);
     
-    fprintf(fptr, "\n");
-
+    fprintf(fptr, "\n\n");
     fprintf(fptr, "|%15s|%15s|%19s|%15s|%15s|%15s|%15s|\n", curr_step_s, curr_cars_s, avg_time_s, q_len_s, full_house_s, tot_sim_car_s, most_brand_s);
-
+    
     fclose(fptr);
-    /*
-    file = CREATE NEW FILE BY NUMBER
-        WRITE HEADER data IN file
-    CLOSE file
-    */
 }
 
 /*
@@ -114,22 +107,20 @@ void create_new_file_with_head_data (int new_file_number, t_Time sim_duration, i
 
 @return void
 */
-void append_data_per_timestep (int new_file_number, t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) {
-    FILE *fptr;
+void append_data_per_timestep (char *path, int new_file_number, t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) {
+    char filename[60];
 
-    fptr = fopen(filename, "a");     //still unnsure on how to pass the filename along to other functions
-    
-    
+    sprintf(filename, "%sSimulation_%d.txt", *path, new_file_number);
+
+    FILE *fptr = fopen(filename, "a");     
+    if (fptr == NULL) {
+        printf("Error opening file.\n");
+        return 1;
+    }
+
     fprintf(fptr, "|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
-    fprintf(fptr, "\n");
-
+    
     fclose(fptr);
-
-    /*
-    file = OPEN FILE BY NUMBER
-        PRINT IN FILE : DATA
-    CLOSE FILE
-    */
 }
 
 
