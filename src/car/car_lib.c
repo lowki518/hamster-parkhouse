@@ -43,7 +43,7 @@ The generating of a new car is based on the users choice of arrival chances in p
 @param[2] id A pointer to the ID for the car
 @param[3] max_parking The maximum allowed parking time
 
-@return  the car or not
+@return the car or not
 */
 t_Car * car_arrives (float percentage, unsigned int *id, t_Time max_parking) {
     
@@ -58,7 +58,12 @@ t_Car * car_arrives (float percentage, unsigned int *id, t_Time max_parking) {
         new_car->id = *id;
         (*id)++;
 
-        new_car->parking_time = rand()%(max_parking + 1);
+        // generates a random value between 0 and max_parking
+        new_car->parking_time = rand() % (max_parking + 1);
+
+        // generates a random value between 0 and 26 (Number of car brands)
+        // -> generates a random brand for the car
+        new_car->brand = rand() % (27);
 
         return new_car;
     }
