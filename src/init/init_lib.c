@@ -7,7 +7,7 @@
 
 @return new cell
 */
-t_Parking_Cell *new_cell() {
+t_Parking_Cell *init_new_cell() {
     t_Parking_Cell *new_cell = malloc(sizeof(*new_cell));
     if (!new_cell) {
         return NULL;
@@ -65,4 +65,5 @@ void clear_car_park(t_Car_Park *car_park) {
     }
 
     free(car_park);
+    car_park = NULL;
 }

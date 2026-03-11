@@ -1,5 +1,6 @@
 #include "../include/car_lib.h"
 #include "../include/data_types.h"
+#include "../include/init_lib.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,7 +30,15 @@ void test_car_arrives() {
     free(car_2);
 
 }
+^
 
+void test_park_car() {
+    init_car_park();
+    car_arrives();
+
+    assert(cell->p_car_in_cell == car)
+
+}
 
 /*
 @brief tests the check_parking_time function
