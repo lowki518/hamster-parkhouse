@@ -42,21 +42,19 @@ typedef struct {
 // Parking_Cell Struct
 // Pointer to the car in the cell
 // Pointer to next cell
-typedef struct {
+typedef struct Parking_Cell{
     t_Car *p_car_in_cell;
-    struct t_Parking_Cell *pNext;
+    struct Parking_Cell *pNext;
 } t_Parking_Cell;
 
 // Car_Park Struct
 // Number of parking cells
 // Number of free parking cells
-// Maximum parking duration
 // Pointer to first parking cell 
 typedef struct {
     int max_parking_cells; 
     int free_parking_cells;
-    t_Time max_parking_duration; 
-    //t_Parking_Cell *first_parking_cell; // comment for review: it don't already know t_Parking_Cell here, it is first defined later!!!
+    t_Parking_Cell *first_parking_cell;
 } t_Car_Park;
 
 
