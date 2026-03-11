@@ -32,7 +32,7 @@ t_Queue *init_queue() {
         return NULL;
     }
  
-    queue->q_length = NULL;
+    queue->q_length = 0;
 
     queue->p_first_pos = NULL;
     queue->p_last_pos = NULL;
