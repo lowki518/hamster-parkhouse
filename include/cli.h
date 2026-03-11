@@ -4,6 +4,7 @@
 #include "data_types.h"
 #include <stdint.h>
 
+
 // Union of all argument types possible in command functions
 typedef union {
   uint8_t int_config;

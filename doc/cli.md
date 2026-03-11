@@ -123,3 +123,8 @@ I see two possibilities:
 
 1. We define getter and setter functions for each variable, in which we have to give over a pointer to the variable or
 2. We define the variables/structs as global variables so that we can directly change them. 
+
+## A decision has been made:
+After short discussion with the team we will now declare the configurables as global variables in config.c and as extern variables in config.h. 
+
+That way everyone can use them and their values. 

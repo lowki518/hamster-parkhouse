@@ -9,19 +9,21 @@ void print_quit() {
     printf("quit");
 }
 
+// Map for print functions
 static struct print_map print_table[3] = {
     {"help", print_help},
     {"config", print_config},
     {"quit", print_quit}
 };
-
-struct configure_map config_table[8] = {
+// Map for configuration changer functions
+struct configure_map config_table[] = {
     {"max_car_cells", change_max_car_cells},
     {"max_parking_time", change_max_parking_time},
     {"simulation_time", change_sim_time},
     {"car_probability", change_car_probability},
     {"random_seed", input_random_seed},
-    {"output_path"}
+    {"output_path", change_output_path}, 
+    {"max_cars_per_ts", change_max_cars_per_ts}
 };
 
 
@@ -105,9 +107,6 @@ void print_help() {
 /*
   @brief Print configs + value
  
-  @param[1] p_<config_variable> A pointer to config variable 
-  ...
-
   @return void
  */
 void print_config() {
@@ -116,17 +115,21 @@ void print_config() {
     // TODO: how to get config vars? all complete?
     printf("Overview of all configurables: \n"
     "max_car_cells - defines how big the carpark is:\n"
-    "value: ...\n"
+    "value: %i\n"
     "max_parking_time - defines how long cars are allowed to stay \n"
-    "value: ...\n"
+    "value: %i\n"
     "simulation_time - how many simulation steps are calculated\n"
-    "value: ...\n"
+    "value: %i\n"
     "car_probability - probability for a car to appear each simulation step\n"
-    "value: ...\n"
+    "value: %.2f\n"
     "random_seed - seed for randomness. defaults to timestamp\n"
-    "value: ...\n"
+    "value: %i\n"
     "output_path - output path for result file(s)\n"
-    "value: ...\n"
+    "value: %s\n"
+    "max_cars_per_ts - max amount of cars coming in per time step\n"
+    "value: %i", 
+    max_car_cells, max_parking_time, simulation_time, 
+    car_probability, random_seed, output_path, max_cars_per_ts
     );
 }
 
@@ -156,9 +159,10 @@ void looped_menu() {
     read_user_input(user_input);
 }
 
+/* Testing purposes:
 int main() {
     char input[256];
     read_user_input(input);
     handle_user_input(input);
     return 0;
-}
+} */

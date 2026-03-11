@@ -5,6 +5,17 @@
 #include <stdint.h>
 
 
+
+// ------- global config variable declarations --------- //
+// can add default values also btw
+extern uint8_t max_car_cells;
+extern t_Time max_parking_time;
+extern uint8_t simulation_time;
+extern float car_probability;
+extern int random_seed;
+extern char output_path[256];
+extern uint8_t max_cars_per_ts;
+
 /*
  @brief Change global variable g_simulation_time
 
@@ -52,5 +63,23 @@ int change_car_probability(char * new_car_probability);
 @return -1 for error
 */
 int input_random_seed(char * new_seed); 
+
+/*
+@brief Changes the output path for output files
+
+@param[1] new_path An input of the new output path
+
+@return -1 for error
+*/
+int change_output_path(char * new_path);
+
+/*
+@brief Changes the randomness seed
+
+@param[1] new_max_cars An input of the new amount of max cars
+
+@return -1 for error
+*/
+int change_max_cars_per_ts(char * new_max_cars);
 
 #endif

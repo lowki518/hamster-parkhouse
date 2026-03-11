@@ -1,17 +1,20 @@
 #include "../../include/data_types.h"
 #include "../../include/config.h"
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <stdint.h>
 
+
 // ------- global config variable declarations --------- //
 // can add default values also btw
-uint8_t max_car_cells;
-t_Time max_parking_time;
-uint8_t simulation_time;
-float car_probability;
-int random_seed;
-char output_path[256];
+uint8_t max_car_cells = 100;
+t_Time max_parking_time = 10;
+uint8_t simulation_time = 100;
+float car_probability = 50.0;
+int random_seed = 0;
+char output_path[256] = "output/path.txt";
+uint8_t max_cars_per_ts = 5;
 
 
 /*
@@ -91,6 +94,24 @@ int change_car_probability(char * new_car_probability) {
 int input_random_seed(char * new_seed) {
     // might also just typecast? then it will always be okay? 
     uint8_t new_value = atoi(new_seed);
+    if (!new_value) {
+        return -1;
+    }
+    random_seed = new_value;
+    return 0;
+}
+
+
+int change_output_path(char * new_path) {
+    if (!new_path) {
+        return -1;
+    }
+    strcpy(output_path, new_path);
+    return 0;
+}
+
+int change_max_cars_per_ts(char * new_max_cars) {
+    uint8_t new_value = (uint8_t)atoi(new_max_cars);
     if (!new_value) {
         return -1;
     }
