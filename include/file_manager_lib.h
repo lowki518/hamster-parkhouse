@@ -1,17 +1,15 @@
 #ifndef FILE_MANAGER_H
 #define FILE_MANAGER_H
 
-#include "../data_types.h"
+#include "data_types.h"
 
 
 /*
 @brief Gets the number (Simulation_X.txt) of the last file in results.
 
-@param[1] folder A pointer to the folder to check
-
 @return Returns the number of the last file
 */
-int get_new_file_number (const char *folder);
+int get_new_file_number ();
 
 
 /*

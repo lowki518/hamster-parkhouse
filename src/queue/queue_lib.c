@@ -1,5 +1,5 @@
-#include "queue_lib.h"    
-#include "../data_types.h"
+#include "../../include/queue_lib.h"    
+#include "../../include/data_types.h"
 #include <stdlib.h>
 
 /*
@@ -32,10 +32,10 @@ t_Queue *init_queue() {
         return NULL;
     }
  
-    queue->q_length = g_q; //global variable for queue length
+    queue->q_length = NULL;
 
-    queue->first_pos = NULL;
-    queue->last_pos = NULL;
+    queue->p_first_pos = NULL;
+    queue->p_last_pos = NULL;
 
     return queue;
 }
@@ -49,14 +49,14 @@ t_Queue *init_queue() {
 @return void
 */
 void de_queue(t_Queue *queue, t_Car_Node *node) {  //is there a better way where we dont need to include the t_Car_Node *node?if not needs to be changed in .h
-    if (queue->first_pos == NULL && queue->last_pos == NULL) {
+    if (queue->p_first_pos == NULL && queue->p_last_pos == NULL) {
         return -1;
     }
     else {
-    queue ->first_pos = node;
+    queue ->p_first_pos = node;
 
-    t_Queue *pTmp = queue->first_pos;
-    queue->first_pos = pTmp->pNext;
+    t_Queue *pTmp = queue->p_first_pos;
+    queue->p_first_pos = pTmp->pNext;
     pTmp->pNext = NULL;
     }
 
@@ -83,13 +83,13 @@ void en_queue(t_Queue *queue, t_Car_Node *node) {  //same thing here with t_Car_
 
     node->pNext = NULL;
 
-    if (queue->first_pos == NULL && queue->last_pos == NULL) {
-        queue->first_pos = node;
-        queue->last_pos = node;
+    if (queue->p_first_pos == NULL && queue->p_last_pos == NULL) {
+        queue->p_first_pos = node;
+        queue->p_last_pos = node;
     }
     else {
-        queue->last_pos->pNext = node;
-        queue->last_pos = node;
+        queue->p_last_pos->pNext = node;
+        queue->p_last_pos = node;
     }
 
 }
@@ -103,7 +103,7 @@ void en_queue(t_Queue *queue, t_Car_Node *node) {  //same thing here with t_Car_
 @return void
 */
 void clear_queue(t_Queue *queue) {
-    while (queue->first_pos != NULL) {
+    while (queue->p_first_pos != NULL) {
         de_queue(queue);
     }
 
