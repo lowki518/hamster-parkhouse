@@ -1,6 +1,6 @@
 #ifndef CONFIG
 #define CONFIG
-#include "../data_types.h"
+#include "data_types.h"
 #include <sys/types.h>
 #include <stdint.h>
 
@@ -12,7 +12,7 @@
 
  @return -1 for error
 */
-int change_sim_time(t_Time simulation_time);
+int change_sim_time(char * new_simulation_time);
 
 
 /*
@@ -23,7 +23,7 @@ int change_sim_time(t_Time simulation_time);
 
 @return -1 for error
 */
-int change_max_car_cells(uint8_t max_park_cells, t_Car_Park * car_park);
+int change_max_car_cells(char * new_max_park_cells);
 
 /*
 @brief Changing the max. parking time
@@ -33,7 +33,7 @@ int change_max_car_cells(uint8_t max_park_cells, t_Car_Park * car_park);
 
 @return -1 for error
 */
-int change_max_parking_time(t_Time max_parking_time, t_Car_Park * car_park);
+int change_max_parking_time(char * new_max_parking_time);
 
 /*
 @brief Changes the probability of car arrival
@@ -42,7 +42,7 @@ int change_max_parking_time(t_Time max_parking_time, t_Car_Park * car_park);
 
 @return -1 for error
 */
-int change_car_probability(float car_probability);
+int change_car_probability(char * new_car_probability);
 
 /*
 @brief Changes the randomness seed
@@ -51,6 +51,6 @@ int change_car_probability(float car_probability);
 
 @return -1 for error
 */
-int input_random_seed(uint8_t seed); 
+int input_random_seed(char * new_seed); 
 
 #endif

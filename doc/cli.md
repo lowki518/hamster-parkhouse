@@ -8,6 +8,7 @@ Possible to change all variables by name:
 - car_probability (float)
 - random_seed (int)
 - output path for results
+- max_cars_per_ts (uint)
 - TODO: any vars missing? 
 ```bash
 > <variable> <new_value>

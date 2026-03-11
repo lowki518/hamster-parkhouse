@@ -2,10 +2,11 @@
 #define CLI
 
 #include "data_types.h"
+#include <stdint.h>
 
 // Union of all argument types possible in command functions
 typedef union {
-  int int_config;
+  uint8_t int_config;
   t_Time time_config;
   float float_config;
   char * path_config;
@@ -16,7 +17,7 @@ typedef union {
 // with Command_Arg type argument
 struct configure_map {
     char *config_name;
-    int (*p_config_change)(Command_Arg arg);
+    int (*p_config_change)(char* arg);
 };
 
 struct print_map {

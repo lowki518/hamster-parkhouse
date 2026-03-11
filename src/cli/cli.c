@@ -1,8 +1,8 @@
-//#include "cli.h"
 #include "../../include/cli.h"
+#include "../../include/config.h"
+#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
-//#include "../include/config.h"
 
 // this function is just so I can try quitting.
 void print_quit() {
@@ -13,6 +13,15 @@ static struct print_map print_table[3] = {
     {"help", print_help},
     {"config", print_config},
     {"quit", print_quit}
+};
+
+struct configure_map config_table[8] = {
+    {"max_car_cells", change_max_car_cells},
+    {"max_parking_time", change_max_parking_time},
+    {"simulation_time", change_sim_time},
+    {"car_probability", change_car_probability},
+    {"random_seed", input_random_seed},
+    {"output_path"}
 };
 
 
@@ -54,14 +63,15 @@ int handle_user_input(char *p_input) {
             return 0;
         }
     }
-    /*
     for (int i = 0; i < (sizeof(config_table) / sizeof(config_table[0])); i++) {
         if (!strcmp(first_arg, config_table[i].config_name)) {
-            config_table[i].p_config_fun(second_arg);
+            if (config_table[i].p_config_change(second_arg)) {
+                printf("Input value \" %s \" for config %s could not be parsed. \n"
+                "No changes were made. Please try again.", second_arg, first_arg);
+            }
             return 0;
         }
     }
-    */
     printf(" \"\"\" %s \"\"\" did not fit any known command. ", first_arg);
     return 1;
 }
