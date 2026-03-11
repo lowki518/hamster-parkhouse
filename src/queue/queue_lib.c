@@ -15,7 +15,7 @@ t_Car_Node *new_Node(t_Car *car) {
         return -1;
     }
 
-    node->pCar = *car;
+    node->pCar = car;
     node->pNext = NULL;
     return node;
 }
@@ -46,25 +46,20 @@ t_Queue *init_queue() {
 
 @param[1] queue A pointer to the queue to dequeue from.
 
-@return void
+@return the car that leaves the queue
 */
-void de_queue(t_Queue *queue, t_Car_Node *node) {  //is there a better way where we dont need to include the t_Car_Node *node?if not needs to be changed in .h
-    if (queue->p_first_pos == NULL && queue->p_last_pos == NULL) {
-        return -1;
-    }
-    else {
-    queue ->p_first_pos = node;
-
-    t_Queue *pTmp = queue->p_first_pos;
+t_Car *de_queue(t_Queue *queue) {  
+    if (queue->p_first_pos == NULL) {
+        return;
+    } 
+    t_Car_Node *pTmp = queue->p_first_pos;
     queue->p_first_pos = pTmp->pNext;
-    pTmp->pNext = NULL;
-    }
+    t_Car *car = pTmp->pCar;
 
-    //do we want to change the cars index value here?
+    queue->q_length--;
 
-    free (pTmp);
-    
-    //does it make sense?
+    free(pTmp);
+    return car;
 }
 
 
@@ -76,22 +71,17 @@ void de_queue(t_Queue *queue, t_Car_Node *node) {  //is there a better way where
 
 @return void
 */
-void en_queue(t_Queue *queue, t_Car_Node *node) {  //same thing here with t_Car_Node
+void en_queue(t_Queue *queue, t_Car *car) {  //same thing here with t_Car_Node
 
-    pNewNode->pNext = pNode->pNext;
-    pNode->pNext = pNewNode;
+    t_Car_Node *node = new_Node(car);
 
-    node->pNext = NULL;
-
-    if (queue->p_first_pos == NULL && queue->p_last_pos == NULL) {
+    if (queue->q_length == 0) {
         queue->p_first_pos = node;
         queue->p_last_pos = node;
-    }
-    else {
+    } else {
         queue->p_last_pos->pNext = node;
         queue->p_last_pos = node;
     }
-
 }
 
 
@@ -108,5 +98,5 @@ void clear_queue(t_Queue *queue) {
     }
 
     free (queue);
-    *queue = NULL;
+    queue = NULL;
 }

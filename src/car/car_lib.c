@@ -1,6 +1,7 @@
 #include "../../include/car_lib.h"
 #include "../../include/data_types.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 /*
 @brief parks a car in an allocated parking cell
@@ -12,7 +13,7 @@
 @return  void
 */
 void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time) {
-    cell->car_in_cell = car;
+    cell->p_car_in_cell = car;
     car->start_parking_time = time;
 }
 
@@ -26,9 +27,9 @@ void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time) {
 */
 void unpark_car(t_Parking_Cell *cell) {
 
-    free(cell->car_in_cell);
+    free(cell->p_car_in_cell);
 
-    cell->car_in_cell = NULL;
+    cell->p_car_in_cell = NULL;
 
 }
 
@@ -47,10 +48,10 @@ The generating of a new car is based on the users choice of arrival chances in p
 t_Car * car_arrives (float percentage, unsigned int *id, t_Time max_parking) {
     
     //generates random number between 0 and 10000 abd converts percentage to int
-    int rand = rand() % 10001;
-    if (rand <= (int) (percentage*100)) {
+    int rand_v = rand() % 10001;
+    if (rand_v <= (int) (percentage*100)) {
         t_Car *new_car = malloc(sizeof(t_Car));
-        if(!t_Car) {
+        if(!new_car) {
             return NULL;
         }
 
