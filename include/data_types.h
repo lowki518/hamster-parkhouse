@@ -36,7 +36,7 @@ typedef struct {
     int max_parking_cells; 
     int free_parking_cells;
     t_Time max_parking_duration; 
-    t_Parking_Cell *first_parking_cell;
+    //t_Parking_Cell *first_parking_cell; // comment for review: it don't already know t_Parking_Cell here, it is first defined later!!!
 } t_Car_Park;
 
 
