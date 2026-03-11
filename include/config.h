@@ -7,7 +7,6 @@
 
 
 // ------- global config variable declarations --------- //
-// can add default values also btw
 extern uint8_t max_car_cells;
 extern t_Time max_parking_time;
 extern uint8_t simulation_time;

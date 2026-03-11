@@ -13,7 +13,7 @@ t_Time max_parking_time = 10;
 uint8_t simulation_time = 100;
 float car_probability = 50.0;
 int random_seed = 0;
-char output_path[256] = "output/path.txt";
+char output_path[256] = "output/";
 uint8_t max_cars_per_ts = 5;
 
 
@@ -25,8 +25,8 @@ uint8_t max_cars_per_ts = 5;
  @return -1 for error
 */
 int change_sim_time(char* new_simulation_time) {
-    uint8_t new_value = (t_Time)atoi(new_simulation_time);
-    if (!new_value) {
+    t_Time new_value = (t_Time)atoi(new_simulation_time);
+    if (!new_value || new_value < 4) {
         return -1;
     }
     simulation_time = new_value;
@@ -55,7 +55,6 @@ int change_max_car_cells(char * new_max_car_cells){
 @brief Changing the max. parking time
 
 @param[1] max_parking_time Describes the max. parking time for the cars
-@param[2] t_Car_Park A pointer to the car park
 
 @return -1 for error
 */
@@ -101,7 +100,13 @@ int input_random_seed(char * new_seed) {
     return 0;
 }
 
+/*
+@brief Changes the output path for output files
 
+@param[1] new_path An input of the new output path
+
+@return -1 for error
+*/
 int change_output_path(char * new_path) {
     if (!new_path) {
         return -1;
@@ -110,6 +115,13 @@ int change_output_path(char * new_path) {
     return 0;
 }
 
+/*
+@brief Changes the randomness seed
+
+@param[1] new_max_cars An input of the new amount of max cars
+
+@return -1 for error
+*/
 int change_max_cars_per_ts(char * new_max_cars) {
     uint8_t new_value = (uint8_t)atoi(new_max_cars);
     if (!new_value) {

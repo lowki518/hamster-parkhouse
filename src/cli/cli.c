@@ -6,7 +6,7 @@
 
 // this function is just so I can try quitting.
 void print_quit() {
-    printf("quit");
+    printf("quit backslash n");
 }
 
 // Map for print functions
@@ -35,7 +35,7 @@ struct configure_map config_table[] = {
   @return 0 if successful, otherwise 1
  */
 int read_user_input(char *p_input) {
-    if (!scanf("%255[^\n]%*c", p_input)) {
+    if (!fgets(p_input, 255, stdin)) {
         // Error handling - TODO
         printf("Error");
         return 1;
@@ -69,13 +69,13 @@ int handle_user_input(char *p_input) {
         if (!strcmp(first_arg, config_table[i].config_name)) {
             if (config_table[i].p_config_change(second_arg)) {
                 printf("Input value \" %s \" for config %s could not be parsed. \n"
-                "No changes were made. Please try again.", second_arg, first_arg);
+                "No changes were made. Please try again.\n", second_arg, first_arg);
             }
             return 0;
         }
     }
-    printf(" \"\"\" %s \"\"\" did not fit any known command. ", first_arg);
-    return 1;
+    printf(" \"\"\" %s \"\"\" did not fit any known command. \n", first_arg);
+    return -1;
 }
 
 /* 
@@ -96,12 +96,12 @@ void print_help() {
     "Allowed types for configurations: \n"
     "   - max_car_cells     unsigned int, e.g. 100\n"
     "   - max_parking_time  unsigned int, e.g. 20\n"
-    "   - simulation_time   unsigned int, e.g. 200\n"
+    "   - simulation_time   unsigned int, minimum 4, e.g. 200\n"
     "   - car_probability   float, e.g. 0.5\n"
     "   - random_seed       int, e.g. 12308964\n"
     "   - output_path       string describing path, e.g. output/my_file_name\n"
+    "   - max_cars_per_ts   unsigned int, e.g. 5\n"
     );
-
 }
 
 /*
@@ -118,7 +118,7 @@ void print_config() {
     "value: %i\n"
     "max_parking_time - defines how long cars are allowed to stay \n"
     "value: %i\n"
-    "simulation_time - how many simulation steps are calculated\n"
+    "simulation_time - how many simulation steps are calculated, minimum 4\n"
     "value: %i\n"
     "car_probability - probability for a car to appear each simulation step\n"
     "value: %.2f\n"
@@ -133,19 +133,20 @@ void print_config() {
     );
 }
 
+
 /*
   @brief Print start menu (UI) and wait for user input
 
   @return void
  */
-
 void start_menu() {
     // Standard text visualisation
-    printf("Hello, this will be our start menu. ");
+    printf("Hello, this will be our start menu.\n");
     print_help();
     
     looped_menu();
 }
+
 
 /*
   @brief Print looped menu (UI) and wait for user input
@@ -155,14 +156,6 @@ void start_menu() {
 void looped_menu() {
     // read and handle user input
     char *user_input; // do we need to m/calloc?
-    printf("Please enter your command: \n>");
+    printf("Please enter your command: \n> ");
     read_user_input(user_input);
 }
-
-/* Testing purposes:
-int main() {
-    char input[256];
-    read_user_input(input);
-    handle_user_input(input);
-    return 0;
-} */

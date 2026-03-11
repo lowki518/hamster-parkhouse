@@ -5,15 +5,6 @@
 #include <stdint.h>
 
 
-// Union of all argument types possible in command functions
-typedef union {
-  uint8_t int_config;
-  t_Time time_config;
-  float float_config;
-  char * path_config;
-  void *nothing;
-} Command_Arg;
-
 // Structure for a mapping from string (command input) to a function
 // with Command_Arg type argument
 struct configure_map {
@@ -75,9 +66,6 @@ void print_help();
 /*
   @brief Print configs + value
  
-  @param[1] p_<config_variable> A pointer to config variable 
-  ...
-
   @return void
  */
 void print_config();
