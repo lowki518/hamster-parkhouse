@@ -10,7 +10,7 @@
 // can add default values also btw
 uint8_t max_car_cells = 100;
 t_Time max_parking_time = 10;
-uint8_t simulation_time = 100;
+t_Time simulation_time = 100;
 float car_probability = 50.0;
 int random_seed = 0;
 char output_path[256] = "output/";

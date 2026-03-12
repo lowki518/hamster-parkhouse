@@ -9,7 +9,7 @@
 // ------- global config variable declarations --------- //
 extern uint8_t max_car_cells;
 extern t_Time max_parking_time;
-extern uint8_t simulation_time;
+extern t_Time simulation_time;
 extern float car_probability;
 extern int random_seed;
 extern char output_path[256];

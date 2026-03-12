@@ -4,7 +4,7 @@
 #include "../include/config_lib.h"
 #include "../include/data_types.h"
 #include "../include/file_manager_lib.h"
-#include "../include/init_lib.h"
+#include "../include/sim_lib.h"
 #include "../include/queue_lib.h"
 #include "../include/statistics_output_lib.h"
 
@@ -27,6 +27,6 @@ int main() {
         return 0;
     }
 
-    srand(seed);
-    
+    int *sim_nr = start_simulation(simulation_time, car_probability, max_cars_per_ts, max_parking_time, random_seed, output_path);
+
 }
