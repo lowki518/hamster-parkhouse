@@ -132,3 +132,5 @@ int check_parking_time(t_Car *car, t_Time time) {
     return FALSE;
 }
 
+/*
+*/

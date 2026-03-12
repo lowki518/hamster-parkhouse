@@ -1,5 +1,7 @@
 #include "../../include/sim_lib.h"
 #include "../../include/config_lib.h"
+#include "../../include/queue_lib.h"
+#include "../../include/file_manager_lib.h"
 #include <stdlib.h>
 
 
@@ -75,15 +77,57 @@ void clear_car_park(t_Car_Park *car_park) {
 
 @return void
 */
-void start_simulation (t_Time time_steps) {
+void start_simulation (const t_Time time_steps, const float new_car_prob, const int max_cars_per_ts, const t_Time max_parking_time, unsigned int seed, const char* path) {
+
+    srand(seed);
+
+    // allocates all the needed variables for the simulation
+    unsigned int *car_id = malloc(sizeof(car_id));
+    int *sim_nr = malloc(sizeof(sim_nr));
+    t_Time *time = malloc(sizeof(time));
+    //TODO
+    float *avg_parking_time = malloc(sizeof(avg_parking_time));
+    int *full_house_steps = malloc(sizeof(full_house_steps));
+    Car_Brand *brand = malloc(26 * sizeof(brand)); //As we have 26 brands
+    
+    
+    // if any allocation failed, abort
+    if(!car_id || !sim_nr || !time || !avg_parking_time || !full_house_steps) {
+        printf("Error allocating memory.\n");
+        return;
+    }
+
+    *car_id = 0;
+    *sim_nr = get_new_file_number(path);
+    *avg_parking_time = 0;
+    *full_house_steps = 0;
 
     t_Car_Park *park = init_car_park(max_car_cells);
     t_Parking_Cell *cell = park->first_parking_cell;
+    t_Queue *queue = init_queue();
+
+    create_new_file_with_head_data(path, *sim_nr, time_steps, max_car_cells, max_parking_time, new_car_prob, max_cars_per_ts, seed);
     
-    for (t_Time time = 0; time <= time_steps; time++) {
-        unpark_cars_in_park(park, time);
+    for (*time = 0; *time <= time_steps; *(time)++) {
 
+        // checks if any cars in the park need to be unparked
+        unpark_cars_in_park(park, *time);
 
+        // creates new cars
+        for (int i = 0; i <= max_cars_per_ts; i++) {
+            t_Car *new_car = car_arrives(new_car_prob, car_id, max_parking_time);
+            if (new_car != NULL) {
+                en_queue(queue, new_car);
+            }
+        }
+
+        // as long as there are free parking cells and cars in the queue -> park the cars
+        while(park->free_parking_cells > 0 || queue->q_length > 0) {
+            t_Car *car = de_queue(queue);
+            park_car_in_park(car, park, *time);
+        }
+        append_data_per_timestep(path, sim_nr, *time, (park->max_parking_cells - park->free_parking_cells), *avg_parking_time, queue->q_length, *full_house_steps, !(car_id) + 1, *most_brand);
+        
     }
     
 
