@@ -15,8 +15,32 @@ add_subdirectory(external/SDL)
 add_subdirectory(external/SDL_ttf)
 
 
+add_executable(test src/test.c)
+
+target_link_libraries(test PRIVATE m SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+
+# Executable
+#add_executable(tot_simulation
+#    src/main.c
+#    src/car/car_lib.c
+#    src/cli/cli_lib.c
+#    src/config/config_lib.c
+#    src/file_manager/file_manager_lib.c
+#    src/queue/queue_lib.c
+#    src/statistics_gui/statistics_output_lib.c
+#    src/simulation_loop.c
+#)
+
+#target_link_libraries(tot_simulation car cli config file_manager queue statistics_output simulation_loop SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+
+
+# only build main if tests successful
+#add_dependencies(tot_simulation run_tests)
+
+
+
 #internal
-include_directories(include)
+#include_directories(include)
 
 # --------------------------------------------------
 # Library
@@ -27,10 +51,10 @@ include_directories(include)
 #add_library(config src/config/config_lib.c)
 #add_library(file_manager src/file_manager/file_manager_lib.c)
 #add_library(queue src/queue/queue_lib.c)
-add_library(statistics_output src/statistics_gui/statistics_output_lib.c)
+#add_library(statistics_output src/statistics_gui/statistics_output_lib.c)
 #add_library(simulation_loop src/simulation_loop.c)
 
-target_link_libraries(statistics_output SDL3::SDL3 SDL3_ttf::SDL3_ttf m)
+#target_link_libraries(statistics_output SDL3::SDL3 SDL3_ttf::SDL3_ttf m)
 
 # --------------------------------------------------
 # Unit-Test-Executable
@@ -85,25 +109,3 @@ target_link_libraries(statistics_output SDL3::SDL3 SDL3_ttf::SDL3_ttf m)
 # --------------------------------------------------
 #  Main
 # --------------------------------------------------
-
-add_executable(statistics src/test.c)
-
-target_link_libraries(statistics statistics_output SDL3::SDL3 SDL3_ttf::SDL3_ttf m)
-
-# Executable
-#add_executable(tot_simulation
-#    src/main.c
-#    src/car/car_lib.c
-#    src/cli/cli_lib.c
-#    src/config/config_lib.c
-#    src/file_manager/file_manager_lib.c
-#    src/queue/queue_lib.c
-#    src/statistics_gui/statistics_output_lib.c
-#    src/simulation_loop.c
-#)
-
-#target_link_libraries(tot_simulation car cli config file_manager queue statistics_output simulation_loop SDL3::SDL3 SDL3_ttf::SDL3_ttf)
-
-
-# only build main if tests successful
-#add_dependencies(tot_simulation run_tests)
