@@ -88,7 +88,6 @@ void start_simulation (const t_Time time_steps, const float new_car_prob, const 
     //TODO
     float *avg_parking_time = malloc(sizeof(avg_parking_time));
     int *full_house_steps = malloc(sizeof(full_house_steps));
-    Car_Brand *brand = malloc(26 * sizeof(brand)); //As we have 26 brands
     
     
     // if any allocation failed, abort

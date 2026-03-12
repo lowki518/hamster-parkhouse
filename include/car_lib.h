@@ -69,5 +69,13 @@ t_Car * car_arrives (float percentage, unsigned int *id, t_Time max_parking);
 */
 int check_parking_time(t_Car *car, t_Time time);
 
+/*
+@brief gets the current most parked brand
+
+@param[1] park A pointer to the car park
+
+@return the most parked brand
+*/
+Car_Brand get_most_parked_brand(t_Car_Park *park);
 
 #endif
