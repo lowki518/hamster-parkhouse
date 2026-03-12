@@ -30,14 +30,27 @@ void test_car_arrives() {
     free(car_2);
 
 }
-^
 
 void test_park_car() {
-    init_car_park();
-    car_arrives();
+    t_Car_Park *car_park = init_car_park(30);
 
-    assert(cell->p_car_in_cell == car)
+    t_Parking_Cell *cell = car_park->first_parking_cell;
 
+    t_Time time;
+
+    unsigned int *id;
+    *id = 0;
+
+    t_Car *car = car_arrives(100.00f, id, 50);
+
+    park_car(car, cell, time);
+
+    assert(cell->p_car_in_cell == car);
+    assert(car->start_parking_time == time);
+
+    free(car);
+    free(cell);
+    free(car_park);
 }
 
 /*
@@ -57,4 +70,25 @@ void test_check_parking_time() {
     assert(check_parking_time(car, 51) == 0);
 
     free(car);
+}
+
+
+void test_unpark_car() {
+    t_Car_Park *car_park = init_car_park(30);
+    t_Parking_Cell *cell = car_park->first_parking_cell;
+
+    t_Time time;
+
+    unsigned int *id;
+    *id = 0;
+
+    t_Car *car = car_arrives(100.00f, id, 50);
+
+    park_car(car, cell, time);
+
+    assert(cell->p_car_in_cell == NULL);
+
+    free(car);
+    free(cell);
+    free(car_park);
 }
