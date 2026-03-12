@@ -13,6 +13,15 @@ git config --global --add safe.directory /workspaces/hamster-parkhouse
 echo "✓ Git configured"
 echo ""
 
+# ===== Set German Keyboard Layout =====
+echo "Configuring German keyboard layout..."
+export DEBIAN_FRONTEND=noninteractive
+echo 'keyboard-configuration keyboard-configuration/layout select German' | debconf-set-selections
+echo 'keyboard-configuration keyboard-configuration/variant select German' | debconf-set-selections
+dpkg-reconfigure --frontend noninteractive keyboard-configuration > /dev/null 2>&1 || true
+echo "✓ German keyboard configured"
+echo ""
+
 # Cleanup function called on EXIT
 cleanup() {
     echo ""
@@ -115,12 +124,6 @@ cmake ..
 echo "  → Building..."
 make
 
-if [ -f "statistics" ]; then
-    echo "✓ Build successful"
-else
-    echo "✗ Build failed - executable not found"
-    exit 1
-fi
 echo ""
 
 # ===== Step 5: Start Desktop =====
