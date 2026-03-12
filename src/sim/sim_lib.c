@@ -71,13 +71,18 @@ void clear_car_park(t_Car_Park *car_park) {
 }
 
 /*
-@brief The complete setup of the full simulation
+@brief Does the entire simulation and prits the data
 
 @param[1] time_steps User defined number of time steps (length of sim)
+@param[2] new_car_prob The probability of a new car
+@param[3] max_cars_per_ts How many cars can arrive per ts
+@param[4] max_parking_time The maximum parking time
+@param[5] seed The seed for the randomness
+@param[6] path The path for the output file
 
-@return void
+@returns the number of the completed simulation
 */
-void start_simulation (const t_Time time_steps, const float new_car_prob, const int max_cars_per_ts, const t_Time max_parking_time, unsigned int seed, const char* path) {
+int *start_simulation (const t_Time time_steps, const float new_car_prob, const int max_cars_per_ts, const t_Time max_parking_time, unsigned int seed, const char* path) {
 
     srand(seed);
 
@@ -86,19 +91,19 @@ void start_simulation (const t_Time time_steps, const float new_car_prob, const 
     int *sim_nr = malloc(sizeof(sim_nr));
     t_Time *time = malloc(sizeof(time));
     //TODO
-    float *avg_parking_time = malloc(sizeof(avg_parking_time));
+    t_Time *tot_parking_time = malloc(sizeof(tot_parking_time));
     int *full_house_steps = malloc(sizeof(full_house_steps));
     
     
     // if any allocation failed, abort
-    if(!car_id || !sim_nr || !time || !avg_parking_time || !full_house_steps) {
+    if(!car_id || !sim_nr || !time || !tot_parking_time || !full_house_steps) {
         printf("Error allocating memory.\n");
         return;
     }
 
     *car_id = 0;
     *sim_nr = get_new_file_number(path);
-    *avg_parking_time = 0;
+    *tot_parking_time = 0;
     *full_house_steps = 0;
 
     t_Car_Park *park = init_car_park(max_car_cells);
@@ -117,6 +122,7 @@ void start_simulation (const t_Time time_steps, const float new_car_prob, const 
             t_Car *new_car = car_arrives(new_car_prob, car_id, max_parking_time);
             if (new_car != NULL) {
                 en_queue(queue, new_car);
+                tot_parking_time += new_car->parking_time;
             }
         }
 
@@ -125,28 +131,27 @@ void start_simulation (const t_Time time_steps, const float new_car_prob, const 
             t_Car *car = de_queue(queue);
             park_car_in_park(car, park, *time);
         }
-        append_data_per_timestep(path, sim_nr, *time, (park->max_parking_cells - park->free_parking_cells), *avg_parking_time, queue->q_length, *full_house_steps, !(car_id) + 1, *most_brand);
+        
+        // checks if the park is full and increases the counter
+        if(park->free_parking_cells == 0) {
+            *(full_house_steps)++;
+        }
+
+        // prints the data of the current timestep
+        // TODO print the data in the console
+        float avg_parking_time = (float) *tot_parking_time / (float) (*(car_id) + 1);
+        append_data_per_timestep(path, sim_nr, *time, (park->max_parking_cells - park->free_parking_cells), avg_parking_time, queue->q_length, *full_house_steps, *(car_id) + 1, get_most_parked_brand(park));
         
     }
     
+    // clears the memory
+    clear_queue(queue);
+    clear_car_park(park);
+    
+    free(car_id);
+    free(time);
+    free(full_house_steps);
+    free(tot_parking_time);
 
-    /*
-    print_simulation_data()
-
-        FOR i FROM 0 To time_steps {
-
-
-            IF CAR IS WAITING IN QUEUE THEN
-                check_free_parking_cells() -> car_parks()
-
-            IF A NEW CAR ARRIVES THEN
-                check_free_parking_cells() -> car_parks()
-                ELSE go_into_queue()
-
-            print_timestep_data()
-            save_timestep_data()
-        }
-
-        visualize_total_data()
-    */
+    return *sim_nr;
 }

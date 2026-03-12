@@ -146,6 +146,7 @@ Car_Brand get_most_parked_brand(t_Car_Park *park) {
     while (cell != NULL) {
         //increases the value for each brand if the car is of the brand type
         brand[cell->p_car_in_cell->brand]++;
+        cell = cell->pNext;
     }
 
     // gets the index of the highest value 
