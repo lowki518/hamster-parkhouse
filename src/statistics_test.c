@@ -13,8 +13,8 @@ gcc statistics_test.c -o test.exe -I "../external/SDL/i686-w64-mingw32/include" 
 #include <time.h>
 
 // ================== Layout ==================
-#define WIDTH             1500
-#define HEIGHT            1000
+#define WIDTH             1200
+#define HEIGHT            900
 #define FONT_PATH         "../external/Font/ARIAL.TTF"
 #define FONT_SIZE         12
 
@@ -59,7 +59,7 @@ int main() {
     
 
     // Borderless window
-    SDL_Window *window = SDL_CreateWindow("Plotter", WIDTH, HEIGHT, SDL_WINDOW_BORDERLESS);
+    SDL_Window *window = SDL_CreateWindow("Hamster-Parkhouse-Output", WIDTH, HEIGHT, SDL_WINDOW_FULLSCREEN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
     // Initial plot rect (will be recalculated every frame)
@@ -156,8 +156,7 @@ int main() {
         SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
         SDL_RenderClear(renderer);
 
-        // Plot: background -> grid & ticks -> axes -> labels -> graph -> UI
-        drawPlotBackground(renderer, &plot);
+        drawBackground(renderer);
 
         // Grid & ticks (with the requested rules)
         drawYTicksAndGrid(renderer, font, &plot, yMin, yMax);

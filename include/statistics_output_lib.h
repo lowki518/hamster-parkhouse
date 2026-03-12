@@ -3,8 +3,8 @@
 
 
 // Includes all needed Libraries
-#include <SDL3/SDL.h>
-#include <SDL3_ttf/SDL_ttf.h>
+#include <../external/SDL/include/SDL3/SDL.h>
+#include <../external/SDL_ttf/include/SDL3_ttf/SDL_ttf.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,8 +14,8 @@
 
 // ================== Values for Layout and quick change ==================
 // Size of Window
-#define WIDTH             1500
-#define HEIGHT            1000
+#define WIDTH             1200
+#define HEIGHT            900
 
 // Font
 #define FONT_PATH         "../external/Font/ARIAL.TTF"
@@ -279,7 +279,7 @@ void drawText(SDL_Renderer *renderer, TTF_Font *font, char *text, float x, float
 
 
 /*
-@brief Creates a new PlotArea with a white background.
+@brief Creates a new PlotArea 
 
 @param[1] x The x-coordinate of the top-left corner of the PlotArea.
 @param[2] y The y-coordinate of the top-left corner of the PlotArea.
@@ -293,14 +293,14 @@ PlotArea createPlotArea(float x, float y, float w, float h, SDL_Renderer *render
 
 
 /*
-@brief Draws the background of the plot area.
+@brief Draws the background in white
 
 @param[1] renderer A pointer to the renderer to use for drawing.
 @param[2] p A pointer to the PlotArea to draw the background for.
 
 @return void
 */
-void drawPlotBackground(SDL_Renderer *renderer, PlotArea *p);
+void drawBackground(SDL_Renderer *renderer);
 
 
 /*

@@ -407,7 +407,7 @@ void drawText(SDL_Renderer *renderer, TTF_Font *font, char *text, float x, float
 
 
 /*
-@brief Creates a new PlotArea with a white background.
+@brief Creates a new PlotArea
 
 @param[1] x The x-coordinate of the top-left corner of the PlotArea.
 @param[2] y The y-coordinate of the top-left corner of the PlotArea.
@@ -421,23 +421,22 @@ PlotArea createPlotArea(float x, float y, float w, float h, SDL_Renderer * rende
     PlotArea p;
     p.rect.x = x; p.rect.y = y; p.rect.w = w; p.rect.h = h;
     p.padding = PADDING;
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &p.rect);
     return p;
 }
 
 /*
-@brief Draws the background of the plot area.
+@brief Draws the background in white
 
 @param[1] renderer A pointer to the renderer to use for drawing.
 @param[2] p A pointer to the PlotArea to draw the background for.
 
 @return void
 */
-void drawPlotBackground(SDL_Renderer * renderer, PlotArea * p) {
+void drawBackground(SDL_Renderer * renderer) {
     // Draws the background in white
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &p->rect);
+    SDL_FRect rect = {0, 0, 1200, 900};
+    SDL_RenderFillRect(renderer, &rect);
 }
 
 /*

@@ -12,19 +12,16 @@ add_subdirectory(external/SDL_ttf)
  
 # ===== Include Directories =====
 include_directories(include)
+
+# ===== Add Library Code =====
+add_library(statistics_output src/statistics_gui/statistics_output_lib.c)
  
 # ===== Main Executable =====
-add_executable(test src/test.c)
+add_executable(test src/statistics_test.c)
  
 # ===== Link Libraries =====
-target_link_libraries(test PRIVATE m SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+target_link_libraries(statistics_output SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+target_link_libraries(test m SDL3::SDL3 SDL3_ttf::SDL3_ttf statistics_output)
  
 target_include_directories(test PRIVATE include)
  
-# ===== Build Configuration =====
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
- 
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-message(STATUS "Linking: SDL3::SDL3 SDL3_ttf::SDL3_ttf")
