@@ -10,7 +10,6 @@
 @param[2] cell A pointer to the parking cell where the car should be parked
 @param[3] time The current time
 
-//TODO rewrite function to automatically iterate
 @return  void
 */
 void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time);
@@ -22,12 +21,30 @@ void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time);
 @param[1] cell A pointer to the cell of the car
 @param[2] park A pointer to the car park
 
-//TODO rewrite function to automatically iterate
-
 @return void
 */
 void unpark_car(t_Parking_Cell *cell, t_Car_Park *park);
 
+/*
+@brief unparks all cars that need to be unparked based on the time
+
+@param[1] car A pointer to the car to park
+@param[2] park A pointer to the car park
+@param[3] time The current time
+
+@return void
+*/
+void park_car_in_park (t_Car *car, t_Car_Park *park, t_Time time);
+
+/*
+@brief unparks all cars that need to unparked at the current time
+
+@param[1] park A pointer to the car park
+@param[2] time The current time
+
+@return void
+*/
+void unpark_cars_in_park (t_Car_Park *park, t_Time time);
 
 /*
 @brief Generates the arrival of a car
@@ -48,7 +65,7 @@ t_Car * car_arrives (float percentage, unsigned int *id, t_Time max_parking);
 @param[1] car The car to check
 @param[2] time The time of the parked car to check
 
-@return wether a car needs to leave or not
+@return 1 if a car needs to leave, 0 if it needs to stay
 */
 int check_parking_time(t_Car *car, t_Time time);
 

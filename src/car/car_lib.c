@@ -36,6 +36,50 @@ void unpark_car(t_Parking_Cell *cell, t_Car_Park *park) {
 
 }
 
+/*
+@brief unparks all cars that need to be unparked based on the time
+
+@param[1] car A pointer to the car to park
+@param[2] park A pointer to the car park
+@param[3] time The current time
+
+@return void
+*/
+void park_car_in_park (t_Car *car, t_Car_Park *park, t_Time time) {
+    t_Parking_Cell *cell = park->first_parking_cell;
+
+    for (int i = 0; i < park->max_parking_cells; i++) {
+        if(cell->p_car_in_cell == NULL) {
+            park_car(car, cell, time);
+            return;
+        }
+        cell = cell->pNext;
+    }
+    
+}
+
+/*
+@brief unparks all cars that need to unparked at the current time
+
+@param[1] park A pointer to the car park
+@param[2] time The current time
+
+@return void
+*/
+void unpark_cars_in_park (t_Car_Park *park, t_Time time) {
+    t_Parking_Cell *cell = park->first_parking_cell;
+
+    for (int i = 0; i < park->max_parking_cells; i++) {
+        t_Car *car = cell->p_car_in_cell;
+        if(car != NULL) {
+            if(check_parking_time(car, time)) {
+                unpark_car(cell, park);
+            }
+        }
+        cell = cell->pNext;
+    }
+}
+
 
 /*
 @brief Generates the arrival of a car
@@ -79,7 +123,7 @@ t_Car * car_arrives (float percentage, unsigned int *id, t_Time max_parking) {
 @param[1] car The car to check
 @param[2] time The time of the parked car to check
 
-@return wether a car needs to leave or not
+@return 1 if a car needs to leave, 0 if it needs to stay
 */
 int check_parking_time(t_Car *car, t_Time time) {
     if(car->parking_time + car->start_parking_time <= time) {

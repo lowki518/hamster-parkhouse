@@ -80,8 +80,10 @@ void start_simulation (t_Time time_steps) {
     t_Car_Park *park = init_car_park(max_car_cells);
     t_Parking_Cell *cell = park->first_parking_cell;
     
-    for (int i = 0; i <= time_steps; i++) {
-        
+    for (t_Time time = 0; time <= time_steps; time++) {
+        unpark_cars_in_park(park, time);
+
+
     }
     
 
@@ -90,13 +92,6 @@ void start_simulation (t_Time time_steps) {
 
         FOR i FROM 0 To time_steps {
 
-            FOR EVERY parking_cell {
-                IF CELL IS FREE -> continue
-
-                IF IS PARKING TIME OVER? THEN
-                    car_leaves()
-                    CELL = FREE
-            }
 
             IF CAR IS WAITING IN QUEUE THEN
                 check_free_parking_cells() -> car_parks()
