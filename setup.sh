@@ -148,6 +148,16 @@ echo "  → Starting XFCE..."
 nohup startxfce4 > /tmp/xfce4.log 2>&1 &
 sleep 3
 
+# XDG_RUNTIME_DIR setzen
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+# Falls das Verzeichnis nicht existiert (z.B. auf minimalen Systemen):
+if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+    export XDG_RUNTIME_DIR="/tmp/runtime-$(id -u)"
+    mkdir -p "$XDG_RUNTIME_DIR"
+    chmod 700 "$XDG_RUNTIME_DIR"
+fi
+
 echo ""
 echo "╔════════════════════════════════════════════╗"
 echo "║   ✓ Setup Complete!                       ║"
