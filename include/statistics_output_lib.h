@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "data_types.h"
 
 
 // ================== Values for Layout and quick change ==================
@@ -59,6 +60,38 @@ typedef struct {
     float leftBtnPad;   // window-left padding for left button
     float rightBtnPad;  // window-right padding for right button
 } LayoutMetrics;
+
+/*
+@brief prints the simulation parameters.
+
+@param[1] sim_nr The number of the simulation.
+@param[2] sim_duration The total amount of time steps done.
+@param[3] parking_cells The amount of parking_spaces.
+@param[4] max_parking_duration The maximum parking time for the cars.
+@param[5] new_car_prob The probability of a new car arriving (in percent).
+@param[6] max_cars_arriving How many cars can arrive in a simulation step.
+@param[7] seed The seed used to generate randomness within this simulation.
+
+@return void
+*/
+void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed);
+
+
+/*
+@brief prints the simulated data per timestep
+
+@param[1] timestep The current timestep.
+@param[2] cars_parked The amount of cars currently parked.
+@param[3] avg_parking_time The average parking time of the cars.
+@param[4] q_len The current length of the queue.
+@param[5] full_house_steps The amount of steps the parking garage was full.
+@param[6] tot_cars_simulated The total amount of cars that was simulated.
+@param[7] most_brand The car brand that parked the most.
+
+@return void
+*/
+void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand);
+
 
 /*
 @brief Rewrites the dataset with new data based on the index and the Filepath.

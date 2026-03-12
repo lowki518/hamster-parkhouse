@@ -1,6 +1,64 @@
 #include "statistics_output_lib.h"
 
 /*
+@brief prints the simulation parameters.
+
+@param[1] sim_nr The number of the simulation.
+@param[2] sim_duration The total amount of time steps done.
+@param[3] parking_cells The amount of parking_spaces.
+@param[4] max_parking_duration The maximum parking time for the cars.
+@param[5] new_car_prob The probability of a new car arriving (in percent).
+@param[6] max_cars_arriving How many cars can arrive in a simulation step.
+@param[7] seed The seed used to generate randomness within this simulation.
+
+@return void
+*/
+void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
+    char sim_duration_s[] = "Simulated Steps";
+    char parking_cells_s[] = "Parking Cells";
+    char max_parking_duration_s[] = "Max. Parking Time";
+    char new_car_prob_s[] = "New Car Prob.";
+    char max_cars_arriving_s[] = "Max. New Cars";
+    char seed_s[] = "Seed";
+    
+    char curr_step_s[] = "Current Step";
+    char curr_cars_s[] = "Parked Cars";
+    char avg_time_s[] = "Avg. Time";
+    char q_len_s[] = "Queue Length";
+    char full_house_s[] = "Full Garage";
+    char tot_sim_car_s[] = "Cars Simulated";
+    char most_brand_s[] = "Most Brand";
+
+
+    printf("Simulation Nr. %i:\n", sim_nr);
+    printf("\n");
+
+    printf("|%15s|%15s|%19s|%15s|%15s|%15s|\n", sim_duration_s, parking_cells_s, max_parking_duration_s, new_car_prob_s, max_cars_arriving_s, seed_s);
+    printf("|%15i|%15i|%19i|%14.2f%%|%15i|%15i|\n", sim_duration, parking_cells, max_parking_duration, new_car_prob, max_cars_arriving, seed);
+    
+    printf("\n\n");
+    printf("|%15s|%15s|%19s|%15s|%15s|%15s|%15s|\n", curr_step_s, curr_cars_s, avg_time_s, q_len_s, full_house_s, tot_sim_car_s, most_brand_s);
+}
+
+
+/*
+@brief prints the simulated data per timestep
+
+@param[1] timestep The current timestep.
+@param[2] cars_parked The amount of cars currently parked.
+@param[3] avg_parking_time The average parking time of the cars.
+@param[4] q_len The current length of the queue.
+@param[5] full_house_steps The amount of steps the parking garage was full.
+@param[6] tot_cars_simulated The total amount of cars that was simulated.
+@param[7] most_brand The car brand that parked the most.
+
+@return void
+*/
+void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) { 
+    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
+}
+
+/*
 @brief Rewrites the dataset with new data based on the index.
 
 @param[1] datasetIndex An integer representing the index on the dataset to load.
