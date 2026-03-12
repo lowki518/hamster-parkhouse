@@ -29,7 +29,6 @@ void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time) {
 void unpark_car(t_Parking_Cell *cell, t_Car_Park *park) {
 
     free(cell->p_car_in_cell);
-
     cell->p_car_in_cell = NULL;
 
     park->free_parking_cells++;
