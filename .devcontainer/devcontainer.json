@@ -1,11 +1,11 @@
 {
-  "name": "SDL3 Desktop",
+  "name": "SDL3 Desktop Application",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
   "remoteUser": "root",
   "forwardPorts": [6080],
   "portsAttributes": {
     "6080": {
-      "label": "noVNC",
+      "label": "noVNC - Desktop GUI",
       "onAutoForward": "openBrowser"
     }
   }

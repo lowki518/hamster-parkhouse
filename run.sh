@@ -2,16 +2,15 @@
 
 set -e
 
-# ===== Fix Git Ownership Issue =====
-git config --global --add safe.directory /workspaces/hamster-parkhouse
+echo "╔════════════════════════════════════════════╗"
+echo "║   SDL3 Codespaces Setup                    ║"
+echo "╚════════════════════════════════════════════╝"
+echo ""
 
-# ===== Set German Keyboard Layout =====
-echo "Configuring German keyboard layout..."
-export DEBIAN_FRONTEND=noninteractive
-echo 'keyboard-configuration keyboard-configuration/layout select German' | debconf-set-selections
-echo 'keyboard-configuration keyboard-configuration/variant select German' | debconf-set-selections
-dpkg-reconfigure --frontend noninteractive keyboard-configuration > /dev/null 2>&1 || true
-echo "✓ German keyboard configured"
+# ===== Fix Git Ownership Issue =====
+echo "Fixing Git ownership..."
+git config --global --add safe.directory /workspaces/hamster-parkhouse
+echo "✓ Git configured"
 echo ""
 
 # Cleanup function called on EXIT
@@ -46,14 +45,9 @@ cleanup() {
 # Register cleanup on EXIT (triggered by Ctrl+C or exit)
 trap cleanup EXIT
 
-echo "╔════════════════════════════════════════════╗"
-echo "║   SDL3 Codespaces Setup                    ║"
-echo "╚════════════════════════════════════════════╝"
-echo ""
-
 # ===== STEP 1: Dependencies =====
-echo "[1/4] Installing dependencies..."
-echo "(This may take up to 5 minutes...)"
+echo "[1/5] Installing dependencies..."
+echo "(This may take a few minutes...)"
 echo ""
 
 apt-get update -qq
@@ -65,13 +59,23 @@ apt-get install -y -qq \
   libxcursor-dev libxi-dev libxfixes-dev libxss-dev \
   libxtst-dev libwayland-dev libxkbcommon-dev \
   libdbus-1-dev libudev-dev libgl1-mesa-dev libasound2-dev \
-  libfreetype6-dev libharfbuzz-dev
+  libfreetype6-dev libharfbuzz-dev \
+  keyboard-configuration
 
 echo "✓ Dependencies installed"
 echo ""
 
-# ===== Step 2 : Submodules =====
-echo "[2/4] Initializing SDL3 submodule..."
+# ===== Step 2: German Keyboard =====
+echo "[2/5] Configuring German keyboard..."
+export DEBIAN_FRONTEND=noninteractive
+echo 'keyboard-configuration keyboard-configuration/layout select German' | debconf-set-selections || true
+echo 'keyboard-configuration keyboard-configuration/variant select German' | debconf-set-selections || true
+dpkg-reconfigure --frontend noninteractive keyboard-configuration > /dev/null 2>&1 || true
+echo "✓ German keyboard configured"
+echo ""
+
+# ===== Step 3: Submodules =====
+echo "[3/5] Initializing SDL3 submodules..."
 
 cd /workspaces/hamster-parkhouse
 
@@ -86,20 +90,20 @@ git submodule update --init --recursive
 if [ -f "external/SDL/CMakeLists.txt" ]; then
     echo "✓ SDL3 submodule initialized"
 else
-    echo "✗ SDL3 CMakeLists.txt still not found"
+    echo "✗ SDL3 CMakeLists.txt not found"
     exit 1
 fi
 
 if [ -f "external/SDL_ttf/CMakeLists.txt" ]; then
     echo "✓ SDL3_ttf submodule initialized"
 else
-    echo "✗ SDL3_ttf CMakeLists.txt still not found"
+    echo "✗ SDL3_ttf CMakeLists.txt not found"
     exit 1
 fi
 echo ""
 
-# ===== Step 3: Auto Build App =====
-echo "[3/4] Building SDL3 application..."
+# ===== Step 4: Build App =====
+echo "[4/5] Building SDL3 application..."
 
 rm -rf build
 mkdir -p build
@@ -111,16 +115,23 @@ cmake ..
 echo "  → Building..."
 make
 
+if [ -f "statistics" ]; then
+    echo "✓ Build successful"
+else
+    echo "✗ Build failed - executable not found"
+    exit 1
+fi
+echo ""
 
-# ===== Step 4: Start Desktop =====
-echo "[4/4] Setting up desktop..."
+# ===== Step 5: Start Desktop =====
+echo "[5/5] Starting desktop environment..."
 
 mkdir -p /root/Desktop
 
-echo "Starting desktop services..."
-echo ""
-
 export DISPLAY=:1
+export XDG_RUNTIME_DIR=/tmp/xdg-runtime
+mkdir -p $XDG_RUNTIME_DIR
+chmod 700 $XDG_RUNTIME_DIR
 
 # Xvfb
 echo "  → Starting Xvfb..."
@@ -149,6 +160,9 @@ echo "╚═══════════════════════�
 echo ""
 echo "🌐 Access your desktop:"
 echo "   http://localhost:6080/vnc.html"
+echo ""
+echo "📁 Your app executable:"
+echo "   /workspaces/hamster-parkhouse/build/statistics"
 echo ""
 echo "Press Ctrl+C or type 'exit' to stop and shut down services..."
 echo ""

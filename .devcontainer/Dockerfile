@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     # Desktop & VNC
     xvfb x11vnc novnc websockify xfce4 xfce4-terminal \
     # Additional tools
-    git curl wget nano htop \
+    curl wget nano htop \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspaces/hamster-parkhouse
