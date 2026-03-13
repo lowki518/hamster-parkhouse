@@ -9,7 +9,7 @@ int start = FALSE;
 
 // this function is just so I can try quitting.
 void return_quit() {
-    printf("Quiting...\n");
+    printf("Quitting...\n");
     quit = TRUE;
 }
 
@@ -20,7 +20,7 @@ void return_start() {
 }
 
 // Map for print functions
-static struct print_map print_table[3] = {
+static struct print_map print_table[] = {
     {"help", print_help},
     {"config", print_config},
     {"quit", return_quit},
@@ -64,6 +64,7 @@ int read_user_input(char *p_input) {
 int handle_user_input(char *p_input) {
     // Our commands are at most 2 words long. 
     // first: split input by space and remove all whitespace
+    // TODO: Remove all whitespace
     char *first_arg = strtok(p_input, " ");
     char *second_arg = strtok(NULL, "");
 
@@ -101,7 +102,7 @@ void print_help() {
     "> help         print help menu (this menu)\n"
     "> config       print all configs and their values\n"
     "> start        start the simulation with chosen configs\n"
-    "> ...\n"
+    "> quit         quits this program\n"
     "To change configs: \n"
     "> $config_name $new_value\n"
     "Allowed types for configurations: \n"
@@ -138,7 +139,7 @@ void print_config() {
     "output_path - output path for result file(s)\n"
     "value: %s\n"
     "max_cars_per_ts - max amount of cars coming in per time step\n"
-    "value: %i", 
+    "value: %i\n", 
     max_car_cells, max_parking_time, simulation_time, 
     car_probability, random_seed, output_path, max_cars_per_ts
     );
@@ -164,7 +165,7 @@ void start_menu() {
  */
 void looped_menu() {
     // read and handle user input
-    char *user_input; // do we need to m/calloc?
+    char user_input[256]; // do we need to m/calloc?
     printf("Please enter your command: \n> ");
     read_user_input(user_input);
     handle_user_input(user_input);
