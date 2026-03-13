@@ -70,12 +70,12 @@ add_custom_target(run_tests
 )
 
 # ===== Add Main Executable =====
-add_executable(park-house src/main.c)
+#add_executable(park-house src/main.c)
+add_executable(test src/statistics_test.c)
 
-
-target_link_libraries(park-house car cli config file_manager queue statistics simulation SDL3::SDL3 SDL3_ttf::SDL3_ttf)
-
+#target_link_libraries(park-house car cli config file_manager queue statistics simulation SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+target_link_libraries(test m file_manager statistics SDL3::SDL3 SDL3_ttf::SDL3_ttf)
 
 # only build main if tests successful
-add_dependencies(park-house run_tests)
+add_dependencies(test run_tests)
  

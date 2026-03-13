@@ -10,6 +10,7 @@ gcc statistics_test.c -o test.exe -I "../external/SDL/i686-w64-mingw32/include" 
 */
 
 #include "../include/statistics_output_lib.h"
+#include "../external/SDL/SDL3/include/"
 #include <time.h>
 
 // ================== Layout ==================
