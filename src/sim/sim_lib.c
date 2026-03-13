@@ -85,7 +85,7 @@ void clear_car_park(t_Car_Park *car_park) {
 
 @returns the number of the completed simulation
 */
-int *start_simulation (int max_car_cells, const t_Time time_steps, const float new_car_prob, const int max_cars_per_ts, const t_Time max_parking_time, unsigned int seed, const char* path) {
+int *start_simulation (int max_car_cells, const t_Time time_steps, const float new_car_prob, const int max_cars_per_ts, unsigned int seed, const char* path) {
 
     srand(seed);
 

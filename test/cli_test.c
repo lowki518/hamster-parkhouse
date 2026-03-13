@@ -23,3 +23,7 @@ void test_handle_user_input() {
     // Get error code - TODO: right error code
     assert(handle_user_input(error_input) != 0);
 }
+
+int main() {
+    test_handle_user_input();
+}

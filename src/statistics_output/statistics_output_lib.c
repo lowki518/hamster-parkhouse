@@ -55,7 +55,7 @@ void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time
 @return void
 */
 void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) { 
-    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
+    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15i|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
 }
 
 /*
