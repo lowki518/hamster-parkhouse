@@ -3,8 +3,8 @@
 
 
 // Includes all needed Libraries
-#include <../external/SDL/include/SDL3/SDL.h>
-#include <../external/SDL_ttf/include/SDL3_ttf/SDL_ttf.h>
+#include "../external/SDL/include/SDL3/SDL.h"
+#include "../external/SDL_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,16 +50,6 @@ typedef struct {
     float pressAnim; // 0.0f to 1.0f, used for scaling effect
 } Button;
 
-typedef struct {
-    SDL_FRect rect;
-    float padding; // inner padding for axes/labels
-} PlotArea;
-
-typedef struct {
-    float topBar;
-    float leftBtnPad;   // window-left padding for left button
-    float rightBtnPad;  // window-right padding for right button
-} LayoutMetrics;
 
 /*
 @brief prints the simulation parameters.
@@ -129,10 +119,10 @@ int isPointInsideRect(float x, float y, SDL_FRect * rect);
 
 
 /*
-@brief Calculates the inner bounds of a PlotArea, 
-accounting for padding and saves it in the provided pointers.
+@brief Calculates the inner bounds of a plot rectangle,
+accounting for PADDING and saves it in the provided pointers.
 
-@param[1] p A pointer to the PlotArea.
+@param[1] plot A pointer to the plot SDL_FRect.
 @param[2] left A pointer to a float where the left bound will be stored.
 @param[3] right A pointer to a float where the right bound will be stored.
 @param[4] top A pointer to a float where the top bound will be stored.
@@ -140,7 +130,7 @@ accounting for padding and saves it in the provided pointers.
 
 @return void
 */
-void innerBounds(PlotArea *p, float *left, float *right, float *top, float *bottom);
+void innerBounds(SDL_FRect *plot, float *left, float *right, float *top, float *bottom);
 
 
 /*
@@ -279,24 +269,9 @@ void drawText(SDL_Renderer *renderer, TTF_Font *font, char *text, float x, float
 
 
 /*
-@brief Creates a new PlotArea 
-
-@param[1] x The x-coordinate of the top-left corner of the PlotArea.
-@param[2] y The y-coordinate of the top-left corner of the PlotArea.
-@param[3] w The width of the PlotArea.
-@param[4] h The height of the PlotArea.
-@param[5] renderer A pointer to renderer to use for drawing the background.
-
-@return A PlotArea structure representing the created PlotArea.
-*/
-PlotArea createPlotArea(float x, float y, float w, float h, SDL_Renderer *renderer);
-
-
-/*
 @brief Draws the background in white
 
 @param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] p A pointer to the PlotArea to draw the background for.
 
 @return void
 */
@@ -309,11 +284,11 @@ void drawBackground(SDL_Renderer *renderer);
 This function was made using Copilot, as I didn't want to calculate the geometry.
 
 @param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] p A pointer to the PlotArea to draw in.
+@param[2] plot A pointer to the plot SDL_FRect to draw in.
 
 @return void
 */
-void drawAxesWithArrows(SDL_Renderer *renderer, PlotArea *p);
+void drawAxesWithArrows(SDL_Renderer *renderer, SDL_FRect *plot);
 
 
 /*
@@ -321,13 +296,13 @@ void drawAxesWithArrows(SDL_Renderer *renderer, PlotArea *p);
 
 @param[1] renderer A pointer to the SDL_Renderer to use for drawing.
 @param[2] font A pointer to the TTF_Font to use for rendering the text.
-@param[3] p A pointer to the PlotArea structure representing the plot area to draw.
+@param[3] plot A pointer to the plot SDL_FRect to draw.
 @param[4] labelX A string representing the label for the X axis.
 @param[5] labelY A string representing the label for the Y axis.
 
 @return void
 */
-void drawAxisLabels(SDL_Renderer *renderer, TTF_Font *font, PlotArea *p, char *labelX, char *labelY);
+void drawAxisLabels(SDL_Renderer *renderer, TTF_Font *font, SDL_FRect *plot, char *labelX, char *labelY);
 
 
 /*
@@ -351,13 +326,13 @@ This function was done using Copilot, as it's just basic math and boring drawing
 
 @param[1] renderer A pointer to the renderer to use for drawing.
 @param[2] font A pointer to the font to use for rendering the tick labels
-@param[3] p A pointer to the PlotArea to draw in.
+@param[3] plot A pointer to the plot SDL_FRect to draw in.
 @param[4] yMin The minimum Y value of the range to determine tick positions.
 @param[5] yMax The maximum Y value of the range to determine tick positions.
 
 @return void
 */
-void drawYTicksAndGrid(SDL_Renderer *renderer, TTF_Font *font, PlotArea *p, float yMin, float yMax);
+void drawYTicksAndGrid(SDL_Renderer *renderer, TTF_Font *font, SDL_FRect *plot, float yMin, float yMax);
 
 /*
 @brief Draws X-axis ticks and grid lines on the plot area, with labels representing minutes.
@@ -366,12 +341,12 @@ Basically copied from drawYTicksAndGrid.
 
 @param[1] renderer A pointer to the renderer to use for drawing.
 @param[2] font A pointer to the font to use for rendering the tick labels.
-@param[3] p A pointer to the PlotArea to draw in.
+@param[3] plot A pointer to the plot SDL_FRect to draw in.
 @param[4] sampleCount The number of samples in the dataset, used to determine tick positions and labels.
 
 @return void
 */
-void drawXTicksAndGridMinutes(SDL_Renderer *renderer, TTF_Font *font, PlotArea *p, int sampleCount);
+void drawXTicksAndGridMinutes(SDL_Renderer *renderer, TTF_Font *font, SDL_FRect *plot, int sampleCount);
 
 
 /*
@@ -403,7 +378,7 @@ void computeYRange(float *data, int count, float *outMin, float *outMax);
 @brief Draws a graph of the dataset on the plot area.
 
 @param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] p A pointer to the PlotArea to draw in
+@param[2] plot A pointer to the plot SDL_FRect to draw in.
 @param[3] data A pointer to the array of float values representing the dataset to graph.
 @param[4] count The number of elements in the dataset.
 @param[5] yMin The minimum Y value of the range to determine the vertical scaling of the graph.
@@ -411,23 +386,22 @@ void computeYRange(float *data, int count, float *outMin, float *outMax);
 
 @return void
 */
-void drawGraph(SDL_Renderer *renderer, PlotArea *p, float *data, int count, float yMin, float yMax);
+void drawGraph(SDL_Renderer *renderer, SDL_FRect *plot, float *data, int count, float yMin, float yMax);
 
 
 /*
-@brief sets up the layout metrics and positions/sizes of the plot area and buttons based on the current window dimensions.
+@brief sets up the positions/sizes of the plot area and buttons based on the current window dimensions.
 
 @param[1] width The current width of the window.
 @param[2] height The current height of the window.
-@param[3] L A pointer to the LayoutMetrics layout metrics will be stored.
-@param[4] plot A pointer to where the PlotArea will be stored.
-@param[5] leftBtn A pointer to the left button, where the computed position and size will be stored.
-@param[6] rightBtn A pointer to the right button, where the computed position and size will be stored.
-@param[7] closeBtn A pointer to the close button, where the computed position and size will be stored.
+@param[3] plot A pointer to the SDL_FRect where the plot area will be stored.
+@param[4] leftBtn A pointer to the left button, where the computed position and size will be stored.
+@param[5] rightBtn A pointer to the right button, where the computed position and size will be stored.
+@param[6] closeBtn A pointer to the close button, where the computed position and size will be stored.
 
 @return void
 */
-void computeLayout(int width, int height, LayoutMetrics *L, PlotArea *plot,
+void computeLayout(int width, int height, SDL_FRect *plot,
                           Button *leftBtn, Button *rightBtn, Button *closeBtn);
 
 #endif

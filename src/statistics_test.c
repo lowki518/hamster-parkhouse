@@ -10,27 +10,8 @@ gcc statistics_test.c -o test.exe -I "../external/SDL/i686-w64-mingw32/include" 
 */
 
 #include "../include/statistics_output_lib.h"
-#include "../external/SDL/SDL3/include/"
+#include "../external/SDL/include/SDL3/SDL.h"
 #include <time.h>
-
-// ================== Layout ==================
-#define WIDTH             1200
-#define HEIGHT            900
-#define FONT_PATH         "../external/Font/ARIAL.TTF"
-#define FONT_SIZE         12
-
-// Layout constants
-#define TOP_BAR_H         44.0f   // reserved space for close button
-#define SIDE_BTN_W        50.0f
-#define SIDE_BTN_H        50.0f
-#define SIDE_PAD          10.0f   // padding between plot and side buttons
-#define EDGE_MARGIN       10.0f   // window margin to place side buttons
-#define CLOSE_SIZE        28.0f
-#define CLOSE_MARGIN       8.0f
-
-// ================== Booleans ==================
-#define TRUE                  1
-#define FALSE                 0
 
 // ================== Data ==================
 
@@ -45,7 +26,7 @@ int main() {
     float dataset[DATASET_SIZE];
     char dataset_name[DATASET_COUNT][32] = {"Data1", "Data2", "Data3", "Data4", "Data5"};
 
-    //Fill dataset with random values
+    // Fill dataset with random values
     for(int i = 0; i < DATASET_SIZE; ++i) {
         dataset[i] = (float) rand() / RAND_MAX * 100.0f;
         printf("dataset[%d] = %f\n", i, dataset[i]);
@@ -56,22 +37,15 @@ int main() {
         return -1;
     }
 
-    
-    
-
     // Borderless window
     SDL_Window *window = SDL_CreateWindow("Hamster-Parkhouse-Output", WIDTH, HEIGHT, SDL_WINDOW_FULLSCREEN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
-    // Initial plot rect (will be recalculated every frame)
-    PlotArea plot = createPlotArea(EDGE_MARGIN + SIDE_BTN_W + SIDE_PAD, TOP_BAR_H + EDGE_MARGIN,
-                                   WIDTH - (EDGE_MARGIN + SIDE_BTN_W + SIDE_PAD)*2,  // overwritten by computeLayout
-                                   HEIGHT - TOP_BAR_H - 2.0f*EDGE_MARGIN,            // overwritten by computeLayout
-                                   renderer);
+    // Plot rect (will be recalculated every frame by computeLayout)
+    SDL_FRect plot = {0};
 
-    TTF_Font * font = openFont(FONT_PATH, FONT_SIZE);
+    TTF_Font *font = openFont(FONT_PATH, FONT_SIZE);
     
-    // Check if font was loaded successfully
     if (!font) {
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
@@ -80,15 +54,9 @@ int main() {
     }
 
     // Buttons
-    Button leftBtn     = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
-    Button rightBtn    = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
-    Button closeBtn    = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
-
-    // Resampled buffer (recomputed when inner width or dataset changes)
-    float *resampled = NULL;
-    int resampledCount = 0;
-    int lastInnerPixelWidth = -1;
-    int lastDatasetIndex = -1;
+    Button leftBtn  = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
+    Button rightBtn = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
+    Button closeBtn = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
 
     // Current Y range
     float yMin = 0.0f, yMax = 1.0f;
@@ -107,15 +75,13 @@ int main() {
 
         last = now;
 
-
         // Layout
-        LayoutMetrics L;
-        computeLayout(WIDTH, HEIGHT, &L, &plot, &leftBtn, &rightBtn, &closeBtn);
+        computeLayout(WIDTH, HEIGHT, &plot, &leftBtn, &rightBtn, &closeBtn);
 
         float mouseX, mouseY;
         SDL_GetMouseState(&mouseX, &mouseY);
 
-        updateButtonHover(&leftBtn, mouseX, mouseY);
+        updateButtonHover(&leftBtn,  mouseX, mouseY);
         updateButtonHover(&rightBtn, mouseX, mouseY);
         updateButtonHover(&closeBtn, mouseX, mouseY);
 
@@ -129,29 +95,17 @@ int main() {
             rightClicked |= handleNavButtonEvent(&rightBtn, &event);
             handleCloseButtonEvent(&closeBtn, &event, &running);
 
-            // ESC to quit
             if (event.type == SDL_EVENT_KEY_UP && event.key.key == SDLK_ESCAPE) {
                 running = FALSE;
             }
         }
 
-    
-        updateButtonAnimation(&leftBtn, dt);
+        updateButtonAnimation(&leftBtn,  dt);
         updateButtonAnimation(&rightBtn, dt);
         updateButtonAnimation(&closeBtn, dt);
 
-        // Resample if needed (inner width or dataset changed)
-        float left, right, top, bottom;
-        innerBounds(&plot, &left, &right, &top, &bottom);
-        int innerPixelWidth = (int) fmaxf(2.0f, floorf(right - left));
-    
-        for (int i = 0; i < DATASET_SIZE; ++i) {            
-            
-            dataset[i] = lerp(dataset[i], DATASET_SIZE, WIDTH);
-
-            // Recompute Y range for the *original* dataset (smoother labels)
-            computeYRange(dataset, DATASET_SIZE, &yMin, &yMax);
-        }
+        // Recompute Y range for the dataset
+        computeYRange(dataset, DATASET_SIZE, &yMin, &yMax);
 
         // Draw frame
         SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
@@ -159,7 +113,7 @@ int main() {
 
         drawBackground(renderer);
 
-        // Grid & ticks (with the requested rules)
+        // Grid & ticks
         drawYTicksAndGrid(renderer, font, &plot, yMin, yMax);
         drawXTicksAndGridMinutes(renderer, font, &plot, DATASET_SIZE);
 
@@ -168,7 +122,7 @@ int main() {
         drawAxisLabels(renderer, font, &plot, "Minutes", dataset_name[currentDataset]);
 
         // Graph
-        drawGraph(renderer, &plot,dataset, DATASET_SIZE, yMin, yMax);
+        drawGraph(renderer, &plot, dataset, DATASET_SIZE, yMin, yMax);
 
         // UI: nav buttons
         drawButton(renderer, &leftBtn);
@@ -192,16 +146,3 @@ int main() {
 
     return 0;
 }
-
-
-/*
-
-for() {
-do_module1;
-do2_module2
-do...;
-do_ubfunction1;
-do_subfunction2;
-do_module3;
-}
-*/
