@@ -1,3 +1,7 @@
+/**
+CLI functions for main menu and argument parsing.
+*/
+
 #include "../../include/cli_lib.h"
 #include "../../include/config_lib.h"
 #include <stdint.h>
@@ -48,7 +52,7 @@ struct configure_map config_table[] = {
 int read_user_input(char *p_input) {
     if (!fgets(p_input, 255, stdin)) {
         // Error handling - TODO
-        printf("Invalid user imput\n");
+        printf("Invalid user inpuwut\n");
         return 1;
     }
     return 0;
@@ -100,7 +104,7 @@ void print_help() {
     // TODO: is everything complete?
     printf("How to use: \n"
     "> help         print help menu (this menu)\n"
-    "> config       print all configs and their values\n"
+    "> config       print all configs and their values\n" // why does this not align in the terminal? 
     "> start        start the simulation with chosen configs\n"
     "> quit         quits this program\n"
     "To change configs: \n"
@@ -153,7 +157,8 @@ void print_config() {
  */
 void start_menu() {
     // Standard text visualisation
-    printf("Hello, this will be our start menu.\n");
+    printf("-------------- Space Hamster Parkhouse -------------- \n");
+    printf("Credits: Paminer Lesle, Ben Hibinger, Lionel Keilhack\n\n\n");
     print_help();
 }
 
@@ -168,8 +173,9 @@ void looped_menu() {
     char user_input[256]; // do we need to m/calloc?
     printf("Please enter your command: \n> ");
     read_user_input(user_input);
+
     // Removing the newline char with end of string:
     user_input[strcspn(user_input, "\n")] = '\0';
-    
+
     handle_user_input(user_input);
 }
