@@ -21,7 +21,6 @@ void test_new_node() {
 
     free(node);
     free(car);
-
 }
 
 /*
@@ -154,5 +153,4 @@ void test_queue() {
     test_en_queue();
     test_de_queue();
     test_clear_queue();
-
 }

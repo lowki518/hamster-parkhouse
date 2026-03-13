@@ -31,6 +31,9 @@ void test_car_arrives() {
 
 }
 
+/*
+@brief tests the park_car function
+*/
 void test_park_car() {
     t_Car_Park *car_park = init_car_park(30);
 
@@ -72,7 +75,9 @@ void test_check_parking_time() {
     free(car);
 }
 
-
+/*
+@brief tests the unpark_car function
+*/
 void test_unpark_car() {
     t_Car_Park *car_park = init_car_park(30);
     t_Parking_Cell *cell = car_park->first_parking_cell;
@@ -91,4 +96,14 @@ void test_unpark_car() {
     free(car);
     free(cell);
     free(car_park);
+}
+
+/*
+@brief tests the whole car_lib
+*/
+void test_car_lib() {
+    test_car_arrives();
+    test_park_car();
+    test_check_parking_time();
+    test_unpark_car();
 }
