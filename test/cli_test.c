@@ -1,5 +1,5 @@
-#include "../include/cli.h"
-#include "../include/config.h"
+#include "../include/cli_lib.h"
+#include "../include/config_lib.h"
 #include <assert.h>
 
 /*
