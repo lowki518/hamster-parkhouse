@@ -168,5 +168,8 @@ void looped_menu() {
     char user_input[256]; // do we need to m/calloc?
     printf("Please enter your command: \n> ");
     read_user_input(user_input);
+    // Removing the newline char with end of string:
+    user_input[strcspn(user_input, "\n")] = '\0';
+    
     handle_user_input(user_input);
 }
