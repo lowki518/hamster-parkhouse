@@ -11,7 +11,7 @@ int main() {
     
 
     char nb_steps_s[] = "Simualted Steps";
-    char nb_cells_s[] = "Parking Spaces";
+    char nb_cells_s[] = "Parking Cells";
     char max_time_s[] = "Max. Time";
     char new_car_prob_s[] = "New Car Prob.";
     char max_new_cars_s[] = "Max. New Cars";

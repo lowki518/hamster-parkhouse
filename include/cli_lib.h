@@ -4,6 +4,9 @@
 #include "data_types.h"
 #include <stdint.h>
 
+// Flag for running & starting simulation
+extern int quit;
+extern int start;
 
 // Structure for a mapping from string (command input) to a function
 // with Command_Arg type argument

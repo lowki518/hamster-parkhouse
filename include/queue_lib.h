@@ -1,7 +1,7 @@
 #ifndef QUEUE_LIB_H
 #define QUEUE_LIB_H
 
-#include "../data_types.h"
+#include "data_types.h"
 
 /*
 @brief creates a new node for the queue
@@ -26,9 +26,9 @@ t_Queue *init_queue();
 
 @param[1] queue A pointer to the queue to dequeue from.
 
-@return void
+@return the car that leaves the queue
 */
-void de_queue(t_Queue *queue);
+t_Car *de_queue(t_Queue *queue);
 
 
 /*

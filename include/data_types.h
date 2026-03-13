@@ -27,34 +27,36 @@ typedef enum {
 typedef unsigned int t_Time;
 
 
-// Car_Park Struct
-// Number of parking cells
-// Number of free parking cells
-// Maximum parking duration
-// Pointer to first parking cell 
-typedef struct {
-    int max_parking_cells; 
-    int free_parking_cells;
-    t_Time max_parking_duration; 
-    //t_Parking_Cell *first_parking_cell; // comment for review: it don't already know t_Parking_Cell here, it is first defined later!!!
-} t_Car_Park;
-
-
 // Car struct
 // Unique ID
-// Cell index
 // Brand of the car
 // How long the car will park
 // When the car started parking
 typedef struct {
     int id;
-    int cell_index; // should be -1 when car is in queue
     Car_Brand brand; 
-
     t_Time parking_time;
     t_Time start_parking_time;
-
 } t_Car;
+
+// Parking_Cell Struct
+// Pointer to the car in the cell
+// Pointer to next cell
+typedef struct Parking_Cell{
+    t_Car *p_car_in_cell;
+    struct Parking_Cell *pNext;
+} t_Parking_Cell;
+
+// Car_Park Struct
+// Number of parking cells
+// Number of free parking cells
+// Pointer to first parking cell 
+typedef struct {
+    int max_parking_cells; 
+    int free_parking_cells;
+    t_Parking_Cell *first_parking_cell;
+} t_Car_Park;
+
 
 
 // Car_Node Struct
@@ -62,26 +64,20 @@ typedef struct {
 // Pointer to next Node
 typedef struct {    
     t_Car *pCar;
-    struct t_carnode *pNext; 
+    struct t_Car_Node *pNext; 
 } t_Car_Node;
 
 
 // Queue struct
 // Length of queue
 // Pointer to first node
+// Pointer to last node
 typedef struct {
     int q_length; 
-    t_Car_Node *first_pos; 
+    t_Car_Node *p_first_pos;
+    t_Car_Node *p_last_pos;
 } t_Queue;
 
-
-// Parking_Cell Struct
-// (Boolean) Is the cell free
-// Pointer to the car in the cell
-typedef struct {
-    int is_free;
-    t_Car *car_in_cell;
-} t_Parking_Cell;
 
 
 #endif
