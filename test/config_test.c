@@ -65,3 +65,13 @@ void test_change_max_cars_per_ts() {
     assert(max_cars_per_ts == 123);
     assert(change_max_cars_per_ts("invalid") != 0);
 }
+
+void test_config_all() {
+    test_input_random_seed();
+    test_change_sim_time();
+    test_change_output_path();
+    test_change_max_cars_per_ts();
+    test_change_max_parking_time();
+    test_change_car_probability();
+    test_change_max_car_cells();
+}
