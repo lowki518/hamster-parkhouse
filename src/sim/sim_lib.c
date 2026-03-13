@@ -63,7 +63,7 @@ void clear_car_park(t_Car_Park *car_park) {
     t_Parking_Cell *cell = car_park->first_parking_cell;
 
     while (cell != NULL) {
-        unpark_car(cell);
+        unpark_car(cell, car_park);
         t_Parking_Cell *ctmp = cell->pNext;
         free(cell);
         cell = ctmp;
@@ -75,19 +75,11 @@ void clear_car_park(t_Car_Park *car_park) {
 /*
 @brief Does the entire simulation and prits the data
 
-@param[1] max_car_cells The amount of car cells in the park
-@param[2] time_steps User defined number of time steps (length of sim)
-@param[3] new_car_prob The probability of a new car
-@param[4] max_cars_per_ts How many cars can arrive per ts
-@param[5] max_parking_time The maximum parking time
-@param[6] seed The seed for the randomness
-@param[7] path The path for the output file
-
 @returns the number of the completed simulation
 */
-int *start_simulation (int max_car_cells, const t_Time time_steps, const float new_car_prob, const int max_cars_per_ts, const t_Time max_parking_time, unsigned int seed, const char* path) {
+int *start_simulation () {
 
-    srand(seed);
+    srand(random_seed);
 
     // allocates all the needed variables for the simulation
     unsigned int *car_id = malloc(sizeof(car_id));
@@ -100,11 +92,11 @@ int *start_simulation (int max_car_cells, const t_Time time_steps, const float n
     // if any allocation failed, abort
     if(!car_id || !sim_nr || !time || !tot_parking_time || !full_house_steps) {
         printf("Error allocating memory.\n");
-        return;
+        return NULL;
     }
 
     *car_id = 0;
-    *sim_nr = get_new_file_number(path);
+    *sim_nr = get_new_file_number(output_path);
     *tot_parking_time = 0;
     *full_house_steps = 0;
 
@@ -112,17 +104,17 @@ int *start_simulation (int max_car_cells, const t_Time time_steps, const float n
     t_Parking_Cell *cell = park->first_parking_cell;
     t_Queue *queue = init_queue();
 
-    create_new_file_with_head_data(path, *sim_nr, time_steps, max_car_cells, max_parking_time, new_car_prob, max_cars_per_ts, seed);
-    print_head_data(*sim_nr, time_steps, max_car_cells, max_parking_time, new_car_prob, max_cars_per_ts, seed);
+    create_new_file_with_head_data(output_path, *sim_nr, simulation_time, max_car_cells, max_parking_time, car_probability, max_cars_per_ts, random_seed);
+    print_head_data(*sim_nr, simulation_time, max_car_cells, max_parking_time, car_probability, max_cars_per_ts, random_seed);
 
-    for (*time = 0; *time <= time_steps; *(time)++) {
+    for (*time = 0; *time <= simulation_time; *(time)++) {
 
         // checks if any cars in the park need to be unparked
         unpark_cars_in_park(park, *time);
 
         // creates new cars
         for (int i = 0; i <= max_cars_per_ts; i++) {
-            t_Car *new_car = car_arrives(new_car_prob, car_id, max_parking_time);
+            t_Car *new_car = car_arrives(car_probability, car_id, max_parking_time);
             if (new_car != NULL) {
                 en_queue(queue, new_car);
                 tot_parking_time += new_car->parking_time;
@@ -145,7 +137,7 @@ int *start_simulation (int max_car_cells, const t_Time time_steps, const float n
         float avg_parking_time = (float) *tot_parking_time / (float) (*(car_id) + 1);
         Car_Brand brand = get_most_parked_brand(park);
         print_data_per_timestep(*time, (park->max_parking_cells - park->free_parking_cells), avg_parking_time, queue->q_length, *full_house_steps, *(car_id) + 1, brand);
-        append_data_per_timestep(path, sim_nr, *time, (park->max_parking_cells - park->free_parking_cells), avg_parking_time, queue->q_length, *full_house_steps, *(car_id) + 1, brand);
+        append_data_per_timestep(output_path, *sim_nr, *time, (park->max_parking_cells - park->free_parking_cells), avg_parking_time, queue->q_length, *full_house_steps, *(car_id) + 1, brand);
         
     }
     
@@ -158,5 +150,5 @@ int *start_simulation (int max_car_cells, const t_Time time_steps, const float n
     free(full_house_steps);
     free(tot_parking_time);
 
-    return *sim_nr;
+    return sim_nr;
 }

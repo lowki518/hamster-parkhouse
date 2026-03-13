@@ -1,5 +1,5 @@
-#ifndef CLI 
-#define CLI
+#ifndef CLI_LIB_H
+#define CLI_LIB_H
 
 #include "data_types.h"
 #include <stdint.h>

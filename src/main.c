@@ -27,6 +27,6 @@ int main() {
         return 0;
     }
 
-    int *sim_nr = start_simulation(simulation_time, car_probability, max_cars_per_ts, max_parking_time, random_seed, output_path);
+    int *sim_nr = start_simulation();
 
 }

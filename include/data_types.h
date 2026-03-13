@@ -62,7 +62,7 @@ typedef struct {
 // Car_Node Struct
 // Pointer to cointained car
 // Pointer to next Node
-typedef struct {    
+typedef struct t_Car_Node {    
     t_Car *pCar;
     struct t_Car_Node *pNext; 
 } t_Car_Node;

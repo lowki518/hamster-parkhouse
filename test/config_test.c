@@ -1,4 +1,4 @@
-#include "../include/config.h"
+#include "../include/config_lib.h"
 #include <assert.h>
 #include <string.h>
 
@@ -66,7 +66,7 @@ void test_change_max_cars_per_ts() {
     assert(change_max_cars_per_ts("invalid") != 0);
 }
 
-void test_config_all() {
+int main() {
     test_input_random_seed();
     test_change_sim_time();
     test_change_output_path();

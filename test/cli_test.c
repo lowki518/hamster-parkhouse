@@ -1,5 +1,5 @@
-#include "../include/cli.h"
-#include "../include/config.h"
+#include "../include/cli_lib.h"
+#include "../include/config_lib.h"
 #include <assert.h>
 
 /*
@@ -22,4 +22,8 @@ void test_handle_user_input() {
 
     // Get error code - TODO: right error code
     assert(handle_user_input(error_input) != 0);
+}
+
+int main() {
+    test_handle_user_input();
 }

@@ -38,16 +38,8 @@ void clear_car_park(t_Car_Park *car_park);
 /*
 @brief Does the entire simulation and prits the data
 
-@param[1] max_car_cells The amount of car cells in the park
-@param[2] time_steps User defined number of time steps (length of sim)
-@param[3] new_car_prob The probability of a new car
-@param[4] max_cars_per_ts How many cars can arrive per ts
-@param[5] max_parking_time The maximum parking time
-@param[6] seed The seed for the randomness
-@param[7] path The path for the output file
-
 @returns the number of the completed simulation
 */
-int *start_simulation (const t_Time time_steps, const float new_car_prob, const int max_cars_per_ts, const t_Time max_parking_time, unsigned int seed, const char* path) {
+int *start_simulation ();
 
 #endif
