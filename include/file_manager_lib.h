@@ -48,35 +48,24 @@ void create_new_file_with_head_data (char *path, int new_file_number, t_Time sim
 */
 void append_data_per_timestep (char *path, int new_file_number, t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand);
 
+/*
+@brief opens simulation from path with file number to read
+
+@param[1] path The path to the file
+@param[2] file_number The number of the simulation
+
+@return the pointer to the file stream
+*/
+FILE *open_file_r(const char* path, int file_number);
 
 /*
+@brief opens simulation from path with file number to append
 
-@brief writes the new config data into the config file.
+@param[1] path The path to the file
+@param[2] file_number The number of the simulation
 
-@param[1] parking_cells The amount of parking cells.
-@param[2] max_parking_duration The max. amount of timesteps a car can park.
-@param[3] sim_duration The duration of the simulation.
-@param[4] new_car_prob The probability of a new car arriving.
-@param[5] max_cars_arriving The maximum amount of cars arriving in one step.
-@param[6] seed The seed used to generate the randomness within the simulation.
-
-
-void write_config_data (int parking_cells, t_Time max_parking_duration, t_Time sim_duration, float new_car_prob, int max_cars_arriving, unsigned int seed);
-
-
-
-@brief Reads the config file
-
-@param[1] parking_cells A pointer to where the amount of parking cells will be stored.
-@param[2] max_parking_duration A pointer to where the maximum parking duration will be stored.
-@param[3] sim_duration A pointer to where the duration of the simulation will be stored.
-@param[4] new_car_prob A pointer to where the probability of a car arriving will be stored.
-@param[5] max_cars_arriving A pointer to where the maximum amount of cars arriving in one step will be stored.
-@param[6] seed A pointer to where the seed will be stored.
-
-@return void
-
-void read_config_data (int *parking_cells, t_Time *max_parking_duration, t_Time *sim_duration, float *new_car_prob, int *max_cars_arriving, unsigned int *seed);
-
+@return the pointer to the file stream
 */
+FILE *open_file_a(const char* path, int file_number);
+
 #endif

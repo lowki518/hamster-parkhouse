@@ -61,7 +61,7 @@ void create_new_file_with_head_data (char *path,int new_file_number, t_Time sim_
     FILE *fptr = fopen(filename, "w");
     if (fptr == NULL) {
         printf("Error creating file.\n");
-        return 1;
+        return NULL;
     }   
     
     char sim_duration_s[] = "Simulated Steps";
@@ -116,7 +116,7 @@ void append_data_per_timestep (char *path, int new_file_number, t_Time timestep,
     FILE *fptr = fopen(filename, "a");     
     if (fptr == NULL) {
         printf("Error opening file.\n");
-        return 1;
+        return NULL;
     }
 
     fprintf(fptr, "|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
@@ -125,90 +125,46 @@ void append_data_per_timestep (char *path, int new_file_number, t_Time timestep,
 }
 
 
-
-
-
-
-//possibly not necessary as the configs should also be saved in the simulations file
-
-
-
 /*
-@brief writes the new config data into the config file.
+@brief opens simulation from path with file number to read
 
-@param[1] parking_cells The amount of parking cells.
-@param[2] max_parking_duration The max. amount of timesteps a car can park.
-@param[3] sim_duration The duration of the simulation.
-@param[4] new_car_prob The probability of a new car arriving.
-@param[5] max_cars_arriving The maximum amount of cars arriving in one step.
-@param[6] seed The seed used to generate the randomness within the simulation.
+@param[1] path The path to the file
+@param[2] file_number The number of the simulation
 
-@return void
+@return the pointer to the file stream
+*/
+FILE *open_file_r(const char* path, int file_number) {
+    char filename[60];
 
-void write_config_data (int parking_cells, t_Time max_parking_duration, t_Time sim_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
-    char sim_duration_s[] = "Simulated Steps";
-    char parking_cells_s[] = "Parking Cells";
-    char max_parking_duration_s[] = "Max. Parking Time";
-    char new_car_prob_s[] = "New Car Prob.";
-    char max_cars_arriving_s[] = "Max. New Cars";
-    char seed_s[] = "Seed";
-    
-    FILE *fptr; 
-    
-    fptr = fopen("config.txt", "w");      //edit file name and dir
+    sprintf(filename, "%sSimulation_%d.txt", *path, new_file_number);
 
+    FILE *fptr = fopen(filename, "r");     
+    if (fptr == NULL) {
+        printf("Error opening file.\n");
+        return NULL;
+    }
 
-    fprintf(fptr, "\n");
-    fprintf(fptr, "Configured data:\n");
-    fprintf(fptr, "\n");
-
-    fprintf(fptr, "|%15s|%15s|%19s|%15s|%15s|%15s|\n", sim_duration_s, parking_cells_s, max_parking_duration_s, new_car_prob_s, max_cars_arriving_s, seed_s);
-    fprintf(fptr, "|%15i|%15i|%19i|%14.2f%%|%15i|%15i|\n", sim_duration, parking_cells, max_parking_duration, new_car_prob, max_cars_arriving, seed);
-
-    fclose(fptr);
-
-    
-    file = OPEN CONFIG FILE
-        FOR DATA in File                        //why do we need a FOR loop? can't we just write in the file (automaticlaly deletes the old stuff anyways)
-            DATA (in File) = NEW DATA
-        END FOR
-    CLOSE file
-    
+    return fptr;
 }
 
+/*
+@brief opens simulation from path with file number to append
 
+@param[1] path The path to the file
+@param[2] file_number The number of the simulation
 
+@return the pointer to the file stream
+*/
+FILE *open_file_a(const char* path, int file_number) {
+    char filename[60];
 
+    sprintf(filename, "%sSimulation_%d.txt", *path, new_file_number);
 
+    FILE *fptr = fopen(filename, "a");     
+    if (fptr == NULL) {
+        printf("Error opening file.\n");
+        return NULL;
+    }
 
-// needs to either be deleted or done at the verrryyyy end
-
-
-
-
-
-
-@brief Reads the config file
-
-@param[1] parking_cells A pointer to where the amount of parking cells will be stored.
-@param[2] max_parking_duration A pointer to where the maximum parking duration will be stored.
-@param[3] sim_duration A pointer to where the duration of the simulation will be stored.
-@param[4] new_car_prob A pointer to where the probability of a car arriving will be stored.
-@param[5] max_cars_arriving A pointer to where the maximum amount of cars arriving in one step will be stored.
-@param[6] seed A pointer to where the seed will be stored.
-
-@return void
-
-void read_config_data (int *parking_cells, t_Time *max_parking_duration, t_Time *sim_duration, float *new_car_prob, int *max_cars_arriving, unsigned int *seed) {
-
-    /*
-    file = OPEN CONFIG FILE
-        FOR DATA in File
-            *data = DATA FROM FILE
-        END FOR
-    close file
-    
-
- }
-
- */
+    return fptr;
+}

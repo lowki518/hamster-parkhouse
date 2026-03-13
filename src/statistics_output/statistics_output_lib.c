@@ -40,11 +40,98 @@ void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parkin
 
 
 /*
-@brief Rewrites the dataset with new data based on the index.
+@brief gets the length of the Simulation
+
+@param[1] file A pointer to the opened file
+
+@return the simulation length
 */
-float *loadNewDataset(int datasetIndex, char *filepath) {
-    return NULL; // Placeholder for actual implementation
+int get_simulation_length(FILE *file) {
+    char line[115]; // the length of one line
+    int simulated_steps = 0;
+
+    rewind(file);
+
+    // searches for the line "Simulated Steps"
+    while (fgets(line, sizeof(line), file)) {
+        if (strstr(line, "Simulated Steps")) {
+            
+            // the next line contains the value
+            if (fgets(line, sizeof(line), file)) {
+                
+                // reads the first number int he next line
+                if (sscanf(line, " %d", &simulated_steps) != 1) {
+                    simulated_steps = 0;
+                }
+            }
+            break;
+        }
+    }
+
+    return simulated_steps;
 }
+
+
+
+/*
+@brief Rewrites the dataset with new data based on the index
+
+@param[1] file A pointer to the opened file
+@param[2] dataset_index The index of the data to load
+
+@return void
+*/
+void load_new_dataset(FILE* file, int dataset_index, float* dataset) {
+    char line[115]; // the length of one line
+    rewind(file);
+
+    // skips until "Current Step" appears in line
+    while (fgets(line, sizeof(line), file)) {
+        if (strstr(line, "Current Step"))
+            break;
+    }
+
+    int count = 0;
+
+    while (fgets(line, sizeof(line), file)) {
+        char tmp[115]; // the length of on eline
+        strncpy(tmp, line, sizeof(tmp) - 1);
+        tmp[sizeof(tmp) - 1] = '\0';
+
+        char *token;
+        char *rest = tmp;
+        int col = 0;
+        float val = 0.0f;
+        int found = 0;
+
+        while ((token = strtok_r(rest, "|", &rest))) {
+            col++;
+            if (col == dataset_index) {
+                while (*token == ' ') token++;
+                if (sscanf(token, "%f", &val) == 1) {
+                    found = 1;
+                }
+                break;
+            }
+        }
+
+        if (found) {
+            dataset[count++] = val;
+        }
+    }
+}
+
+/*
+@brief returns the name of the brand by its enum code
+
+@param[1] brand_numb The number of the brand
+
+@return the name of the brand
+*/
+char* get_brand_by_number(int brand_numb) {
+    return "test";
+}
+
 
 
 /* 
@@ -71,8 +158,8 @@ accounting for PADDING and saves it in the provided pointers.
 void innerBounds(SDL_FRect *plot, float *left, float *right, float *top, float *bottom) {
     *left   = plot->x + PADDING;
     *bottom = plot->y + plot->h - PADDING;
-    *right  = plot->x + plot->w - 20.0f; // keep space for arrow
-    *top    = plot->y - 20.0f;            // keep space for arrow
+    *right  = plot->x + plot->w - ARROW_PADDING; // keep space for arrow
+    *top    = plot->y - ARROW_PADDING;            // keep space for arrow
 }
 
 
@@ -114,19 +201,16 @@ void updateButtonAnimation(Button *btn, float dt) {
 @brief Draws a cyan glowing & enlarging effect around a given rectangle.
 */
 void drawGlow(SDL_Renderer *renderer, SDL_FRect *rect, float intensity) {
-    int layers = 6;
-    for (int i = 0; i < layers; i++) {
-        float expand = (float) i * 4.0f;
-        float alpha = (1.0f - (float)i / layers) * 80.0f * intensity;
-        SDL_SetRenderDrawColor(renderer, 0, 200, 255, (Uint8)alpha);
-        SDL_FRect glowRect = {
-            rect->x - expand,
-            rect->y - expand,
-            rect->w + expand * 2,
-            rect->h + expand * 2
-        };
-        SDL_RenderFillRect(renderer, &glowRect);
-    }
+    // Draw a solid border around the button, fading in with hover intensity
+    Uint8 alpha = (Uint8)(255.0f * intensity);
+    SDL_SetRenderDrawColor(renderer, BTN_HOVER_R, BTN_HOVER_G, BTN_HOVER_B, alpha);
+    SDL_FRect border = {
+        rect->x - BTN_GLOW_SIZE,
+        rect->y - BTN_GLOW_SIZE,
+        rect->w + BTN_GLOW_SIZE * 2,
+        rect->h + BTN_GLOW_SIZE * 2
+    };
+    SDL_RenderFillRect(renderer, &border);
 }
 
 
@@ -135,9 +219,8 @@ void drawGlow(SDL_Renderer *renderer, SDL_FRect *rect, float intensity) {
 */
 void drawButton(SDL_Renderer *renderer, Button *btn) {
     drawGlow(renderer, &btn->rect, btn->hoverAnim);
-
-    SDL_Color base  = {0, 150, 255, 255};
-    SDL_Color hover = {0, 200, 255, 255};
+    SDL_Color base  = {BTN_BASE_R,  BTN_BASE_G,  BTN_BASE_B,  255};
+    SDL_Color hover = {BTN_HOVER_R, BTN_HOVER_G, BTN_HOVER_B, 255};
     float t = btn->hoverAnim;
 
     Uint8 r = (Uint8)lerp(base.r, hover.r, t);
@@ -169,10 +252,10 @@ void drawArrow(SDL_Renderer *renderer, SDL_FRect *rect, int direction, float hov
     SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
     if (direction == -1) {
         SDL_RenderLine(renderer, cx + size, cy - size, cx - size, cy);
-        SDL_RenderLine(renderer, cx - size, cy,       cx + size, cy + size);
+        SDL_RenderLine(renderer, cx - size, cy, cx + size, cy + size);
     } else {
         SDL_RenderLine(renderer, cx - size, cy - size, cx + size, cy);
-        SDL_RenderLine(renderer, cx + size, cy,       cx - size, cy + size);
+        SDL_RenderLine(renderer, cx + size, cy, cx - size, cy + size);
     }
 }
 
@@ -183,10 +266,11 @@ void drawArrow(SDL_Renderer *renderer, SDL_FRect *rect, int direction, float hov
 This function was made using Copilot, as its basic geometry and I wanted to save time.
 */
 void drawXIcon(SDL_Renderer *renderer, SDL_FRect *rect, float hoverAnim) {
+    (void)hoverAnim; // Icon is always fully visible; hoverAnim kept for API compatibility
     float cx = rect->x + rect->w * 0.5f;
     float cy = rect->y + rect->h * 0.5f;
 
-    float arm = fminf(rect->w, rect->h) * -0.15f * hoverAnim;
+    float arm = fminf(rect->w, rect->h) * 0.3f;
     float x1 = cx - arm, y1 = cy - arm;
     float x2 = cx + arm, y2 = cy + arm;
 

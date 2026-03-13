@@ -30,8 +30,18 @@
 #define CLOSE_MARGIN       8.0f   // margin of the close button from the top-right corner
 #define PADDING           60.0f   // Padding for the plot area to make space for labels and ticks
 #define TICK_SIZE          6.0f   // Length of the tick marks on the axes
+#define ARROW_PADDING     20.0f   // Space for arrows
 
 #define SPEED 10.0f // Speed of animations
+
+// Button colors (base and hover, RGB)
+#define BTN_BASE_R  166
+#define BTN_BASE_G   27
+#define BTN_BASE_B  255
+#define BTN_HOVER_R 255
+#define BTN_HOVER_G 16
+#define BTN_HOVER_B 255
+#define BTN_GLOW_SIZE 10.0f  // thickness of the glow border around buttons (in pixels)
 
 // Booleans
 #define TRUE 1
@@ -82,16 +92,34 @@ void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time
 */
 void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand);
 
+/*
+@brief gets the length of the Simulation
+
+@param[1] file A pointer to the opened file
+
+@return the simulation length
+*/
+int get_simulation_length(FILE *file);
+
 
 /*
-@brief Rewrites the dataset with new data based on the index and the Filepath.
+@brief Rewrites the dataset with new data based on the index
 
-@param[1] datasetIndex An integer representing the index on the dataset to load.
-@param[2] filepath A pointer to a string representing the path to the file containing the new data.
+@param[1] file A pointer to the opened file
+@param[2] dataset_index The index of the data to load
 
-@return A pointer 
+@return void
 */
-float *loadNewDataset(int datasetIndex, char *filepath);
+void load_new_dataset(FILE* file, int dataset_index, float* dataset);
+
+/*
+@brief returns the name of the brand by its enum code
+
+@param[1] brand_numb The number of the brand
+
+@return the name of the brand
+*/
+char* get_brand_by_number(int brand_numb);
 
 
 /* 
