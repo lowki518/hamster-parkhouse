@@ -13,7 +13,7 @@ t_Time max_parking_time = 10;
 t_Time simulation_time = 100;
 float car_probability = 50.0;
 int random_seed = 0;
-char output_path[256] = "output/";
+char output_path[256] = "../data/";
 uint8_t max_cars_per_ts = 5;
 
 

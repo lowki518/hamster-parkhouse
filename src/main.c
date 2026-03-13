@@ -17,16 +17,11 @@ int main() {
     // Opens CLI start Menu
     start_menu();
 
-    // Keeps menu open, until simulation is started or quit
     while (!quit) {
         looped_menu();
+        if (start) {
+            int *sim_nr = start_simulation();
+            start = FALSE;
+        }
     }
-
-    // If user wants to quit -> don't start simulation and exit
-    if(!start) {
-        return 0;
-    }
-
-    int *sim_nr = start_simulation();
-
 }

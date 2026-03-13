@@ -19,7 +19,6 @@ void return_quit() {
 
 void return_start() {
     printf("Starting simulation...\n");
-    quit = TRUE;
     start = TRUE;
 }
 
@@ -78,6 +77,7 @@ int handle_user_input(char *p_input) {
     for (int i = 0; i < (sizeof(print_table) / sizeof(print_table[0])); i++) {
         if (!strcmp(first_arg, print_table[i].print_name)) {
             print_table[i].p_print_fun();
+            printf("This works great until here right? \n");
             return 0;
         }
     }
@@ -90,7 +90,7 @@ int handle_user_input(char *p_input) {
             return 0;
         }
     }
-    printf(" \"\"\" %s \"\"\" did not fit any known command. \n", first_arg);
+    printf(" \"\"\" %s \"\"\" did not fit any known command. uwu\n", first_arg);
     return -1;
 }
 
