@@ -13,7 +13,9 @@
 
 @return void
 */
-void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
+void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, 
+    t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed
+) {
     char sim_duration_s[] = "Simulated Steps";
     char parking_cells_s[] = "Parking Cells";
     char max_parking_duration_s[] = "Max. Parking Time";
@@ -33,11 +35,19 @@ void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time
     printf("Simulation Nr. %i:\n", sim_nr);
     printf("\n");
 
-    printf("|%15s|%15s|%19s|%15s|%15s|%15s|\n", sim_duration_s, parking_cells_s, max_parking_duration_s, new_car_prob_s, max_cars_arriving_s, seed_s);
-    printf("|%15i|%15i|%19i|%14.2f%%|%15i|%15i|\n", sim_duration, parking_cells, max_parking_duration, new_car_prob, max_cars_arriving, seed);
+    printf("|%15s|%15s|%19s|%15s|%15s|%15s|\n", 
+        sim_duration_s, parking_cells_s, max_parking_duration_s, 
+        new_car_prob_s, max_cars_arriving_s, seed_s);
+    printf("|%15i|%15i|%19i|%14.2f%%|%15i|%15i|\n", 
+        sim_duration, parking_cells, max_parking_duration, new_car_prob, max_cars_arriving, seed);
     
+    //printf("We at least get until here like I got in Bens mum right?5\n");
+
     printf("\n\n");
-    printf("|%15s|%15s|%19s|%15s|%15s|%15s|%15s|\n", curr_step_s, curr_cars_s, avg_time_s, q_len_s, full_house_s, tot_sim_car_s, most_brand_s);
+    printf("|%15s|%15s|%19s|%15s|%15s|%15s|%15s|\n", 
+        curr_step_s, curr_cars_s, avg_time_s, q_len_s, full_house_s, tot_sim_car_s, most_brand_s);
+    
+    
 }
 
 
@@ -54,8 +64,11 @@ void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time
 
 @return void
 */
-void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) { 
-    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15i|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
+void print_data_per_timestep (t_Time timestep, int cars_parked, 
+    float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand
+) { 
+    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15i|\n", 
+        timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
 }
 
 /*

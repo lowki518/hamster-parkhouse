@@ -141,21 +141,25 @@ int check_parking_time(t_Car *car, t_Time time) {
 */
 Car_Brand get_most_parked_brand(t_Car_Park *park) {
     t_Parking_Cell *cell = park->first_parking_cell;
-    int *brand = calloc(26, sizeof (brand)); //allocates memory for 26 brands
+    int *brand = calloc(27, sizeof (brand)); //allocates memory for 26 brands
 
     while (cell != NULL) {
         //increases the value for each brand if the car is of the brand type
-        brand[cell->p_car_in_cell->brand]++;
+        t_Car *car = cell->p_car_in_cell;
+        if(car) {
+            *(brand + car->brand) += 1;
+        }
         cell = cell->pNext;
     }
 
     // gets the index of the highest value 
     int max_index = 0;
-    for (int i = 1; i < 26; i++) {
+    for (int i = 0; i < 27; i++) {
         if (brand[i] > brand[max_index]) {
             max_index = i;
         }
     }
+
 
     free(brand);
 
