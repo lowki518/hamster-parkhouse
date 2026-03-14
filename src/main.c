@@ -23,5 +23,8 @@ int main() {
             int *sim_nr = start_simulation();
             start = FALSE;
         }
+        if (file_nr == -1) {
+            printf("Please input your shit in here @Ben you mofo ÒnÓ\n");
+        }
     }
 }
