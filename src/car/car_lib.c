@@ -166,3 +166,75 @@ Car_Brand get_most_parked_brand(t_Car_Park *park) {
     return max_index;
 
 }
+
+/*
+@brief returns the name of the brand by its enum code
+
+@param[1] brand_numb The number of the brand
+
+@return the name of the brand
+*/
+char* get_brand_by_number(Car_Brand brand_numb) {
+
+    switch (brand_numb) {
+
+        case 0:
+            return "BMW";
+        case 1:
+            return "VW";
+        case 2:
+            return "SKODA";
+        case 3:
+            return "RENAULT";
+        case 4:
+            return "CITROEN";
+        case 5:
+            return "TOYOTA";
+        case 6:
+            return "AUDI";
+        case 7:
+            return "MERCEDES";
+        case 8:
+            return "PEUGEOT";
+        case 9:
+            return "MAYBACH";
+        case 10:
+            return "ALPINA";
+        case 11:
+            return "NISSAN";
+        case 12:
+            return "HONDA";
+        case 13:
+            return "SAAB";
+        case 14:
+            return "VOLVO";
+        case 15:
+            return "OPEL";
+        case 16:
+            return "DACIA";
+        case 17:
+            return "FORD";
+        case 18:
+            return "FIAT";
+        case 19:
+            return "ALFA ROMEO";
+        case 20:
+            return "PORSCHE";
+        case 21:
+            return "KIA";
+        case 22:
+            return "HYUNDAI";
+        case 23:
+            return "MAZDA";
+        case 24:
+            return "SEAT";
+        case 25:
+            return "SUBARU";
+        case 26:
+            return "SUZUKI";
+    
+        default:
+            return "";
+    
+    }
+}

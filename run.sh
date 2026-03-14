@@ -171,4 +171,4 @@ echo "Press Ctrl+C or type 'exit' to stop and shut down services..."
 echo ""
 
 # Keep the script alive so desktop remains open
-tail -f /dev/null
+wait 2>/dev/null || true

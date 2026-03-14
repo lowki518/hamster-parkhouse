@@ -28,23 +28,22 @@ add_library(simulation src/sim/sim_lib.c)
 # ===== Link Library Code =====
 
 target_link_libraries(cli config)
-target_link_libraries(file_manager config)
+target_link_libraries(file_manager config car)
 target_link_libraries(queue car)
-target_link_libraries(statistics m SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+target_link_libraries(statistics m SDL3::SDL3 SDL3_ttf::SDL3_ttf file_manager car)
 target_link_libraries(simulation m car cli config file_manager queue statistics)
 
 
 # ===== Add Tests =====
 add_executable(test_cli test/cli_test.c)
 add_executable(test_config test/config_test.c)
+add_executable(test_gui test/gui_test.c)
 
 
 # ===== Link Test Libraries =====
-
-
 target_link_libraries(test_cli cli config)
 target_link_libraries(test_config config)
- 
+target_link_libraries(test_gui m statistics SDL3::SDL3 SDL3_ttf::SDL3_ttf)
 
 
 # ===== Activate Unit Tests =====
@@ -57,7 +56,12 @@ add_test(
 
 add_test(
     NAME ConfigUnitTest
-    COMMAND test_cli
+    COMMAND test_config
+)
+
+add_test(
+    NAME GUIUnitTest
+    COMMAND test_gui
 )
 
 
@@ -66,16 +70,17 @@ add_custom_target(run_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
     DEPENDS test_cli
     DEPENDS test_config
+    DEPENDS test_gui
     COMMENT "Running unit tests"
 )
 
 # ===== Add Main Executable =====
-add_executable(park-house src/main.c)
+#add_executable(park-house src/main.c)
+add_executable(vis src/statistics_test.c)
 
-
-target_link_libraries(park-house car cli config file_manager queue statistics simulation SDL3::SDL3 SDL3_ttf::SDL3_ttf)
-
+#target_link_libraries(park-house car cli config file_manager queue statistics simulation SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+target_link_libraries(vis m file_manager statistics SDL3::SDL3 SDL3_ttf::SDL3_ttf car)
 
 # only build main if tests successful
-add_dependencies(park-house run_tests)
+add_dependencies(vis run_tests)
  
