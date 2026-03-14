@@ -4,15 +4,12 @@ CLI functions for main menu and argument parsing.
 
 #include "../../include/cli_lib.h"
 #include "../../include/config_lib.h"
-#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
 int quit = FALSE;
 int start = FALSE;
-int file_nr = -1;
-
 
 // this function is just so I can try quitting.
 void return_quit() {
@@ -25,19 +22,12 @@ void return_start() {
     start = TRUE;
 }
 
-// needs to be a fucken int mate I'm not angry you are I still didn't have any coffee this morning because BEN OF ALL PEOPLE needed my help for some random errors in his fucking GUI shit that he couldn't fix and was like: Lionel uwu, can you help me? And because I'm a cool guy I just said yes directly after waking up and seeing his message but I just didn't have coffee yet and now im angy ÒnÓ
-int open_file(char * file_nr_s) {
-    printf("Opening this fucking bitch ass file...\n");
-    file_nr = atoi(file_nr_s);
-    return 0;
-}
-
 // Map for print functions
 static struct print_map print_table[] = {
     {"help", print_help},
     {"config", print_config},
     {"quit", return_quit},
-    {"start", return_start},
+    {"start", return_start}
 };
 // Map for configuration changer functions
 struct configure_map config_table[] = {
@@ -47,9 +37,7 @@ struct configure_map config_table[] = {
     {"car_probability", change_car_probability},
     {"random_seed", input_random_seed},
     {"output_path", change_output_path}, 
-    {"max_cars_per_ts", change_max_cars_per_ts},
-    {"open", open_file}
-
+    {"max_cars_per_ts", change_max_cars_per_ts}
 };
 
 
