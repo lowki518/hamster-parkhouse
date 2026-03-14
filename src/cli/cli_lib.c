@@ -5,11 +5,13 @@ CLI functions for main menu and argument parsing.
 #include "../../include/cli_lib.h"
 #include "../../include/config_lib.h"
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 int quit = FALSE;
 int start = FALSE;
+int file_nr = -1;
 
 // this function is just so I can try quitting.
 void return_quit() {
@@ -21,6 +23,13 @@ void return_start() {
     printf("Starting simulation...\n");
     start = TRUE;
 }
+
+// this fucking ass bitch function got deleted I'm so fucking angry please don't do this again... also fuck you ben for calling me before my first coffeeeeeeeeeeeeeee and letting me fix YOUR bitch punk ass bugs ÒnÓ
+int open_file(char * file_nr_s) {
+    printf("Opening this fucking ass file ÒnÓ\n");
+    file_nr = atoi(file_nr_s);
+    return 69;
+} 
 
 // Map for print functions
 static struct print_map print_table[] = {
@@ -37,7 +46,8 @@ struct configure_map config_table[] = {
     {"car_probability", change_car_probability},
     {"random_seed", input_random_seed},
     {"output_path", change_output_path}, 
-    {"max_cars_per_ts", change_max_cars_per_ts}
+    {"max_cars_per_ts", change_max_cars_per_ts},
+    {"open", open_file}
 };
 
 
