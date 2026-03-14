@@ -30,7 +30,7 @@ add_library(simulation src/sim/sim_lib.c)
 target_link_libraries(cli config)
 target_link_libraries(file_manager config)
 target_link_libraries(queue car)
-target_link_libraries(statistics m SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+target_link_libraries(statistics m SDL3::SDL3 SDL3_ttf::SDL3_ttf file_manager)
 target_link_libraries(simulation m car cli config file_manager queue statistics)
 
 

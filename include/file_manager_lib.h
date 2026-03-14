@@ -2,7 +2,7 @@
 #define FILE_MANAGER_H
 
 #include "data_types.h"
-
+#include <stdio.h>
 
 /*
 @brief Gets the number (Simulation_X.txt) of the last file in results.

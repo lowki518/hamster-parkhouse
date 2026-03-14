@@ -5,11 +5,13 @@
 // Includes all needed Libraries
 #include "../external/SDL/include/SDL3/SDL.h"
 #include "../external/SDL_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "file_manager_lib.h"
+#include "data_types.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "data_types.h"
+
 
 
 // ================== Values for Layout and quick change ==================
@@ -43,9 +45,8 @@
 #define BTN_HOVER_B 255
 #define BTN_GLOW_SIZE 10.0f  // thickness of the glow border around buttons (in pixels)
 
-// Booleans
-#define TRUE 1
-#define FALSE 0
+// The number of relevant data in statistics
+#define DATASET_TYPE 5
 
 
 //================== Structs ==================
@@ -119,7 +120,7 @@ void load_new_dataset(FILE* file, int dataset_index, float* dataset);
 
 @return the name of the brand
 */
-char* get_brand_by_number(int brand_numb);
+char* get_brand_by_number(Car_Brand brand_numb);
 
 
 /* 
@@ -431,5 +432,9 @@ void drawGraph(SDL_Renderer *renderer, SDL_FRect *plot, float *data, int count, 
 */
 void computeLayout(int width, int height, SDL_FRect *plot,
                           Button *leftBtn, Button *rightBtn, Button *closeBtn);
+
+
+void open_gui(const char* path, int sim_number);
+
 
 #endif

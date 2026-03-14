@@ -1,4 +1,6 @@
 #include "../../include/statistics_output_lib.h"
+#include "../../include/file_manager_lib.h"
+#include "../../include/data_types.h"
 
 /*
 @brief prints the simulation parameters.
@@ -47,6 +49,7 @@ void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parkin
 @return the simulation length
 */
 int get_simulation_length(FILE *file) {
+    printf("length\n")
     char line[115]; // the length of one line
     int simulated_steps = 0;
 
@@ -82,6 +85,7 @@ int get_simulation_length(FILE *file) {
 @return void
 */
 void load_new_dataset(FILE* file, int dataset_index, float* dataset) {
+    printf("loading new dataset\n");
     char line[115]; // the length of one line
     rewind(file);
 
@@ -90,6 +94,8 @@ void load_new_dataset(FILE* file, int dataset_index, float* dataset) {
         if (strstr(line, "Current Step"))
             break;
     }
+
+    printf("found current step");
 
     int count = 0;
 
@@ -116,6 +122,7 @@ void load_new_dataset(FILE* file, int dataset_index, float* dataset) {
         }
 
         if (found) {
+            printf("setting new dataset\n");
             dataset[count++] = val;
         }
     }
@@ -128,8 +135,69 @@ void load_new_dataset(FILE* file, int dataset_index, float* dataset) {
 
 @return the name of the brand
 */
-char* get_brand_by_number(int brand_numb) {
-    return "test";
+char* get_brand_by_number(Car_Brand brand_numb) {
+
+    switch (brand_numb) {
+
+        case 0:
+            return "BMW";
+        case 1:
+            return "VW";
+        case 2:
+            return "SKODA";
+        case 3:
+            return "RENAULT";
+        case 4:
+            return "CITROEN";
+        case 5:
+            return "TOYOTA";
+        case 6:
+            return "AUDI";
+        case 7:
+            return "MERCEDES";
+        case 8:
+            return "PEUGEOT";
+        case 9:
+            return "MAYBACH";
+        case 10:
+            return "ALPINA";
+        case 11:
+            return "NISSAN";
+        case 12:
+            return "HONDA";
+        case 13:
+            return "SAAB";
+        case 14:
+            return "VOLVO";
+        case 15:
+            return "OPEL";
+        case 16:
+            return "DACIA";
+        case 17:
+            return "FORD";
+        case 18:
+            return "FIAT";
+        case 19:
+            return "ALFA ROMEO";
+        case 20:
+            return "PORSCHE";
+        case 21:
+            return "KIA";
+        case 22:
+            return "HYUNDAI";
+        case 23:
+            return "MAZDA";
+        case 24:
+            return "SEAT";
+        case 25:
+            return "SUBARU";
+        case 26:
+            return "SUZUKI";
+    
+        default:
+            return "";
+    
+    }
 }
 
 
@@ -585,4 +653,157 @@ void computeLayout(int width, int height, SDL_FRect *plot,
     closeBtn->rect.w = closeBtn->rect.h = CLOSE_SIZE;
     closeBtn->rect.x = width  - CLOSE_MARGIN - closeBtn->rect.w;
     closeBtn->rect.y = CLOSE_MARGIN;
+}
+
+
+void open_gui(const char* path, int sim_number) {
+
+    FILE* data_file = open_file_r(path, sim_number);
+
+    // preparation of the dataset
+    int current_dataset = 0;
+    float *dataset = calloc(get_simulation_length(data_file), sizeof(dataset));
+    load_new_dataset(data_file, current_dataset, dataset);
+    char dataset_name[DATASET_TYPE][32] = {"Parked Cars", "Avg. Time", "Queue Length", "Full Garage", "Cars Simulated"};
+
+
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        SDL_Log("SDL init failed: %s", SDL_GetError());
+        return;
+    }
+
+    // Borderless window
+    SDL_Window *window = SDL_CreateWindow("Hamster-Parkhouse-Output", WIDTH, HEIGHT, SDL_WINDOW_FULLSCREEN);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+
+    // Plot rect (will be recalculated every frame by computeLayout)
+    SDL_FRect plot = {0};
+
+    TTF_Font *font = openFont(FONT_PATH, FONT_SIZE);
+    
+    if (!font) {
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        printf("Could not load font\n");
+        return;
+    }
+
+    // Buttons
+    Button leftBtn  = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
+    Button rightBtn = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
+    Button closeBtn = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
+
+    // Current Y range
+    float yMin = 0.0f, yMax = 1.0f;
+
+    int running = TRUE;
+    SDL_Event event;
+    int last = 0;
+
+    while (running) {
+        int now = SDL_GetTicks();
+        float dt = 0.016f; // For safety, assumed 60 FPS
+        
+        if (last != 0) {
+            dt = (float)(now - last) / 1000.0f;
+        }
+
+        last = now;
+
+        // Layout
+        computeLayout(WIDTH, HEIGHT, &plot, &leftBtn, &rightBtn, &closeBtn);
+
+        float mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY);
+
+        updateButtonHover(&leftBtn,  mouseX, mouseY);
+        updateButtonHover(&rightBtn, mouseX, mouseY);
+        updateButtonHover(&closeBtn, mouseX, mouseY);
+
+        int leftClicked = 0, rightClicked = 0;
+
+        // Event handling
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) running = FALSE;
+
+            // bitwise or and setting the variable (this checks if a button was clicked)
+            leftClicked  |= handleNavButtonEvent(&leftBtn,  &event);
+            rightClicked |= handleNavButtonEvent(&rightBtn, &event);
+
+            // if a button was clicked, load new dataset
+            if(leftClicked) {
+                current_dataset--;
+                    if(current_dataset < 0) {
+                        current_dataset = 4;
+                    }
+                    load_new_dataset(data_file, current_dataset, dataset);
+
+            }
+
+            if(rightClicked) {
+                current_dataset++;
+                    if(current_dataset > 4) {
+                        current_dataset = 0;
+                    }
+                    load_new_dataset(data_file, current_dataset, dataset);
+
+            }
+
+            // closes the window, if the button was clicked
+            handleCloseButtonEvent(&closeBtn, &event, &running);
+
+
+            if (event.type == SDL_EVENT_KEY_UP && event.key.key == SDLK_ESCAPE) {
+                running = FALSE;
+            }
+        }
+
+        updateButtonAnimation(&leftBtn,  dt);
+        updateButtonAnimation(&rightBtn, dt);
+        updateButtonAnimation(&closeBtn, dt);
+
+        // Recompute Y range for the dataset
+        computeYRange(dataset, DATASET_TYPE, &yMin, &yMax);
+
+        // Draw frame
+        SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
+        SDL_RenderClear(renderer);
+
+        drawBackground(renderer);
+
+        // Grid & ticks
+        drawYTicksAndGrid(renderer, font, &plot, yMin, yMax);
+        drawXTicksAndGridMinutes(renderer, font, &plot, DATASET_TYPE);
+
+        // Axes and labels
+        drawAxesWithArrows(renderer, &plot);
+        drawAxisLabels(renderer, font, &plot, "Minutes", dataset_name[current_dataset]);
+
+        // Graph
+        drawGraph(renderer, &plot, dataset, DATASET_TYPE, yMin, yMax);
+
+        // UI: nav buttons
+        drawButton(renderer, &leftBtn);
+        drawButton(renderer, &rightBtn);
+        drawArrow(renderer, &leftBtn.rect,  -1, leftBtn.hoverAnim);
+        drawArrow(renderer, &rightBtn.rect,  1, rightBtn.hoverAnim);
+
+        // Close button
+        drawButton(renderer, &closeBtn);
+        drawXIcon(renderer, &closeBtn.rect, closeBtn.hoverAnim);
+
+        SDL_RenderPresent(renderer);
+    }
+
+    TTF_CloseFont(font);
+    TTF_Quit();
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    free(dataset);
+    fclose(data_file);
+
 }

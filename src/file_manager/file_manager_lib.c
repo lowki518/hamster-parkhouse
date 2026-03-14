@@ -136,7 +136,7 @@ void append_data_per_timestep (char *path, int new_file_number, t_Time timestep,
 FILE *open_file_r(const char* path, int file_number) {
     char filename[60];
 
-    sprintf(filename, "%sSimulation_%d.txt", *path, new_file_number);
+    sprintf(filename, "%sSimulation_%d.txt", *path, file_number);
 
     FILE *fptr = fopen(filename, "r");     
     if (fptr == NULL) {
@@ -158,7 +158,7 @@ FILE *open_file_r(const char* path, int file_number) {
 FILE *open_file_a(const char* path, int file_number) {
     char filename[60];
 
-    sprintf(filename, "%sSimulation_%d.txt", *path, new_file_number);
+    sprintf(filename, "%sSimulation_%d.txt", *path, file_number);
 
     FILE *fptr = fopen(filename, "a");     
     if (fptr == NULL) {
