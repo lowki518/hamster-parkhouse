@@ -53,8 +53,8 @@ void test_input_random_seed() {
 @brief test change_output_path function
 */
 void test_change_output_path() {
-    assert(change_output_path("output_stuff/"));
-    assert(!strcmp(output_path, "output_stuff/"));
+    assert(change_output_path("output_stuff/") == 0);
+    assert(strcmp(output_path, "output_stuff/") == 0);
 }
 
 /* 

@@ -160,75 +160,6 @@ void load_new_dataset(FILE* file, int dataset_index, float* dataset, int size) {
 
 
 /*
-@brief Returns the name of a car brand by its enum value
-
-@param[1] brand_numb The enum value of the car brand
-
-@return A string containing the name of the car brand
-*/
-char* get_brand_by_number(Car_Brand brand_numb) {
-    switch (brand_numb) {
-        case 0:  
-            return "BMW";
-        case 1:  
-            return "VW";
-        case 2:  
-            return "SKODA";
-        case 3:  
-            return "RENAULT";
-        case 4:  
-            return "CITROEN";
-        case 5:  
-            return "TOYOTA";
-        case 6:  
-            return "AUDI";
-        case 7:  
-            return "MERCEDES";
-        case 8:  
-            return "PEUGEOT";
-        case 9:  
-            return "MAYBACH";
-        case 10: 
-            return "ALPINA";
-        case 11: 
-            return "NISSAN";
-        case 12: 
-            return "HONDA";
-        case 13: 
-            return "SAAB";
-        case 14: 
-            return "VOLVO";
-        case 15:    
-            return "OPEL";
-        case 16: 
-            return "DACIA";
-        case 17: 
-            return "FORD";
-        case 18: 
-            return "FIAT";
-        case 19: 
-            return "ALFA ROMEO";
-        case 20: 
-            return "PORSCHE";
-        case 21: 
-            return "KIA";
-        case 22: 
-            return "HYUNDAI";
-        case 23: 
-            return "MAZDA";
-        case 24: 
-            return "SEAT";
-        case 25: 
-            return "SUBARU";
-        case 26:
-            return "SUZUKI";
-        default: 
-            return "";
-    }
-}
-
-
-/*
 @brief A simple linear interpolation function
 
 @param[1] a The start value
@@ -729,39 +660,6 @@ void draw_x_ticks_and_grid(SDL_Renderer *renderer, TTF_Font *font, SDL_FRect *pl
 
 
 /*
-@brief Computes the minimum and maximum values in a float array
-
-@param[1] data A pointer to the float array
-@param[2] count The number of elements in the array
-@param[3] out_min A pointer to a float where the minimum value will be stored
-@param[4] out_max A pointer to a float where the maximum value will be stored
-
-@return void
-*/
-void compute_data_min_max(float *data, int count, float *out_min, float *out_max) {
-    if (!data || count <= 0) {
-        *out_min = 0.f;
-        *out_max = 1.f;
-        return;
-    }
-
-    float mn = data[0];
-    float mx = data[0];
-
-    for (int i = 1; i < count; ++i) {
-        if (data[i] < mn) {
-            mn = data[i];
-        } else if (data[i] > mx) {
-            mx = data[i];
-        }
-    }
-
-    *out_min = mn;
-    *out_max = mx;
-}
-
-
-/*
 @brief Computes a suitable Y-axis range for a dataset, starting from 0 for non-negative data
 
 @param[1] data A pointer to the float array
@@ -772,15 +670,24 @@ void compute_data_min_max(float *data, int count, float *out_min, float *out_max
 @return void
 */
 void compute_y_range(float *data, int count, float *out_min, float *out_max) {
-    float mn, mx;
-    compute_data_min_max(data, count, &mn, &mx);
+    if (!data || count <= 0) {
+        *out_min = 0.0f;
+        *out_max = 1.0f;
+        return;
+    }
+
+    // find min and max directly here
+    float mn = data[0];
+    float mx = data[0];
+    for (int i = 1; i < count; ++i) {
+        if      (data[i] < mn) mn = data[i];
+        else if (data[i] > mx) mx = data[i];
+    }
 
     if (mn >= 0.0f) {
-        // non-negative data: always start Y axis at 0
         *out_min = 0.0f;
         *out_max = (mx == 0.0f) ? 1.0f : mx;
     } else {
-        // negative data: add 5% padding above and below
         if (mx == mn) mx = mn + 1.0f;
         float pad = 0.05f * (mx - mn);
         *out_min = mn - pad;
@@ -802,9 +709,9 @@ void compute_y_range(float *data, int count, float *out_min, float *out_max) {
 @return void
 */
 void draw_graph(SDL_Renderer *renderer, SDL_FRect *plot, float *data, int count, float y_min, float y_max) {
-    if (!data || count <= 1) {}
+    if (!data || count <= 1) {
         return;
-}
+    }
 
     float left, right, top, bottom;
     inner_bounds(plot, &left, &right, &top, &bottom);

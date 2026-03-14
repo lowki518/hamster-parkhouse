@@ -391,19 +391,6 @@ void draw_x_ticks_and_grid(SDL_Renderer *renderer, TTF_Font *font, SDL_FRect *pl
 
 
 /*
-@brief Computes the minimum and maximum values in a float array
-
-@param[1] data A pointer to the float array
-@param[2] count The number of elements in the array
-@param[3] out_min A pointer to a float where the minimum value will be stored
-@param[4] out_max A pointer to a float where the maximum value will be stored
-
-@return void
-*/
-void compute_data_min_max(float *data, int count, float *out_min, float *out_max);
-
-
-/*
 @brief Computes a suitable Y-axis range for a dataset, starting from 0 for non-negative data
 
 @param[1] data A pointer to the float array
