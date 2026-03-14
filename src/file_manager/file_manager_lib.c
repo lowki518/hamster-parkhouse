@@ -14,7 +14,7 @@
 */
 int get_new_file_number(char *folder) {
     
-    DIR *dir = opendir(*folder);  //go to folder
+    DIR *dir = opendir(folder);  //go to folder
 
     struct dirent *past_sim;  //pointer to files in folder
     int max_file_nr = 0;
@@ -57,12 +57,12 @@ int get_new_file_number(char *folder) {
 void create_new_file_with_head_data (char *path,int new_file_number, t_Time sim_duration, int parking_cells, t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
     char filename[60];
 
-    sprintf(filename, "%sSimulation_%d.txt", *path, new_file_number);
+    sprintf(filename, "%sSimulation_%d.txt", path, new_file_number);
 
     FILE *fptr = fopen(filename, "w");
     if (fptr == NULL) {
         printf("Error creating file.\n");
-        return NULL;
+        return;
     }   
     
     char sim_duration_s[] = "Simulated Steps";
@@ -112,13 +112,11 @@ void create_new_file_with_head_data (char *path,int new_file_number, t_Time sim_
 void append_data_per_timestep (char *path, int new_file_number, t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) {
     char filename[60];
 
-    sprintf(filename, "%sSimulation_%d.txt", *path, new_file_number);
+    sprintf(filename, "%sSimulation_%d.txt", path, new_file_number);
 
     FILE *fptr = fopen(filename, "a");     
     if (fptr == NULL) {
         printf("Error opening file.\n");
-        return NULL;
-    }
 
     fprintf(fptr, "|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, get_brand_by_number(most_brand));
     

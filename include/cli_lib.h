@@ -7,6 +7,7 @@
 // Flag for running & starting simulation
 extern int quit;
 extern int start;
+extern int file_nr;
 
 // Structure for a mapping from string (command input) to a function
 // with Command_Arg type argument
