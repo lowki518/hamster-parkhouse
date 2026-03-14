@@ -20,7 +20,7 @@
 #define HEIGHT            900
 
 // Font
-#define FONT_PATH         "../external/Font/ARIAL.TTF"
+#define FONT_PATH         "/workspaces/hamster-parkhouse/external/Font/ARIAL.TTF"
 #define FONT_SIZE         12
 
 // Layout
@@ -40,10 +40,16 @@
 #define BTN_BASE_R  166
 #define BTN_BASE_G   27
 #define BTN_BASE_B  255
+
 #define BTN_HOVER_R 255
 #define BTN_HOVER_G 16
 #define BTN_HOVER_B 255
 #define BTN_GLOW_SIZE 10.0f  // thickness of the glow border around buttons (in pixels)
+
+// Graph color
+#define GRAPH_COLOR_R 0
+#define GRAPH_COLOR_G 0
+#define GRAPH_COLOR_B 255
 
 // The number of relevant data in statistics
 #define DATASET_TYPE 5
@@ -53,7 +59,7 @@
 
 // SDL_FRect is a basic rectangle with coordinates and the dimensions
 
-typedef struct {
+typedef struct Button{
     SDL_FRect rect; 
     int hovered;
     int pressed;
@@ -111,17 +117,7 @@ int get_simulation_length(FILE *file);
 
 @return void
 */
-void load_new_dataset(FILE* file, int dataset_index, float* dataset);
-
-/*
-@brief returns the name of the brand by its enum code
-
-@param[1] brand_numb The number of the brand
-
-@return the name of the brand
-*/
-char* get_brand_by_number(Car_Brand brand_numb);
-
+void load_new_dataset(FILE* file, int dataset_index, float* dataset, int size);
 
 /* 
 @brief A simple linear interpolation function.

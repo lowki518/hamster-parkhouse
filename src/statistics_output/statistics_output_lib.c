@@ -37,7 +37,7 @@ void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time
 @brief prints the simulated data per timestep
 */
 void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) { 
-    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15i|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
+    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15i|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, get_brand_by_number(most_brand));
 }
 
 
@@ -49,23 +49,20 @@ void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parkin
 @return the simulation length
 */
 int get_simulation_length(FILE *file) {
-    printf("length\n")
-    char line[115]; // the length of one line
+    char line[116];
     int simulated_steps = 0;
 
     rewind(file);
 
-    // searches for the line "Simulated Steps"
+    // Suche die Header-Zeile mit "Simulated Steps"
     while (fgets(line, sizeof(line), file)) {
         if (strstr(line, "Simulated Steps")) {
-            
-            // the next line contains the value
+            // Nächste Zeile enthält die Werte
             if (fgets(line, sizeof(line), file)) {
-                
-                // reads the first number int he next line
-                if (sscanf(line, " %d", &simulated_steps) != 1) {
-                    simulated_steps = 0;
-                }
+                // '|' überspringen und ersten Wert lesen
+                char *ptr = line;
+                while (*ptr == '|' || *ptr == ' ') ptr++;
+                sscanf(ptr, "%d", &simulated_steps);
             }
             break;
         }
@@ -84,24 +81,30 @@ int get_simulation_length(FILE *file) {
 
 @return void
 */
-void load_new_dataset(FILE* file, int dataset_index, float* dataset) {
-    printf("loading new dataset\n");
-    char line[115]; // the length of one line
+void load_new_dataset(FILE* file, int dataset_index, float* dataset, int size) {
+    char line[116];
     rewind(file);
 
-    // skips until "Current Step" appears in line
+    // offset by 2 to skip "Current Step" column and account for leading '|'
+    int col_index = dataset_index + 2;
+
+    // skip until "Current Step" appears in line
     while (fgets(line, sizeof(line), file)) {
         if (strstr(line, "Current Step"))
             break;
     }
 
-    printf("found current step");
-
     int count = 0;
 
-    while (fgets(line, sizeof(line), file)) {
-        char tmp[115]; // the length of on eline
-        strncpy(tmp, line, sizeof(tmp) - 1);
+    while (count < size && fgets(line, sizeof(line), file)) {
+
+        // skip empty lines
+        if (line[0] == '\n' || line[0] == '\r' || line[0] == '\0') {
+            continue;
+        }
+
+        char tmp[116];
+        strncpy(tmp, line, sizeof(tmp));
         tmp[sizeof(tmp) - 1] = '\0';
 
         char *token;
@@ -111,8 +114,14 @@ void load_new_dataset(FILE* file, int dataset_index, float* dataset) {
         int found = 0;
 
         while ((token = strtok_r(rest, "|", &rest))) {
+            // skip empty tokens
+            if (token[0] == '\0' || token[0] == '\n' || token[0] == '\r') {
+                continue;
+            }
+
             col++;
-            if (col == dataset_index) {
+
+            if (col == col_index) {
                 while (*token == ' ') token++;
                 if (sscanf(token, "%f", &val) == 1) {
                     found = 1;
@@ -122,81 +131,9 @@ void load_new_dataset(FILE* file, int dataset_index, float* dataset) {
         }
 
         if (found) {
-            printf("setting new dataset\n");
-            dataset[count++] = val;
+            dataset[count] = val;
+            count++;
         }
-    }
-}
-
-/*
-@brief returns the name of the brand by its enum code
-
-@param[1] brand_numb The number of the brand
-
-@return the name of the brand
-*/
-char* get_brand_by_number(Car_Brand brand_numb) {
-
-    switch (brand_numb) {
-
-        case 0:
-            return "BMW";
-        case 1:
-            return "VW";
-        case 2:
-            return "SKODA";
-        case 3:
-            return "RENAULT";
-        case 4:
-            return "CITROEN";
-        case 5:
-            return "TOYOTA";
-        case 6:
-            return "AUDI";
-        case 7:
-            return "MERCEDES";
-        case 8:
-            return "PEUGEOT";
-        case 9:
-            return "MAYBACH";
-        case 10:
-            return "ALPINA";
-        case 11:
-            return "NISSAN";
-        case 12:
-            return "HONDA";
-        case 13:
-            return "SAAB";
-        case 14:
-            return "VOLVO";
-        case 15:
-            return "OPEL";
-        case 16:
-            return "DACIA";
-        case 17:
-            return "FORD";
-        case 18:
-            return "FIAT";
-        case 19:
-            return "ALFA ROMEO";
-        case 20:
-            return "PORSCHE";
-        case 21:
-            return "KIA";
-        case 22:
-            return "HYUNDAI";
-        case 23:
-            return "MAZDA";
-        case 24:
-            return "SEAT";
-        case 25:
-            return "SUBARU";
-        case 26:
-            return "SUZUKI";
-    
-        default:
-            return "";
-    
     }
 }
 
@@ -372,11 +309,15 @@ int handleNavButtonEvent(Button *btn, SDL_Event *event) {
 */
 void handleCloseButtonEvent(Button *btn, SDL_Event *event, int *running) {
     if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-        if (btn->hovered && !btn->pressed) btn->pressed = TRUE;
+        if (btn->hovered && !btn->pressed) {
+            btn->pressed = TRUE;
+        }
     }
     if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
-        if (btn->pressed && btn->hovered) *running = FALSE;
-        btn->pressed = FALSE;
+        if (btn->pressed && btn->hovered) {
+            *running = FALSE;
+            btn->pressed = FALSE;
+        }
     }
 }
 
@@ -599,7 +540,9 @@ void computeYRange(float *data, int count, float *outMin, float *outMax) {
 @brief Draws a graph of the dataset on the plot area.
 */
 void drawGraph(SDL_Renderer *renderer, SDL_FRect *plot, float *data, int count, float yMin, float yMax) {
-    if (!data || count <= 1) return;
+    if (!data || count <= 1) {
+        return;
+    }
 
     float left, right, top, bottom;
     innerBounds(plot, &left, &right, &top, &bottom);
@@ -608,7 +551,7 @@ void drawGraph(SDL_Renderer *renderer, SDL_FRect *plot, float *data, int count, 
     float h = bottom - top;
     if (w <= 0 || h <= 0) return;
 
-    SDL_SetRenderDrawColor(renderer, 220, 60, 60, 255);
+    SDL_SetRenderDrawColor(renderer, GRAPH_COLOR_R, GRAPH_COLOR_G, GRAPH_COLOR_B, 255);
 
     for (int i = 0; i < count - 1; ++i) {
         float t0 = (float) i       / (float)(count - 1);
@@ -662,8 +605,9 @@ void open_gui(const char* path, int sim_number) {
 
     // preparation of the dataset
     int current_dataset = 0;
-    float *dataset = calloc(get_simulation_length(data_file), sizeof(dataset));
-    load_new_dataset(data_file, current_dataset, dataset);
+    int size = get_simulation_length(data_file);
+    float *dataset = calloc(size, sizeof(float));
+    load_new_dataset(data_file, current_dataset, dataset, size);
     char dataset_name[DATASET_TYPE][32] = {"Parked Cars", "Avg. Time", "Queue Length", "Full Garage", "Cars Simulated"};
 
 
@@ -685,7 +629,6 @@ void open_gui(const char* path, int sim_number) {
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();
-        printf("Could not load font\n");
         return;
     }
 
@@ -725,7 +668,9 @@ void open_gui(const char* path, int sim_number) {
 
         // Event handling
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_EVENT_QUIT) running = FALSE;
+            if (event.type == SDL_EVENT_QUIT) {
+                running = FALSE;
+            }
 
             // bitwise or and setting the variable (this checks if a button was clicked)
             leftClicked  |= handleNavButtonEvent(&leftBtn,  &event);
@@ -737,8 +682,7 @@ void open_gui(const char* path, int sim_number) {
                     if(current_dataset < 0) {
                         current_dataset = 4;
                     }
-                    load_new_dataset(data_file, current_dataset, dataset);
-
+                    load_new_dataset(data_file, current_dataset, dataset, size);
             }
 
             if(rightClicked) {
@@ -746,7 +690,7 @@ void open_gui(const char* path, int sim_number) {
                     if(current_dataset > 4) {
                         current_dataset = 0;
                     }
-                    load_new_dataset(data_file, current_dataset, dataset);
+                    load_new_dataset(data_file, current_dataset, dataset, size);
 
             }
 
@@ -757,6 +701,7 @@ void open_gui(const char* path, int sim_number) {
             if (event.type == SDL_EVENT_KEY_UP && event.key.key == SDLK_ESCAPE) {
                 running = FALSE;
             }
+
         }
 
         updateButtonAnimation(&leftBtn,  dt);
@@ -764,7 +709,7 @@ void open_gui(const char* path, int sim_number) {
         updateButtonAnimation(&closeBtn, dt);
 
         // Recompute Y range for the dataset
-        computeYRange(dataset, DATASET_TYPE, &yMin, &yMax);
+        computeYRange(dataset, size, &yMin, &yMax);
 
         // Draw frame
         SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
@@ -774,14 +719,14 @@ void open_gui(const char* path, int sim_number) {
 
         // Grid & ticks
         drawYTicksAndGrid(renderer, font, &plot, yMin, yMax);
-        drawXTicksAndGridMinutes(renderer, font, &plot, DATASET_TYPE);
+        drawXTicksAndGridMinutes(renderer, font, &plot, size);
 
         // Axes and labels
         drawAxesWithArrows(renderer, &plot);
         drawAxisLabels(renderer, font, &plot, "Minutes", dataset_name[current_dataset]);
 
         // Graph
-        drawGraph(renderer, &plot, dataset, DATASET_TYPE, yMin, yMax);
+        drawGraph(renderer, &plot, dataset, size, yMin, yMax);
 
         // UI: nav buttons
         drawButton(renderer, &leftBtn);
@@ -801,9 +746,11 @@ void open_gui(const char* path, int sim_number) {
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    SDL_Quit();
+    
 
     free(dataset);
     fclose(data_file);
 
+
+    SDL_Quit();
 }

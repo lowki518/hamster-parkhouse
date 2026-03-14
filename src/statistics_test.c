@@ -19,7 +19,7 @@ gcc statistics_test.c -o test.exe -I "../external/SDL/i686-w64-mingw32/include" 
 
 int main() {
     
-    open_gui("data/", 5);
+    open_gui("../data/", 5);
 
     return 0;
 }

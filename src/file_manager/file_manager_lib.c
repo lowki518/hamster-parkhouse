@@ -1,5 +1,6 @@
 #include "../../include/data_types.h"
 #include "../../include/file_manager_lib.h"
+#include "../../include/car_lib.h"
 #include <stdlib.h>
 #include <dirent.h>
 #include <stdio.h>
@@ -119,7 +120,7 @@ void append_data_per_timestep (char *path, int new_file_number, t_Time timestep,
         return NULL;
     }
 
-    fprintf(fptr, "|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
+    fprintf(fptr, "|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, get_brand_by_number(most_brand));
     
     fclose(fptr);
 }
@@ -136,7 +137,7 @@ void append_data_per_timestep (char *path, int new_file_number, t_Time timestep,
 FILE *open_file_r(const char* path, int file_number) {
     char filename[60];
 
-    sprintf(filename, "%sSimulation_%d.txt", *path, file_number);
+    sprintf(filename, "%sSimulation_%d.txt", path, file_number);
 
     FILE *fptr = fopen(filename, "r");     
     if (fptr == NULL) {
@@ -158,7 +159,7 @@ FILE *open_file_r(const char* path, int file_number) {
 FILE *open_file_a(const char* path, int file_number) {
     char filename[60];
 
-    sprintf(filename, "%sSimulation_%d.txt", *path, file_number);
+    sprintf(filename, "%sSimulation_%d.txt", path, file_number);
 
     FILE *fptr = fopen(filename, "a");     
     if (fptr == NULL) {
