@@ -1,4 +1,4 @@
-#include "../include/init_lib.h"
+#include "../include/sim_lib.h"
 #include "../include/data_types.h"
 #include <assert.h>
 #include <stdio.h>

@@ -1,6 +1,6 @@
 #include "../include/car_lib.h"
 #include "../include/data_types.h"
-#include "../include/init_lib.h"
+#include "../include/sim_lib.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -99,6 +99,34 @@ void test_unpark_car() {
 }
 
 /*
+@brief tests the park_car_in_park function
+*/
+void test_park_car_in_park() {
+
+}
+
+/*
+@brief tests the unpark_cars_in_park function
+*/
+void test_unpark_cars_in_park() {
+
+}
+
+/*
+@brief tests the gest_most_parked_brand function
+*/
+void test_gest_most_parked_brand() {
+
+}
+
+/*
+@brief tests the get_brand_by_number function
+*/
+void test_get_brand_by_number() {
+
+}
+
+/*
 @brief tests the whole car_lib
 */
 void test_car_lib() {
@@ -106,4 +134,9 @@ void test_car_lib() {
     test_park_car();
     test_check_parking_time();
     test_unpark_car();
+
+    test_park_car_in_park();
+    test_unpark_cars_in_park();
+    test_gest_most_parked_brand();
+    test_get_brand_by_number();
 }

@@ -121,6 +121,7 @@ void append_data_per_timestep (char *path, int new_file_number, t_Time timestep,
     fprintf(fptr, "|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, get_brand_by_number(most_brand));
     
     fclose(fptr);
+    }
 }
 
 
