@@ -1,6 +1,7 @@
 #include "../include/config_lib.h"
 #include <assert.h>
 #include <string.h>
+#include <stdio.h>
 
 /* 
 @brief test change_sim_time function

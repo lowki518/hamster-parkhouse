@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <errno.h>
+#include <unistd.h>
 
 #define TEST_OUTPUT_PATH "/workspaces/hamster-parkhouse/test/tmp/"
 
