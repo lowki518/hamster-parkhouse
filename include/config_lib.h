@@ -1,3 +1,7 @@
+/*
+@brief Header file for the Config library
+*/
+
 #ifndef CONFIG_LIB_H
 #define CONFIG_LIB_H
 #include "data_types.h"

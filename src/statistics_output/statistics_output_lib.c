@@ -1,3 +1,7 @@
+/*
+@brief Library with all the main functions for the statistics output and GUIIIIIIII
+*/
+
 #include "../../include/statistics_output_lib.h"
 #include "../../include/file_manager_lib.h"
 #include "../../include/data_types.h"

@@ -1,3 +1,7 @@
+/*
+@brief Header file for the CLI library
+*/
+
 #ifndef CLI_LIB_H
 #define CLI_LIB_H
 

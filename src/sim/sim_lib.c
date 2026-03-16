@@ -1,3 +1,7 @@
+/*
+@brief Library with all the main functions for the simulation
+*/
+
 #include "../../include/sim_lib.h"
 #include "../../include/car_lib.h"
 #include "../../include/config_lib.h"

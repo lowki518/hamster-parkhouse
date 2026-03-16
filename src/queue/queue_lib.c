@@ -1,3 +1,7 @@
+/*
+@brief Library with all the main functions for the quue
+*/
+
 #include "../../include/queue_lib.h"    
 #include "../../include/data_types.h"
 #include <stdlib.h>

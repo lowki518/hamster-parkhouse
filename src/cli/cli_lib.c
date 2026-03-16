@@ -1,5 +1,5 @@
-/**
-CLI functions for main menu and argument parsing.
+/*
+@brief Library with all the main functions for the CLI
 */
 
 #include "../../include/cli_lib.h"
