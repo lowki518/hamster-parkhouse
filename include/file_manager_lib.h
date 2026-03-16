@@ -1,3 +1,7 @@
+/*
+@brief Header file for File manager library
+*/
+
 #ifndef FILE_MANAGER_H
 #define FILE_MANAGER_H
 

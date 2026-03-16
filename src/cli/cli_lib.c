@@ -1,3 +1,7 @@
+/*
+@brief Library with all the main functions for the CLI
+*/
+
 #include "../../include/cli_lib.h"
 #include "../../include/config_lib.h"
 #include <stdint.h>

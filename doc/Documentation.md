@@ -158,3 +158,7 @@ Hopefully our humor :)
 "Cetero censio Github Codespaces esse delendam" - Lionel 
 
 "Your commit messages are way to boring" - Lionel
+
+"That pink looks gay" - Pamina 
+
+"Ha! GUIIIIIII" - Lionel

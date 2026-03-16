@@ -1,3 +1,6 @@
+/*
+@brief Header file for the Car library
+*/
 #ifndef CAR_LIB_H
 #define CAR_LIB_H
 

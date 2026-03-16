@@ -1,3 +1,7 @@
+/*
+@brief Library with all the main functions for the configuration of parameters
+*/
+
 #include "../../include/data_types.h"
 #include "../../include/config_lib.h"
 #include <stdlib.h>

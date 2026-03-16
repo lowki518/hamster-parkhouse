@@ -1,3 +1,7 @@
+/*
+@brief Header file for Queue library
+*/
+
 #ifndef QUEUE_LIB_H
 #define QUEUE_LIB_H
 

@@ -1,5 +1,6 @@
-// Definition of needed data types and structs. 
-
+/*
+@brief Definition of needed data types and structs.
+*/  
 
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H

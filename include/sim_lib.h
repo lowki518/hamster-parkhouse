@@ -1,3 +1,7 @@
+/*
+@brief Header File for simulation library
+*/
+
 #ifndef INIT_LIB_H
 #define INIT_LIB_H
 

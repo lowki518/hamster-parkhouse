@@ -1,3 +1,7 @@
+/*
+@brief Library with all the main functions for the car
+*/
+
 #include "../../include/car_lib.h"
 #include "../../include/data_types.h"
 #include <stdio.h>

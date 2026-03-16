@@ -1,3 +1,7 @@
+/*
+@brief Library with all the main functions for the file manager
+*/
+
 #include "../../include/data_types.h"
 #include "../../include/file_manager_lib.h"
 #include <stdlib.h>
