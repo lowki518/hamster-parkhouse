@@ -3,8 +3,11 @@
 Part 1:
 
 Firstly we are making sure that we are all on the same page on how we want our parking garage to work. We split up the work evenly to cater to each strength. 
+
 Everyone has worked on their part of the work load. We discussed how we want to itterate through the parking lot to check for any available parking spaces (heated discussion). 
+
 The visualization is getting along, and the base data types are almost finished. 
+
 We had our last meet up and checked everything was cleaned and ready to upload.
 
     Main Work distributions:
@@ -17,9 +20,13 @@ We had our last meet up and checked everything was cleaned and ready to upload.
 Part 2: 
     
 The work will be distributed similarily to before. 
+
 The translating to code out of pseudo code is nearly finished. The visualization is prooving to be difficult (Lionel wants to give up).
 Functions have been written, unit tests almost done, CLI getting along.
+
 Functions and unit tests finished, CLI done. Cleaning up the final details and working on getting the simulation going. We hate seg faults. Got it built and eventually (finallllyyyyy) running!
+
+It's not running anymore :( Final unit tests are done (file tests were made with AI as it's annoying), hoping to get this thing running. Motivation has left the chat. 
 
 ## What different options did we have regarding the structure and implementation? 
 >Naming of parking...:
@@ -82,7 +89,13 @@ Functions and unit tests finished, CLI done. Cleaning up the final details and w
 
 
 ## Were there any issues regarding the Team?
-As we mainly met up in person to discuss the progress, most issues were resolved pretty quickly. And when we needed a break, a movie and Ben's cooking (btw fcking great)usually helped.
+As we mainly met up in person to discuss the progress, most issues were resolved pretty quickly. And when we needed a break, a movie and Ben's cooking (btw fcking great) usually helped.
 
 ## What worked well?
 Team work and keeping each other updated on the progress. 
+
+Had a lot of fun along the way (Test Simulation 69 with >70 MB space) with extremely long simulations. 
+
+The unit tests usually worked first try, as long as the library was correct.
+
+
