@@ -53,8 +53,8 @@ void test_input_random_seed() {
 @brief test change_output_path function
 */
 void test_change_output_path() {
-    assert(change_output_path("output_stuff/"));
-    assert(!strcmp(output_path, "output_stuff/"));
+    assert(change_output_path("output_stuff/") == 0);
+    assert(strcmp(output_path, "output_stuff/") == 0);
 }
 
 /* 
@@ -74,4 +74,6 @@ int main() {
     test_change_max_parking_time();
     test_change_car_probability();
     test_change_max_car_cells();
+
+    printf("All config_lib tests passed!\n");
 }

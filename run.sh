@@ -13,11 +13,17 @@ git config --global --add safe.directory /workspaces/hamster-parkhouse
 echo "✓ Git configured"
 echo ""
 
+# ===== Remove problematic repositories =====
+echo "Cleaning up repositories..."
+rm -f /etc/apt/sources.list.d/yarn.list 2>/dev/null || true
+echo "✓ Repositories cleaned"
+echo ""
+
 # ===== Set German Keyboard Layout =====
 echo "Configuring German keyboard layout..."
 export DEBIAN_FRONTEND=noninteractive
-echo 'keyboard-configuration keyboard-configuration/layout select German' | debconf-set-selections
-echo 'keyboard-configuration keyboard-configuration/variant select German' | debconf-set-selections
+echo 'keyboard-configuration keyboard-configuration/layout select German' | debconf-set-selections 2>/dev/null || true
+echo 'keyboard-configuration keyboard-configuration/variant select German' | debconf-set-selections 2>/dev/null || true
 dpkg-reconfigure --frontend noninteractive keyboard-configuration > /dev/null 2>&1 || true
 echo "✓ German keyboard configured"
 echo ""
@@ -59,7 +65,7 @@ echo "[1/5] Installing dependencies..."
 echo "(This may take a few minutes...)"
 echo ""
 
-apt-get update -qq
+apt-get update -qq 2>&1 | grep -v "NO_PUBKEY\|The repository" || true
 apt-get install -y -qq \
   xvfb x11vnc novnc websockify \
   xfce4 xfce4-terminal \
@@ -77,8 +83,8 @@ echo ""
 # ===== Step 2: German Keyboard =====
 echo "[2/5] Configuring German keyboard..."
 export DEBIAN_FRONTEND=noninteractive
-echo 'keyboard-configuration keyboard-configuration/layout select German' | debconf-set-selections || true
-echo 'keyboard-configuration keyboard-configuration/variant select German' | debconf-set-selections || true
+echo 'keyboard-configuration keyboard-configuration/layout select German' | debconf-set-selections 2>/dev/null || true
+echo 'keyboard-configuration keyboard-configuration/variant select German' | debconf-set-selections 2>/dev/null || true
 dpkg-reconfigure --frontend noninteractive keyboard-configuration > /dev/null 2>&1 || true
 echo "✓ German keyboard configured"
 echo ""
@@ -124,6 +130,12 @@ cmake ..
 echo "  → Building..."
 make
 
+if [ -f "park-house" ]; then
+    echo "✓ Build successful"
+else
+    echo "✗ Build failed - executable not found"
+    exit 1
+fi
 echo ""
 
 # ===== Step 5: Start Desktop =====

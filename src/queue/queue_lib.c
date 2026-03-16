@@ -16,7 +16,7 @@
 t_Car_Node *new_Node(t_Car *car) {
     t_Car_Node *node = malloc(sizeof(node));
     if(!node) {
-        return -1;
+        return NULL;
     }
 
     node->pCar = car;
@@ -36,7 +36,7 @@ t_Queue *init_queue() {
         return NULL;
     }
  
-    queue->q_length = NULL;
+    queue->q_length = 0;
 
     queue->p_first_pos = NULL;
     queue->p_last_pos = NULL;
@@ -54,7 +54,7 @@ t_Queue *init_queue() {
 */
 t_Car *de_queue(t_Queue *queue) {  
     if (queue->p_first_pos == NULL) {
-        return;
+        return NULL;
     } 
     t_Car_Node *pTmp = queue->p_first_pos;
     queue->p_first_pos = pTmp->pNext;
@@ -62,6 +62,9 @@ t_Car *de_queue(t_Queue *queue) {
 
     queue->q_length--;
 
+    if (queue->p_first_pos == NULL) {
+        queue->p_last_pos = NULL;
+    }
     free(pTmp);
     return car;
 }
@@ -86,6 +89,8 @@ void en_queue(t_Queue *queue, t_Car *car) {  //same thing here with t_Car_Node
         queue->p_last_pos->pNext = node;
         queue->p_last_pos = node;
     }
+
+    queue->q_length++;
 }
 
 

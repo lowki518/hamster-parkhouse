@@ -33,7 +33,6 @@ void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time) {
 void unpark_car(t_Parking_Cell *cell, t_Car_Park *park) {
 
     free(cell->p_car_in_cell);
-
     cell->p_car_in_cell = NULL;
 
     park->free_parking_cells++;
@@ -145,24 +144,100 @@ int check_parking_time(t_Car *car, t_Time time) {
 */
 Car_Brand get_most_parked_brand(t_Car_Park *park) {
     t_Parking_Cell *cell = park->first_parking_cell;
-    int *brand = calloc(26, sizeof (brand)); //allocates memory for 26 brands
+    int *brand = calloc(27, sizeof (brand)); //allocates memory for 26 brands
 
     while (cell != NULL) {
         //increases the value for each brand if the car is of the brand type
-        brand[cell->p_car_in_cell->brand]++;
+        t_Car *car = cell->p_car_in_cell;
+        if(car) {
+            *(brand + car->brand) += 1;
+        }
         cell = cell->pNext;
     }
 
     // gets the index of the highest value 
     int max_index = 0;
-    for (int i = 1; i < 26; i++) {
+    for (int i = 0; i < 27; i++) {
         if (brand[i] > brand[max_index]) {
             max_index = i;
         }
     }
 
+
     free(brand);
 
     return max_index;
 
+}
+
+/*
+@brief returns the name of the brand by its enum code
+
+@param[1] brand_numb The number of the brand
+
+@return the name of the brand
+*/
+char* get_brand_by_number(Car_Brand brand_numb) {
+
+    switch (brand_numb) {
+
+        case 0:
+            return "BMW";
+        case 1:
+            return "VW";
+        case 2:
+            return "SKODA";
+        case 3:
+            return "RENAULT";
+        case 4:
+            return "CITROEN";
+        case 5:
+            return "TOYOTA";
+        case 6:
+            return "AUDI";
+        case 7:
+            return "MERCEDES";
+        case 8:
+            return "PEUGEOT";
+        case 9:
+            return "MAYBACH";
+        case 10:
+            return "ALPINA";
+        case 11:
+            return "NISSAN";
+        case 12:
+            return "HONDA";
+        case 13:
+            return "SAAB";
+        case 14:
+            return "VOLVO";
+        case 15:
+            return "OPEL";
+        case 16:
+            return "DACIA";
+        case 17:
+            return "FORD";
+        case 18:
+            return "FIAT";
+        case 19:
+            return "ALFA ROMEO";
+        case 20:
+            return "PORSCHE";
+        case 21:
+            return "KIA";
+        case 22:
+            return "HYUNDAI";
+        case 23:
+            return "MAZDA";
+        case 24:
+            return "SEAT";
+        case 25:
+            return "SUBARU";
+        case 26:
+            return "SUZUKI";
+    
+        default:
+            return "";
+    
+    }
 }

@@ -5,26 +5,34 @@
 #include "../../include/cli_lib.h"
 #include "../../include/config_lib.h"
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 int quit = FALSE;
 int start = FALSE;
+int file_nr = -1;
 
 // this function is just so I can try quitting.
 void return_quit() {
-    printf("Quiting...\n");
+    printf("Quitting...\n");
     quit = TRUE;
 }
 
 void return_start() {
     printf("Starting simulation...\n");
-    quit = TRUE;
     start = TRUE;
 }
 
+// this fucking ass bitch function got deleted I'm so fucking angry please don't do this again... also fuck you ben for calling me before my first coffeeeeeeeeeeeeeee and letting me fix YOUR bitch punk ass bugs ÒnÓ
+int open_file(char * file_nr_s) {
+    printf("Opening this fucking ass file ÒnÓ\n");
+    file_nr = atoi(file_nr_s);
+    return 69;
+} 
+
 // Map for print functions
-static struct print_map print_table[3] = {
+static struct print_map print_table[] = {
     {"help", print_help},
     {"config", print_config},
     {"quit", return_quit},
@@ -38,7 +46,8 @@ struct configure_map config_table[] = {
     {"car_probability", change_car_probability},
     {"random_seed", input_random_seed},
     {"output_path", change_output_path}, 
-    {"max_cars_per_ts", change_max_cars_per_ts}
+    {"max_cars_per_ts", change_max_cars_per_ts},
+    {"open", open_file}
 };
 
 
@@ -52,7 +61,7 @@ struct configure_map config_table[] = {
 int read_user_input(char *p_input) {
     if (!fgets(p_input, 255, stdin)) {
         // Error handling - TODO
-        printf("Invalid user imput\n");
+        printf("Invalid user inpuwut\n");
         return 1;
     }
     return 0;
@@ -68,6 +77,7 @@ int read_user_input(char *p_input) {
 int handle_user_input(char *p_input) {
     // Our commands are at most 2 words long. 
     // first: split input by space and remove all whitespace
+    // TODO: Remove all whitespace
     char *first_arg = strtok(p_input, " ");
     char *second_arg = strtok(NULL, "");
 
@@ -77,6 +87,7 @@ int handle_user_input(char *p_input) {
     for (int i = 0; i < (sizeof(print_table) / sizeof(print_table[0])); i++) {
         if (!strcmp(first_arg, print_table[i].print_name)) {
             print_table[i].p_print_fun();
+            printf("This works great until here right? \n");
             return 0;
         }
     }
@@ -89,7 +100,7 @@ int handle_user_input(char *p_input) {
             return 0;
         }
     }
-    printf(" \"\"\" %s \"\"\" did not fit any known command. \n", first_arg);
+    printf(" \"\"\" %s \"\"\" did not fit any known command. uwu\n", first_arg);
     return -1;
 }
 
@@ -103,9 +114,9 @@ void print_help() {
     // TODO: is everything complete?
     printf("How to use: \n"
     "> help         print help menu (this menu)\n"
-    "> config       print all configs and their values\n"
+    "> config       print all configs and their values\n" // why does this not align in the terminal? 
     "> start        start the simulation with chosen configs\n"
-    "> ...\n"
+    "> quit         quits this program\n"
     "To change configs: \n"
     "> $config_name $new_value\n"
     "Allowed types for configurations: \n"
@@ -142,7 +153,7 @@ void print_config() {
     "output_path - output path for result file(s)\n"
     "value: %s\n"
     "max_cars_per_ts - max amount of cars coming in per time step\n"
-    "value: %i", 
+    "value: %i\n", 
     max_car_cells, max_parking_time, simulation_time, 
     car_probability, random_seed, output_path, max_cars_per_ts
     );
@@ -156,7 +167,8 @@ void print_config() {
  */
 void start_menu() {
     // Standard text visualisation
-    printf("Hello, this will be our start menu.\n");
+    printf("-------------- Space Hamster Parkhouse -------------- \n");
+    printf("Credits: Paminer Lesle, Ben Hibinger, Lionel Keilhack\n\n\n");
     print_help();
 }
 
@@ -168,8 +180,12 @@ void start_menu() {
  */
 void looped_menu() {
     // read and handle user input
-    char *user_input; // do we need to m/calloc?
+    char user_input[256]; // do we need to m/calloc?
     printf("Please enter your command: \n> ");
     read_user_input(user_input);
+
+    // Removing the newline char with end of string:
+    user_input[strcspn(user_input, "\n")] = '\0';
+
     handle_user_input(user_input);
 }

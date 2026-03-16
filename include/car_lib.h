@@ -81,4 +81,13 @@ int check_parking_time(t_Car *car, t_Time time);
 */
 Car_Brand get_most_parked_brand(t_Car_Park *park);
 
+/*
+@brief returns the name of the brand by its enum code
+
+@param[1] brand_numb The number of the brand
+
+@return the name of the brand
+*/
+char* get_brand_by_number(Car_Brand brand_numb);
+
 #endif

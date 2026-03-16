@@ -17,7 +17,7 @@ t_Time max_parking_time = 10;
 t_Time simulation_time = 100;
 float car_probability = 50.0;
 int random_seed = 0;
-char output_path[256] = "output/";
+char output_path[256] = "../data/";
 uint8_t max_cars_per_ts = 5;
 
 
@@ -63,7 +63,7 @@ int change_max_car_cells(char * new_max_car_cells){
 @return -1 for error
 */
 int change_max_parking_time(char * new_max_parking_time) {
-    uint8_t new_value = (t_Time)atoi(new_max_parking_time);
+    t_Time new_value = (t_Time) atoi(new_max_parking_time);
     if (!new_value) {
         return -1;
     }
@@ -96,7 +96,7 @@ int change_car_probability(char * new_car_probability) {
 */
 int input_random_seed(char * new_seed) {
     // might also just typecast? then it will always be okay? 
-    uint8_t new_value = atoi(new_seed);
+    int new_value = atoi(new_seed);
     if (!new_value) {
         return -1;
     }
@@ -127,10 +127,10 @@ int change_output_path(char * new_path) {
 @return -1 for error
 */
 int change_max_cars_per_ts(char * new_max_cars) {
-    uint8_t new_value = (uint8_t)atoi(new_max_cars);
+    int new_value = atoi(new_max_cars);
     if (!new_value) {
         return -1;
     }
-    random_seed = new_value;
+    max_cars_per_ts = new_value;
     return 0;
 }

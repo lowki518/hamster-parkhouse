@@ -8,6 +8,7 @@
 #include "../../include/queue_lib.h"
 #include "../../include/file_manager_lib.h"
 #include "../../include/statistics_output_lib.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 
@@ -108,10 +109,15 @@ int *start_simulation () {
     t_Parking_Cell *cell = park->first_parking_cell;
     t_Queue *queue = init_queue();
 
-    create_new_file_with_head_data(output_path, *sim_nr, simulation_time, max_car_cells, max_parking_time, car_probability, max_cars_per_ts, random_seed);
+
+    create_new_file_with_head_data(output_path, *sim_nr, 
+        simulation_time, max_car_cells, 
+        max_parking_time, car_probability, 
+        max_cars_per_ts, random_seed);
+    
     print_head_data(*sim_nr, simulation_time, max_car_cells, max_parking_time, car_probability, max_cars_per_ts, random_seed);
 
-    for (*time = 0; *time <= simulation_time; *(time)++) {
+    for (*time = 0; *time <= simulation_time; (*time)++) {
 
         // checks if any cars in the park need to be unparked
         unpark_cars_in_park(park, *time);
@@ -121,34 +127,52 @@ int *start_simulation () {
             t_Car *new_car = car_arrives(car_probability, car_id, max_parking_time);
             if (new_car != NULL) {
                 en_queue(queue, new_car);
-                tot_parking_time += new_car->parking_time;
+                *tot_parking_time += new_car->parking_time;
             }
         }
 
         // as long as there are free parking cells and cars in the queue -> park the cars
-        while(park->free_parking_cells > 0 || queue->q_length > 0) {
+        while(park->free_parking_cells > 0 && queue->q_length > 0) {
+
             t_Car *car = de_queue(queue);
             park_car_in_park(car, park, *time);
         }
-        
+
         // checks if the park is full and increases the counter
         if(park->free_parking_cells == 0) {
-            *(full_house_steps)++;
+            (*full_house_steps)++;
         }
 
         // prints the data of the current timestep
         // TODO print the data in the console
-        float avg_parking_time = (float) *tot_parking_time / (float) (*(car_id) + 1);
+        float avg_parking_time = (float) (*tot_parking_time) / (float) ((*car_id) + 1);
+
         Car_Brand brand = get_most_parked_brand(park);
-        print_data_per_timestep(*time, (park->max_parking_cells - park->free_parking_cells), avg_parking_time, queue->q_length, *full_house_steps, *(car_id) + 1, brand);
-        append_data_per_timestep(output_path, *sim_nr, *time, (park->max_parking_cells - park->free_parking_cells), avg_parking_time, queue->q_length, *full_house_steps, *(car_id) + 1, brand);
+
+        print_data_per_timestep(*time, 
+            (park->max_parking_cells - park->free_parking_cells), 
+            avg_parking_time, 
+            queue->q_length, 
+            *full_house_steps, 
+            *(car_id) + 1, 
+            brand);
+
+        append_data_per_timestep(output_path, 
+            *sim_nr, 
+            *time, 
+            (park->max_parking_cells - park->free_parking_cells), 
+            avg_parking_time, queue->q_length, 
+            *full_house_steps, 
+            *(car_id) + 1, 
+            brand);
         
     }
+
     
     // clears the memory
     clear_queue(queue);
     clear_car_park(park);
-    
+
     free(car_id);
     free(time);
     free(full_house_steps);

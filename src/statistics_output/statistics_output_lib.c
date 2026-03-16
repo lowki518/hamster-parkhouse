@@ -3,241 +3,317 @@
 */
 
 #include "../../include/statistics_output_lib.h"
+#include "../../include/file_manager_lib.h"
+#include "../../include/data_types.h"
+
 
 /*
-@brief prints the simulation parameters.
+@brief Prints the simulation parameters
 
-@param[1] sim_nr The number of the simulation.
-@param[2] sim_duration The total amount of time steps done.
-@param[3] parking_cells The amount of parking_spaces.
-@param[4] max_parking_duration The maximum parking time for the cars.
-@param[5] new_car_prob The probability of a new car arriving (in percent).
-@param[6] max_cars_arriving How many cars can arrive in a simulation step.
-@param[7] seed The seed used to generate randomness within this simulation.
+@param[1] sim_nr The number of the simulation
+@param[2] sim_duration The total amount of time steps done
+@param[3] parking_cells The amount of parking spaces
+@param[4] max_parking_duration The maximum parking time for the cars
+@param[5] new_car_prob The probability of a new car arriving (in percent)
+@param[6] max_cars_arriving How many cars can arrive in a simulation step
+@param[7] seed The seed used to generate randomness within this simulation
 
 @return void
 */
-void print_head_data (int sim_nr, t_Time sim_duration, int parking_cells, t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
-    char sim_duration_s[] = "Simulated Steps";
-    char parking_cells_s[] = "Parking Cells";
+void print_head_data(int sim_nr, t_Time sim_duration, int parking_cells, t_Time max_parking_duration, float new_car_prob, int max_cars_arriving, unsigned int seed) {
+    char sim_duration_s[]         = "Simulated Steps";
+    char parking_cells_s[]        = "Parking Cells";
     char max_parking_duration_s[] = "Max. Parking Time";
-    char new_car_prob_s[] = "New Car Prob.";
-    char max_cars_arriving_s[] = "Max. New Cars";
-    char seed_s[] = "Seed";
-    
-    char curr_step_s[] = "Current Step";
-    char curr_cars_s[] = "Parked Cars";
-    char avg_time_s[] = "Avg. Time";
-    char q_len_s[] = "Queue Length";
-    char full_house_s[] = "Full Garage";
-    char tot_sim_car_s[] = "Cars Simulated";
-    char most_brand_s[] = "Most Brand";
+    char new_car_prob_s[]         = "New Car Prob.";
+    char max_cars_arriving_s[]    = "Max. New Cars";
+    char seed_s[]                 = "Seed";
 
+    char curr_step_s[]            = "Current Step";
+    char curr_cars_s[]            = "Parked Cars";
+    char avg_time_s[]             = "Avg. Time";
+    char q_len_s[]                = "Queue Length";
+    char full_house_s[]           = "Full Garage";
+    char tot_sim_car_s[]          = "Cars Simulated";
+    char most_brand_s[]           = "Most Brand";
 
     printf("Simulation Nr. %i:\n", sim_nr);
     printf("\n");
-
     printf("|%15s|%15s|%19s|%15s|%15s|%15s|\n", sim_duration_s, parking_cells_s, max_parking_duration_s, new_car_prob_s, max_cars_arriving_s, seed_s);
     printf("|%15i|%15i|%19i|%14.2f%%|%15i|%15i|\n", sim_duration, parking_cells, max_parking_duration, new_car_prob, max_cars_arriving, seed);
-    
     printf("\n\n");
-    printf("|%15s|%15s|%19s|%15s|%15s|%15s|%15s|\n", curr_step_s, curr_cars_s, avg_time_s, q_len_s, full_house_s, tot_sim_car_s, most_brand_s);
+    printf("|%15s|%15s|%19s|%15s|%15s|%15s|%15s|\n", 
+        curr_step_s, curr_cars_s, avg_time_s, q_len_s, full_house_s, tot_sim_car_s, most_brand_s);
+    
+    
 }
 
 
 /*
-@brief prints the simulated data per timestep
+@brief Prints the simulated data for a single timestep
 
-@param[1] timestep The current timestep.
-@param[2] cars_parked The amount of cars currently parked.
-@param[3] avg_parking_time The average parking time of the cars.
-@param[4] q_len The current length of the queue.
-@param[5] full_house_steps The amount of steps the parking garage was full.
-@param[6] tot_cars_simulated The total amount of cars that was simulated.
-@param[7] most_brand The car brand that parked the most.
+@param[1] timestep The current timestep
+@param[2] cars_parked The amount of cars currently parked
+@param[3] avg_parking_time The average parking time of the cars
+@param[4] q_len The current length of the queue
+@param[5] full_house_steps The amount of steps the parking garage was full
+@param[6] tot_cars_simulated The total amount of cars that was simulated
+@param[7] most_brand The car brand that parked the most
 
 @return void
 */
-void print_data_per_timestep (t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) { 
-    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15i|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, most_brand);
+void print_data_per_timestep(t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) {
+    printf("|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", timestep, cars_parked, avg_parking_time, q_len, full_house_steps, tot_cars_simulated, get_brand_by_number(most_brand));
 }
+
 
 /*
-@brief Rewrites the dataset with new data based on the index.
+@brief Gets the number of simulated steps from the file
 
-@param[1] datasetIndex An integer representing the index on the dataset to load.
+@param[1] file A pointer to the opened file
 
-@return A pointer 
+@return The number of simulated steps, or 0 if not found
 */
-float *loadNewDataset(int datasetIndex, char *filepath) {
-    /*
-    File = OPEN File from *filepath
+int get_simulation_length(FILE *file) {
+    char line[116];
+    int simulated_steps = 0;
 
-    datasetSize = READ dataset size from File
-    float *data = ALLOCATE memory for datasetSize
+    rewind(file);
 
-    FOR i FROM 0 to datasetSize-1:
-        data[i] = value from File based on datasetIndex and i
-    
-    return data;
-    */
+    // search for the header line containing "Simulated Steps"
+    while (fgets(line, sizeof(line), file)) {
+        if (strstr(line, "Simulated Steps")) {
+            // the next line contains the actual values
+            if (fgets(line, sizeof(line), file)) {
+                // skip leading '|' and spaces to reach the first number
+                char *ptr = line;
+                while (*ptr == '|' || *ptr == ' ') ptr++;
+                sscanf(ptr, "%d", &simulated_steps);
+            }
+            break;
+        }
+    }
 
-    return NULL; // Placeholder for actual implementation
+    return simulated_steps;
 }
 
 
-/* 
-@brief A simple linear interpolation function.
+/*
+@brief Rewrites the dataset array with values from a specific column in the file
 
-@param[1] a The start value.
-@param[2] b The end value.
-@param[3] t The interpolation factor, between 0.0f and 1.0f.
+@param[1] file A pointer to the opened file
+@param[2] dataset_index The index of the dataset to load (0 = Parked Cars, 1 = Avg Time, ...)
+@param[3] dataset A pointer to the float array to write the values into
+@param[4] size The number of values to read, must match the allocated size of dataset
 
-@return The interpolated value between a and b.
+@return void
+*/
+void load_new_dataset(FILE* file, int dataset_index, float* dataset, int size) {
+    char line[116];
+    rewind(file);
+
+    // offset by 2 to skip "Current Step" column and account for leading '|'
+    int col_index = dataset_index + 2;
+
+    // skip lines until the data header "Current Step" is found
+    while (fgets(line, sizeof(line), file)) {
+        if (strstr(line, "Current Step")) {
+            break;
+        }
+    }
+
+    int count = 0;
+
+    while (count < size && fgets(line, sizeof(line), file)) {
+
+        // skip empty lines
+        if (line[0] == '\n' || line[0] == '\r' || line[0] == '\0') {
+            continue;
+        } 
+
+        char tmp[116];
+        strncpy(tmp, line, sizeof(tmp));
+        tmp[sizeof(tmp) - 1] = '\0';
+
+        char *token;
+        char *rest = tmp;
+        int col = 0;
+        float val = 0.0f;
+        int found = 0;
+
+        while ((token = strtok_r(rest, "|", &rest))) {
+            // skip empty tokens caused by leading '|'
+            if (token[0] == '\0' || token[0] == '\n' || token[0] == '\r') {
+                continue;
+            }
+
+            col++;
+
+            if (col == col_index) {
+                // skip leading spaces before parsing the value
+                while (*token == ' ') token++;
+                if (sscanf(token, "%f", &val) == 1) {
+                    found = 1;
+                }
+                break;
+            }
+        }
+
+        if (found) {
+            dataset[count] = val;
+            count++;
+        }
+    }
+}
+
+
+/*
+@brief A simple linear interpolation function
+
+@param[1] a The start value
+@param[2] b The end value
+@param[3] t The interpolation factor, between 0.0f and 1.0f
+
+@return The interpolated value between a and b
 */
 float lerp(float a, float b, float t) {
-    return a + (b - a) * t; 
+    return a + (b - a) * t;
 }
 
-/*
-@brief Checks if a point (x, y) is inside a given rectangle.
 
-@param[1] x The x-coordinate of the point.
-@param[2] y The y-coordinate of the point.
+/*
+@brief Checks if a point (x, y) is inside a given rectangle
+
+@param[1] x The x-coordinate of the point
+@param[2] y The y-coordinate of the point
 @param[3] rect A pointer to the rectangle
 
-@return 1 if the point is inside the rectangle, 0 otherwise.
+@return 1 if the point is inside the rectangle, 0 otherwise
 */
-int isPointInsideRect(float x, float y, SDL_FRect * rect) {
+int is_point_inside_rect(float x, float y, SDL_FRect *rect) {
     return (x >= rect->x && x <= rect->x + rect->w &&
             y >= rect->y && y <= rect->y + rect->h);
 }
 
 
 /*
-@brief Calculates the inner bounds of a PlotArea, 
-accounting for padding and saves it in the provided pointers.
+@brief Calculates the inner bounds of a plot rectangle, accounting for PADDING
 
-@param[1] p A pointer to the PlotArea.
-@param[2] left A pointer to a float where the left bound will be stored.
-@param[3] right A pointer to a float where the right bound will be stored.
-@param[4] top A pointer to a float where the top bound will be stored.
-@param[5] bottom A pointer to a float where the bottom bound will be stored.
+@param[1] plot A pointer to the plot SDL_FRect
+@param[2] left A pointer to a float where the left bound will be stored
+@param[3] right A pointer to a float where the right bound will be stored
+@param[4] top A pointer to a float where the top bound will be stored
+@param[5] bottom A pointer to a float where the bottom bound will be stored
 
 @return void
 */
-void innerBounds(PlotArea *p, float *left, float *right, float *top, float *bottom) {
-    *left   = p->rect.x + p->padding;
-    *bottom = p->rect.y + p->rect.h - p->padding;
-    *right  = p->rect.x + p->rect.w - 20.0f; // keep space for arrow
-    *top    = p->rect.y - 20.0f;             // keep space for arrow
+void inner_bounds(SDL_FRect *plot, float *left, float *right, float *top, float *bottom) {
+    *left   = plot->x + PADDING;
+    *bottom = plot->y + plot->h - PADDING;
+    *right  = plot->x + plot->w - ARROW_PADDING;  // keep space for arrow
+    *top    = plot->y - ARROW_PADDING;            // keep space for arrow
 }
 
 
 /*
-@brief checks if two values are equal within a tolerance
+@brief Checks if two float values are equal within a given tolerance
 
-@param[1] a The first value to compare.
-@param[2] b The second value to compare.
-@param[3] tol The tolerance within which the two values are considered equal.
+@param[1] a The first value to compare
+@param[2] b The second value to compare
+@param[3] tol The tolerance within which the two values are considered equal
 
-@return 1 if the values are nearly equal within the specified tolerance, 0 otherwise.
+@return 1 if the values are nearly equal, 0 otherwise
 */
-int nearlyEqual(float a, float b, float tol) {
-    return fabsf(a - b) <= tol; //fabsf gets the absolute differenze
+int nearly_equal(float a, float b, float tol) {
+    return fabsf(a - b) <= tol;
 }
 
 
 /*
-@brief Updates the hover state of a button based on the current mouse position.
+@brief Updates the hover state of a button based on the current mouse position
 
-@param[1] btn A pointer to the button to update.
-@param[2] mouseX The current x-coordinate of the mouse.
-@param[3] mouseY The current y-coordinate of the mouse.
+@param[1] btn A pointer to the button to update
+@param[2] mouse_x The current x-coordinate of the mouse
+@param[3] mouse_y The current y-coordinate of the mouse
 
 @return void
 */
-void updateButtonHover(Button *btn, float mouseX, float mouseY) {
-    btn->hovered = isPointInsideRect(mouseX, mouseY, &btn->rect);
+void update_button_hover(Button *btn, float mouse_x, float mouse_y) {
+    btn->hovered = is_point_inside_rect(mouse_x, mouse_y, &btn->rect);
 }
 
 
 /*
-@brief updates the animation state of a button based on the time passed since the last update.
+@brief Updates the animation state of a button based on the time passed since the last update
 
-@param[1] btn A pointer to the button to update.
-@param[2] dt The time in milliseconds since the last update.
+@param[1] btn A pointer to the button to update
+@param[2] dt The time in seconds since the last update
 
 @return void
 */
-void updateButtonAnimation(Button *btn, float dt) {
-    if(btn->hovered) {
+void update_button_animation(Button *btn, float dt) {
+    // smoothly interpolate hoverAnim toward 1 when hovered, toward 0 otherwise
+    if (btn->hovered) {
         btn->hoverAnim += (1.0f - btn->hoverAnim) * SPEED * dt;
     } else {
         btn->hoverAnim += (0.0f - btn->hoverAnim) * SPEED * dt;
     }
 
-    if(btn->pressed) {
+    // smoothly interpolate pressAnim toward 1 when pressed, toward 0 otherwise
+    if (btn->pressed) {
         btn->pressAnim += (1.0f - btn->pressAnim) * SPEED * dt;
     } else {
         btn->pressAnim += (0.0f - btn->pressAnim) * SPEED * dt;
-    }
- }
-
-
-/*
-@brief Draws a cyan glowing & enlarging effect around a given rectangle.
-
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] rect A pointer to the rectangle to draw the glow around.
-@param[3] intensity A float value between 0.0f and 1.0f representing the intensity of the glow effect.
-
-@return void
-*/
- void drawGlow(SDL_Renderer *renderer, SDL_FRect *rect, float intensity) {
-    int layers = 6; //Multiple layers for a smoother animation 
-    for (int i = 0; i < layers; i++) {
-        float expand = (float) i * 4.0f;
-        float alpha = (1.0f - (float)i / layers) * 80.0f * intensity;
-        SDL_SetRenderDrawColor(renderer, 0, 200, 255, (Uint8)alpha); //Uint8 for safety
-        SDL_FRect glowRect = {
-            rect->x - expand,
-            rect->y - expand,
-            rect->w + expand * 2,
-            rect->h + expand * 2
-        };
-        SDL_RenderFillRect(renderer, &glowRect);
     }
 }
 
 
 /*
-@brief Draws a button with the renderer
+@brief Draws a glowing border effect around a given rectangle
 
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] btn A pointer to the button to draw.
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] rect A pointer to the rectangle to draw the glow around
+@param[3] intensity A float value between 0.0f and 1.0f representing the intensity of the glow
 
 @return void
 */
-void drawButton(SDL_Renderer *renderer, Button *btn) {
-    drawGlow(renderer, &btn->rect, btn->hoverAnim);
+void draw_glow(SDL_Renderer *renderer, SDL_FRect *rect, float intensity) {
+    // scale alpha by intensity so the glow fades in with hover animation
+    Uint8 alpha = (Uint8)(255.0f * intensity);
+    SDL_SetRenderDrawColor(renderer, BTN_HOVER_R, BTN_HOVER_G, BTN_HOVER_B, alpha);
+    SDL_FRect border = {
+        rect->x - BTN_GLOW_SIZE,
+        rect->y - BTN_GLOW_SIZE,
+        rect->w + BTN_GLOW_SIZE * 2,
+        rect->h + BTN_GLOW_SIZE * 2
+    };
+    SDL_RenderFillRect(renderer, &border);
+}
 
-    // Fill color (animated)
-    SDL_Color base  = {0, 150, 255, 255};
-    SDL_Color hover = {0, 200, 255, 255};
-    float t = btn->hoverAnim;
 
-    // Sets the color for the button based on the hover animation
-    // Linear interpolation for smoother transition
-    Uint8 r = (Uint8)lerp(base.r, hover.r, t); // Uint8 for safety
-    Uint8 g = (Uint8)lerp(base.g, hover.g, t); // Uint8 for safety
-    Uint8 b = (Uint8)lerp(base.b, hover.b, t); // Uint8 for safety
+/*
+@brief Draws a button with hover and press animations
+
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] btn A pointer to the button to draw
+
+@return void
+*/
+void draw_button(SDL_Renderer *renderer, Button *btn) {
+    draw_glow(renderer, &btn->rect, btn->hoverAnim);
+
+    SDL_Color base  = {BTN_BASE_R,  BTN_BASE_G,  BTN_BASE_B,  255};
+    SDL_Color hover = {BTN_HOVER_R, BTN_HOVER_G, BTN_HOVER_B, 255};
+
+    // interpolate color between base and hover based on hover animation state
+    Uint8 r = (Uint8)lerp(base.r, hover.r, btn->hoverAnim);
+    Uint8 g = (Uint8)lerp(base.g, hover.g, btn->hoverAnim);
+    Uint8 b = (Uint8)lerp(base.b, hover.b, btn->hoverAnim);
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 
-    // Press Animation (scale down)
-    float pressScale = 1.0f - 0.1f * btn->pressAnim;
-    float w = btn->rect.w * pressScale;
-    float h = btn->rect.h * pressScale;
+    // shrink the button slightly when pressed
+    float press_scale = 1.0f - 0.1f * btn->pressAnim;
+    float w = btn->rect.w * press_scale;
+    float h = btn->rect.h * press_scale;
     float x = btn->rect.x + (btn->rect.w - w) / 2.0f;
     float y = btn->rect.y + (btn->rect.h - h) / 2.0f;
 
@@ -247,76 +323,73 @@ void drawButton(SDL_Renderer *renderer, Button *btn) {
 
 
 /*
-@brief Draws an arrow icon inside a given rectangle, with a specified direction and hover animation.
+@brief Draws an arrow icon inside a given rectangle
 
-This function was made using Copilot, as its geometry is a bit tricky and I didn't want to do it manually.
+This function was made using Copilot, as its geometry is a bit tricky and I didn't want to do it manually
 
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] rect A pointer to the rectangle to draw the arrow in.
-@param[3] direction An integer indicating the direction of the arrow (-1 for left, 1 for right).
-@param[4] hoverAnim A float value between 0.0f and 1.0f representing the hover animation state.
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] rect A pointer to the rectangle to draw the arrow in
+@param[3] direction An integer indicating the direction of the arrow (-1 for left, 1 for right)
+@param[4] hover_anim A float value between 0.0f and 1.0f representing the hover animation state
 
 @return void
 */
-void drawArrow(SDL_Renderer *renderer, SDL_FRect *rect, int direction, float hoverAnim) {
-    int cx = (int)(rect->x + rect->w / 2);
-    int cy = (int)(rect->y + rect->h / 2);
-    int size = (int)(rect->h * 0.33f + 3 * hoverAnim);
+void draw_arrow(SDL_Renderer *renderer, SDL_FRect *rect, int direction, float hover_anim) {
+    int cx   = (int)(rect->x + rect->w / 2);
+    int cy   = (int)(rect->y + rect->h / 2);
+    int size = (int)(rect->h * 0.33f + 3 * hover_anim);
 
-    // Draw the arrow using two lines forming a ">" or "<" shape in black
-    SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // black
     if (direction == -1) {
         SDL_RenderLine(renderer, cx + size, cy - size, cx - size, cy);
-        SDL_RenderLine(renderer, cx - size, cy,       cx + size, cy + size);
+        SDL_RenderLine(renderer, cx - size, cy,        cx + size, cy + size);
     } else {
         SDL_RenderLine(renderer, cx - size, cy - size, cx + size, cy);
-        SDL_RenderLine(renderer, cx + size, cy,       cx - size, cy + size);
+        SDL_RenderLine(renderer, cx + size, cy,        cx - size, cy + size);
     }
 }
 
+
 /*
-@brief Draws a centered "X" icon inside a given rectangle, with a hover animation effect.
+@brief Draws a centered X icon inside a given rectangle
 
-This function was made using Copilot, as its basic geometry and I wanted to save time.
+This function was made using Copilot, as its basic geometry and I wanted to save time
 
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] rect A pointer to  the rectangle to draw the "X" icon in.
-@param[3] hoverAnim A float value between 0.0f and 1.0f representing the hover animation state.
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] rect A pointer to the rectangle to draw the X icon in
+@param[3] hover_anim A float value between 0.0f and 1.0f representing the hover animation state
 
 @return void
 */
-void drawXIcon(SDL_Renderer *renderer, SDL_FRect *rect, float hoverAnim) {
-    // Gets the centre of the rectangle
-    float cx = rect->x + rect->w * 0.5f;
-    float cy = rect->y + rect->h * 0.5f;
+void draw_x_icon(SDL_Renderer *renderer, SDL_FRect *rect, float hover_anim) {
+    hover_anim; // icon is always fully visible, hover_anim kept for API compatibility
 
-    // Calculates the arm length of the "X" based on the rectangle size
-    float arm = fminf(rect->w, rect->h) * -0.15f * hoverAnim;
-    float x1 = cx - arm, y1 = cy - arm;
-    float x2 = cx + arm, y2 = cy + arm;
+    float cx  = rect->x + rect->w * 0.5f;
+    float cy  = rect->y + rect->h * 0.5f;
+    float arm = fminf(rect->w, rect->h) * 0.3f;
 
-    // Draw the "X" using two crossing lines in black
-    SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
-    SDL_RenderLine(renderer, x1, y1, x2, y2);
-    SDL_RenderLine(renderer, x1, y2, x2, y1);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //black
+    SDL_RenderLine(renderer, cx - arm, cy - arm, cx + arm, cy + arm);
+    SDL_RenderLine(renderer, cx - arm, cy + arm, cx + arm, cy - arm);
 }
 
+
 /*
-@brief Handles events for navigation buttons.
+@brief Handles mouse events for a navigation button and returns whether it was clicked
 
-@param[1] btn A pointer to the button to handle events for.
-@param[2] event A pointer to the event to handle.
+@param[1] btn A pointer to the button to handle events for
+@param[2] event A pointer to the SDL event to handle
 
-@return 1 if the button was clicked, 0 otherwise.
+@return 1 if the button was clicked, 0 otherwise
 */
-int handleNavButtonEvent(Button *btn, SDL_Event *event) {
+int handle_nav_button_event(Button *btn, SDL_Event *event) {
     int clicked = 0;
-    // Checks if the button was pressed and released
     if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
         if (btn->hovered && !btn->pressed) {
             btn->pressed = TRUE;
-        } 
+        }
     } else if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
+        // only count as clicked if mouse was released while still hovering
         if (btn->pressed && btn->hovered) {
             clicked = 1;
         }
@@ -327,41 +400,44 @@ int handleNavButtonEvent(Button *btn, SDL_Event *event) {
 
 
 /*
-@brief Handles events for the close button.
+@brief Handles mouse events for the close button and sets running to FALSE if clicked
 
-@param[1] btn A pointer to the close button.
-@param[2] event A pointer to the event to handle.
-@param[3] running A pointer to the running state of the application, which will be set to 0 if the close button is clicked.
+@param[1] btn A pointer to the close button
+@param[2] event A pointer to the SDL event to handle
+@param[3] running A pointer to the running state, set to FALSE if the button is clicked
 
 @return void
 */
-void handleCloseButtonEvent(Button *btn, SDL_Event *event, int *running) {
-    // Checks if the button was pressed and released
+void handle_close_button_event(Button *btn, SDL_Event *event, int *running) {
     if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-        if (btn->hovered && !btn->pressed) btn->pressed = TRUE;
+        if (btn->hovered && !btn->pressed) {
+            btn->pressed = TRUE;
+        }
     }
     if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
-        if (btn->pressed && btn->hovered) *running = FALSE;
-        btn->pressed = FALSE;
+        if (btn->pressed && btn->hovered) {
+            *running = FALSE;
+            btn->pressed = FALSE;
+        }
     }
 }
 
+
 /*
-@brief Opens a TTF font from a specified file path with a specified size.
+@brief Opens a TTF font from a file path at a given size
 
-@param[1] path A string representing the file path to the font to open.
-@param[2] size An integer representing the size of the font.
+@param[1] path A string representing the file path to the font
+@param[2] size An integer representing the desired font size
 
-@return A pointer to the opened font, or NULL if the font could not be opened.
+@return A pointer to the opened TTF_Font, or NULL if loading failed
 */
-TTF_Font * openFont(char *path, int size) {
-    // Checks if TTF was initialized successfully
+TTF_Font *open_font(char *path, int size) {
     if (TTF_Init() < 0) {
         printf("TTF init failed: %s", SDL_GetError());
         return NULL;
     }
-    // Opens the font and checks if it was successful
-    TTF_Font * font = TTF_OpenFont(path, size);
+
+    TTF_Font *font = TTF_OpenFont(path, size);
     if (!font) {
         printf("Failed to load font: %s", SDL_GetError());
         return NULL;
@@ -371,37 +447,35 @@ TTF_Font * openFont(char *path, int size) {
 
 
 /*
-@brief Draws text on the screen.
+@brief Draws a string of text at a given position on the screen
 
-This function was done using Copilot, as I had no Idea how to use Text with SDL.
+This function was done using Copilot, as I had no idea how to use text with SDL
 
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] font A pointer to the font to use for rendering the text.
-@param[3] text A string representing the text to draw.
-@param[4] x The x-coordinate where the text should be drawn.
-@param[5] y The y-coordinate where the text should be drawn.
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] font A pointer to the font to use for rendering
+@param[3] text A string representing the text to draw
+@param[4] x The x-coordinate where the text should be drawn
+@param[5] y The y-coordinate where the text should be drawn
 
 @return void
 */
-void drawText(SDL_Renderer *renderer, TTF_Font *font, char *text, float x, float y) {
-    // Sets the ssurface to draw the text on
-    SDL_Color color = {0, 0, 0, 255};
+void draw_text(SDL_Renderer *renderer, TTF_Font *font, char *text, float x, float y) {
+    SDL_Color color   = {0, 0, 0, 255};
     SDL_Surface *surface = TTF_RenderText_Blended(font, text, 0, color);
-    
+
     if (!surface) {
         printf("Failed to render text surface: %s", SDL_GetError());
         return;
-    } 
+    }
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-    if (!texture) { 
-        SDL_DestroySurface(surface); 
+    if (!texture) {
+        SDL_DestroySurface(surface);
         printf("Failed to create texture from surface: %s", SDL_GetError());
-        return; 
+        return;
     }
 
-    // Renders the text at a specific position
     SDL_FRect rec = {x, y, (float)surface->w, (float)surface->h};
     SDL_RenderTexture(renderer, texture, NULL, &rec);
 
@@ -411,372 +485,448 @@ void drawText(SDL_Renderer *renderer, TTF_Font *font, char *text, float x, float
 
 
 /*
-@brief Creates a new PlotArea
+@brief Draws a solid white background covering the entire window
 
-@param[1] x The x-coordinate of the top-left corner of the PlotArea.
-@param[2] y The y-coordinate of the top-left corner of the PlotArea.
-@param[3] w The width of the PlotArea.
-@param[4] h The height of the PlotArea.
-@param[5] renderer A pointer to renderer to use for drawing the background.
-
-@return A PlotArea structure representing the created PlotArea.
-*/
-PlotArea createPlotArea(float x, float y, float w, float h, SDL_Renderer * renderer) {
-    PlotArea p;
-    p.rect.x = x; p.rect.y = y; p.rect.w = w; p.rect.h = h;
-    p.padding = PADDING;
-    return p;
-}
-
-/*
-@brief Draws the background in white
-
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] p A pointer to the PlotArea to draw the background for.
+@param[1] renderer A pointer to the renderer to use for drawing
 
 @return void
 */
-void drawBackground(SDL_Renderer * renderer) {
-    // Draws the background in white
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_FRect rect = {0, 0, 1200, 900};
+void draw_background(SDL_Renderer *renderer) {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // white
+    SDL_FRect rect = {0, 0, WIDTH, HEIGHT};
     SDL_RenderFillRect(renderer, &rect);
 }
 
+
 /*
-@brief Draws the axes of the plot area with arrowheads.
+@brief Draws the X and Y axes of the plot area with arrowheads
 
-This function was made using Copilot, as I didn't want to calculate the geometry.
+This function was made using Copilot, as I didn't want to calculate the geometry
 
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] p A pointer to the PlotArea to draw in.
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] plot A pointer to the plot SDL_FRect
 
 @return void
 */
-void drawAxesWithArrows(SDL_Renderer *renderer, PlotArea *p) {
+void draw_axes_with_arrows(SDL_Renderer *renderer, SDL_FRect *plot) {
     float left, right, top, bottom;
-    innerBounds(p, &left, &right, &top, &bottom);
+    inner_bounds(plot, &left, &right, &top, &bottom);
 
-    // Draw axes in black
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    // X axis
-    SDL_RenderLine(renderer, left, bottom, right, bottom);
-    // Y axis
-    SDL_RenderLine(renderer, left, bottom, left, top);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
+    SDL_RenderLine(renderer, left, bottom, right, bottom); // X axis
+    SDL_RenderLine(renderer, left, bottom, left,  top);    // Y axis
 
-    // Arrow heads; size was tested
     int size = 8;
-    // X arrow
+    // X arrowhead
     SDL_RenderLine(renderer, right, bottom, right - size, bottom - size);
     SDL_RenderLine(renderer, right, bottom, right - size, bottom + size);
-    // Y arrow
+    // Y arrowhead
     SDL_RenderLine(renderer, left, top, left - size, top + size);
     SDL_RenderLine(renderer, left, top, left + size, top + size);
 }
 
 
 /*
-@brief Draws the labels for the X and Y axes of the plot area.
+@brief Draws the labels for the X and Y axes of the plot area
 
-@param[1] renderer A pointer to the SDL_Renderer to use for drawing.
-@param[2] font A pointer to the TTF_Font to use for rendering the text.
-@param[3] p A pointer to the PlotArea structure representing the plot area to draw.
-@param[4] labelX A string representing the label for the X axis.
-@param[5] labelY A string representing the label for the Y axis.
+@param[1] renderer A pointer to the SDL_Renderer to use for drawing
+@param[2] font A pointer to the TTF_Font to use for rendering
+@param[3] plot A pointer to the plot SDL_FRect
+@param[4] label_x A string representing the label for the X axis
+@param[5] label_y A string representing the label for the Y axis
 
 @return void
 */
-void drawAxisLabels(SDL_Renderer *renderer, TTF_Font *font, PlotArea *p, char *labelX, char *labelY) {
+void draw_axis_labels(SDL_Renderer *renderer, TTF_Font *font, SDL_FRect *plot, char *label_x, char *label_y) {
     float left, right, top, bottom;
-    innerBounds(p, &left, &right, &top, &bottom);
-    drawText(renderer, font, labelX, right + 8, bottom - 10);               // X: "Minutes"
-    drawText(renderer, font, labelY, left - 12, top - 20);                   // Y: "Cars currently parked"
+    inner_bounds(plot, &left, &right, &top, &bottom);
+
+    draw_text(renderer, font, label_x, right + 8, bottom - 10);
+
+    // center the Y label above the plot, approximate half-width using char count * 4
+    float plot_center_x = left + (right - left) / 2.0f;
+    draw_text(renderer, font, label_y, plot_center_x - (strlen(label_y) * 4.0f), top - TOP_PADDING);
 }
 
 
 /*
-@brief Maps a Y value to a pixel coordinate within the plot area, based on the specified Y range and plot dimensions.
+@brief Maps a data value to a pixel Y coordinate within the plot area
 
-@param[1] v The Y value to map.
-@param[2] vMin The minimum Y value of the range.
-@param[3] vMax The maximum Y value of the range.
-@param[4] top The top pixel coordinate of the plot area.
-@param[5] bottom The bottom pixel coordinate of the plot area.
+@param[1] v The value to map
+@param[2] v_min The minimum value of the range
+@param[3] v_max The maximum value of the range
+@param[4] top The top pixel coordinate of the plot area
+@param[5] bottom The bottom pixel coordinate of the plot area
 
-@return The Y coordinate of the pixel
+@return The Y pixel coordinate corresponding to v
 */
-float mapYValueToPixel(float v, float vMin, float vMax, float top, float bottom) {
-    if (vMax == vMin) {
+float map_y_value_to_pixel(float v, float v_min, float v_max, float top, float bottom) {
+    if (v_max == v_min) {
         return (top + bottom) * 0.5f;
     }
-
-    // Calculates the relative position
-    float t = (v - vMin) / (vMax - vMin); 
-
-    // Maps the pixel to the absolute position
-    return bottom - t * (bottom - top); 
+    float t = (v - v_min) / (v_max - v_min);
+    return bottom - t * (bottom - top);
 }
 
 
 /*
-@brief Draws Y-axis ticks and grid lines on the plot area.
+@brief Draws Y-axis tick marks, grid lines and value labels on the plot area
 
-This function was done using Copilot, as it's just basic math and boring drawing. (I'm lazy)
+This function was done using Copilot, as it's just basic math and boring drawing
 
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] font A pointer to the font to use for rendering the tick labels
-@param[3] p A pointer to the PlotArea to draw in.
-@param[4] yMin The minimum Y value of the range to determine tick positions.
-@param[5] yMax The maximum Y value of the range to determine tick positions.
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] font A pointer to the font to use for rendering tick labels
+@param[3] plot A pointer to the plot SDL_FRect
+@param[4] y_min The minimum Y value of the data range
+@param[5] y_max The maximum Y value of the data range
 
 @return void
 */
-void drawYTicksAndGrid(SDL_Renderer *renderer, TTF_Font *font, PlotArea *p, float yMin, float yMax) {
-    // Gets the inner bounds of the plot area
+void draw_y_ticks_and_grid(SDL_Renderer *renderer, TTF_Font *font, SDL_FRect *plot, float y_min, float y_max) {
     float left, right, top, bottom;
-    innerBounds(p, &left, &right, &top, &bottom);
+    inner_bounds(plot, &left, &right, &top, &bottom);
 
-    float fractions[5] = {0.f, 0.25f, 0.5f, 0.75f, 1.f}; // Fractions for tick positions
-    float tol = 1e-4f; // Tolerance for hiding the tick at Y=0
+    float fractions[5] = {0.f, 0.25f, 0.5f, 0.75f, 1.0f}; // the interval of the grid lines
+    float tol = 1e-4f;
+
+    // fixed right anchor so all Y labels are right-aligned to the same x position
+    float label_right_anchor = left - 8;
 
     for (int i = 0; i < 5; ++i) {
-        // Calculates the Y value for the current tick
-        float val = yMin + fractions[i] * (yMax - yMin);
-        float y = mapYValueToPixel(val, yMin, yMax, top, bottom);
+        float val = y_min + fractions[i] * (y_max - y_min);
+        float y   = map_y_value_to_pixel(val, y_min, y_max, top, bottom);
 
-        // Grid line in grey
+        // draw horizontal grid line
         SDL_SetRenderDrawColor(renderer, 210, 210, 210, 255);
         SDL_RenderLine(renderer, left, y, right, y);
 
-        // Decide tick visibility:
-        // - hide at Y=0 specifically
-        // - hide at arrowhead (top => i==4)
-        int showTick = 1;
-        if (nearlyEqual(val, 0.0f, tol)) showTick = 0;
-        if (i == 4) showTick = 0;
+        // skip tick at zero and at the top edge
+        int show_tick = 1;
+        if (nearly_equal(val, 0.0f, tol)) {
+            show_tick = 0;
+        }
 
-        // Draws the ticks in black if there should be one
-        if (showTick) {
+        if (i == 4) {
+            show_tick = 0;
+        }
+
+        if (show_tick) {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderLine(renderer, left - TICK_SIZE, y, left, y);
         }
 
-        // Draws the labels for the ticks
         char buf[64];
-        // Formats the tick value with 3 decimal places and saves it in a buffer
-        snprintf(buf, sizeof(buf), "%.3f", val);
-        drawText(renderer, font, buf, left - 46, y - TICK_SIZE + 2); // Numbers are tested for alignment
+        snprintf(buf, sizeof(buf), "%.2f", val);
+
+        // right-align label by subtracting approximate text width from anchor
+        float text_width = strlen(buf) * 7.0f;
+        draw_text(renderer, font, buf, label_right_anchor - text_width - SIDE_PAD, y - TICK_SIZE + 2);
     }
 }
 
 
 /*
-@brief Draws X-axis ticks and grid lines on the plot area, with labels representing minutes.
+@brief Draws X-axis tick marks, grid lines and step labels on the plot area
 
-Basically copied from drawYTicksAndGrid.
-
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] font A pointer to the font to use for rendering the tick labels.
-@param[3] p A pointer to the PlotArea to draw in.
-@param[4] sampleCount The number of samples in the dataset, used to determine tick positions and labels.
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] font A pointer to the font to use for rendering tick labels
+@param[3] plot A pointer to the plot SDL_FRect
+@param[4] sample_count The number of data samples, used to determine tick label values
 
 @return void
 */
-void drawXTicksAndGridMinutes(SDL_Renderer *renderer, TTF_Font *font, PlotArea *p, int sampleCount) {
-    // Checks if there are any samples
-    if (sampleCount <= 0) {
-       return;
+void draw_x_ticks_and_grid(SDL_Renderer *renderer, TTF_Font *font, SDL_FRect *plot, int sample_count) {
+    if (sample_count <= 0) {
+        return;
     }
 
-    // Gets the inner bounds of the plot area
     float left, right, top, bottom;
-    innerBounds(p, &left, &right, &top, &bottom);
+    inner_bounds(plot, &left, &right, &top, &bottom);
 
-
-    float fractions[5] = {0.f, 0.25f, 0.5f, 0.75f, 1.f}; // Fractions for tick positions
-    int denom = sampleCount - 1; // Denominator for calculating tick labels (minutes)
-
+    float fractions[5] = {0.f, 0.25f, 0.5f, 0.75f, 1.0f}; // the interval of the grid lines
+    int denom = sample_count;
 
     for (int i = 0; i < 5; ++i) {
-        
         float x = left + fractions[i] * (right - left);
 
-        // Draws the grid in grey
+        // draw vertical grid line
         SDL_SetRenderDrawColor(renderer, 210, 210, 210, 255);
         SDL_RenderLine(renderer, x, top, x, bottom);
 
-        // Tick at bottom (hide at arrowhead/right end)
+        // skip tick at the rightmost edge
         if (i != 4) {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderLine(renderer, x, bottom, x, bottom - TICK_SIZE);
         }
-    
-        // Calculate the minutes for the tick label
-        float minutes = fractions[i] * (float)denom;
-        
-        // Draws the labels for the ticks
+
         char buf[64];
-        // Formats the tick value with 3 decimal places and saves it in a buffer
-        snprintf(buf, sizeof(buf), "%.3f", minutes);
-        drawText(renderer, font, buf, x - 10, bottom + TICK_SIZE + 6); // Numbers are tested for alignment
+        snprintf(buf, sizeof(buf), "%.2f", fractions[i] * (float)denom);
+        draw_text(renderer, font, buf, x - 10, bottom + TICK_SIZE + 6);
     }
 }
 
 
 /*
-@brief Computes the minimum and maximum values in a dataset.
-@param[1] data A pointer to the array of float values representing the dataset.
-@param[2] count The number of elements in the dataset.
-@param[3] outMin A pointer to a float where the minimum value will be stored.
-@param[4] outMax A pointer to a float where the maximum value will be stored.
+@brief Computes a suitable Y-axis range for a dataset, starting from 0 for non-negative data
+
+@param[1] data A pointer to the float array
+@param[2] count The number of elements in the array
+@param[3] out_min A pointer to a float where the minimum Y value will be stored
+@param[4] out_max A pointer to a float where the maximum Y value will be stored
 
 @return void
 */
-void computeDataMinMax(float *data, int count, float *outMin, float *outMax) {
-    
-    // If the dataset is empty or NULL, set default min and max values
-    if (!data || count <= 0) { 
-        *outMin = 0.f; 
-        *outMax = 1.f; 
-        return; 
+void compute_y_range(float *data, int count, float *out_min, float *out_max) {
+    if (!data || count <= 0) {
+        *out_min = 0.0f;
+        *out_max = 1.0f;
+        return;
     }
 
-    // Initialize min and max to the first element of the dataset
+    // find min and max directly here
     float mn = data[0];
     float mx = data[0];
-
-    // Iterate through the dataset to find the minimum and maximum values
     for (int i = 1; i < count; ++i) {
-        if (data[i] < mn) {
-            mn = data[i];
-        } else if (data[i] > mx) {
-            mx = data[i];
-        }
+        if      (data[i] < mn) mn = data[i];
+        else if (data[i] > mx) mx = data[i];
     }
-    *outMin = mn; 
-    *outMax = mx;
-}
 
-/*
-@brief Computes the Y-axis range for a dataset.
-
-@param[1] data A pointer to the array of float values representing the dataset.
-@param[2] count The number of elements in the dataset.
-@param[3] outMin A pointer to a float where the minimum Y value will be stored.
-@param[4] outMax A pointer to a float where the maximum Y value will be stored.
-
-@return void
-*/
-void computeYRange(float *data, int count, float *outMin, float *outMax) {
-    float mn, mx;
-    computeDataMinMax(data, count, &mn, &mx);
     if (mn >= 0.0f) {
-        *outMin = 0.0f;
-        *outMax = (mx == 0.0f) ? 1.0f : mx;
+        *out_min = 0.0f;
+        *out_max = (mx == 0.0f) ? 1.0f : mx;
     } else {
         if (mx == mn) mx = mn + 1.0f;
         float pad = 0.05f * (mx - mn);
-        *outMin = mn - pad;
-        *outMax = mx + pad;
+        *out_min = mn - pad;
+        *out_max = mx + pad;
     }
 }
 
 
 /*
-@brief Draws a graph of the dataset on the plot area.
+@brief Draws a line graph of a float dataset onto the plot area
 
-@param[1] renderer A pointer to the renderer to use for drawing.
-@param[2] p A pointer to the PlotArea to draw in
-@param[3] data A pointer to the array of float values representing the dataset to graph.
-@param[4] count The number of elements in the dataset.
-@param[5] yMin The minimum Y value of the range to determine the vertical scaling of the graph.
-@param[6] yMax The maximum Y value of the range to determine the vertical scaling of the graph.
+@param[1] renderer A pointer to the renderer to use for drawing
+@param[2] plot A pointer to the plot SDL_FRect
+@param[3] data A pointer to the float array containing the dataset
+@param[4] count The number of elements in the dataset
+@param[5] y_min The minimum Y value used for scaling
+@param[6] y_max The maximum Y value used for scaling
 
 @return void
 */
-void drawGraph(SDL_Renderer *renderer, PlotArea *p, float *data, int count, float yMin, float yMax) {
-    // For safety
+void draw_graph(SDL_Renderer *renderer, SDL_FRect *plot, float *data, int count, float y_min, float y_max) {
     if (!data || count <= 1) {
         return;
     }
 
-    // Gets the inner bounds of the plot area
     float left, right, top, bottom;
-    innerBounds(p, &left, &right, &top, &bottom);
+    inner_bounds(plot, &left, &right, &top, &bottom);
 
-    // Calculates the width and height of the plotting area
     float w = right - left;
     float h = bottom - top;
     if (w <= 0 || h <= 0) {
         return;
     }
 
-    // Draws the graph in red
-    SDL_SetRenderDrawColor(renderer, 220, 60, 60, 255);
+    SDL_SetRenderDrawColor(renderer, GRAPH_COLOR_R, GRAPH_COLOR_G, GRAPH_COLOR_B, 255);
 
-    // Iterates through the dataset and draws lines between consecutive points to form the graph
+    // connect each consecutive pair of data points with a line segment
     for (int i = 0; i < count - 1; ++i) {
-        float t0 = (float) i / (float) (count - 1);
-        float t1 = (float) (i + 1) / (float) (count - 1);
+        float t0 = (float) i      / (float)(count - 1);
+        float t1 = (float)(i + 1) / (float)(count - 1);
 
         float x0 = left + t0 * w;
         float x1 = left + t1 * w;
+        float y0 = map_y_value_to_pixel(data[i],     y_min, y_max, top, bottom);
+        float y1 = map_y_value_to_pixel(data[i + 1], y_min, y_max, top, bottom);
 
-        float val0 = data[i];
-        float val1 = data[i + 1];
-
-        float y0 = mapYValueToPixel(val0, yMin, yMax, top, bottom);
-        float y1 = mapYValueToPixel(val1, yMin, yMax, top, bottom);
-
-        // Draws a line between the two points (x0, y0) and (x1, y1)
         SDL_RenderLine(renderer, x0, y0, x1, y1);
     }
 }
 
 
 /*
-@brief sets up the layout metrics and positions/sizes of the plot area and buttons based on the current window dimensions.
+@brief Computes the positions and sizes of the plot area and all buttons
 
-@param[1] width The current width of the window.
-@param[2] height The current height of the window.
-@param[3] L A pointer to the LayoutMetrics layout metrics will be stored.
-@param[4] plot A pointer to where the PlotArea will be stored.
-@param[5] leftBtn A pointer to the left button, where the computed position and size will be stored.
-@param[6] rightBtn A pointer to the right button, where the computed position and size will be stored.
-@param[7] closeBtn A pointer to the close button, where the computed position and size will be stored.
+@param[1] width The current width of the window
+@param[2] height The current height of the window
+@param[3] plot A pointer to the SDL_FRect where the plot area dimensions will be stored
+@param[4] left_btn A pointer to the left navigation button
+@param[5] right_btn A pointer to the right navigation button
+@param[6] close_btn A pointer to the close button
 
 @return void
 */
-void computeLayout(int width, int height, LayoutMetrics *L, PlotArea *plot, Button *leftBtn, Button *rightBtn, Button *closeBtn) {
-    L->topBar      = TOP_BAR_H;
-    L->leftBtnPad  = EDGE_MARGIN;
-    L->rightBtnPad = EDGE_MARGIN;
+void compute_layout(int width, int height, SDL_FRect *plot,
+                    Button *left_btn, Button *right_btn, Button *close_btn) {
+    left_btn->rect.w = right_btn->rect.w = SIDE_BTN_SIZE;
+    left_btn->rect.h = right_btn->rect.h = SIDE_BTN_SIZE;
 
-    
-    leftBtn->rect.w = rightBtn->rect.w = SIDE_BTN_SIZE;
-    leftBtn->rect.h = rightBtn->rect.h = SIDE_BTN_SIZE;
+    float plot_top    = TOP_BAR_H + EDGE_MARGIN;
+    float plot_height = height - TOP_BAR_H - 2.0f * EDGE_MARGIN;
 
-    float plotTop    = L->topBar + EDGE_MARGIN;
-    float plotHeight = height - L->topBar - 2.0f * EDGE_MARGIN;  // "full height" (minus top bar and 10px margins)
-    float plotBottom = plotTop + plotHeight;
+    left_btn->rect.x  = EDGE_MARGIN;
+    right_btn->rect.x = width - EDGE_MARGIN - right_btn->rect.w;
 
-    leftBtn->rect.x  = L->leftBtnPad;
-    rightBtn->rect.x = width - L->rightBtnPad - rightBtn->rect.w;
+    // vertically center the nav buttons within the plot area
+    left_btn->rect.y  = HEIGHT - SIDE_BTN_HEIGHT;
+    right_btn->rect.y = HEIGHT - SIDE_BTN_HEIGHT;
 
-    float centerY = plotTop + plotHeight * 0.5f;
-    leftBtn->rect.y  = centerY - leftBtn->rect.h * 0.5f;
-    rightBtn->rect.y = centerY - rightBtn->rect.h * 0.5f;
+    float plot_left  = left_btn->rect.x  + left_btn->rect.w  + SIDE_PAD;
+    float plot_right = right_btn->rect.x - SIDE_PAD;
 
-    float plotLeft  = leftBtn->rect.x + leftBtn->rect.w + SIDE_PAD;
-    float plotRight = rightBtn->rect.x - SIDE_PAD;
-    float plotWidth = fmaxf(100.0f, plotRight - plotLeft);
+    plot->x = plot_left;
+    plot->y = plot_top;
+    plot->w = fmaxf(100.0f, plot_right - plot_left);
+    plot->h = plot_height;
 
-    plot->rect.x = plotLeft;
-    plot->rect.y = plotTop;
-    plot->rect.w = plotWidth;
-    plot->rect.h = plotHeight;
+    close_btn->rect.w = close_btn->rect.h = CLOSE_SIZE;
+    close_btn->rect.x = width  - CLOSE_MARGIN - close_btn->rect.w;
+    close_btn->rect.y = CLOSE_MARGIN;
+}
 
-    closeBtn->rect.w = closeBtn->rect.h = CLOSE_SIZE;
-    closeBtn->rect.x = width  - CLOSE_MARGIN - closeBtn->rect.w;
-    closeBtn->rect.y = CLOSE_MARGIN;
+
+/*
+@brief Opens the GUI window, loads simulation data from file and runs the main render loop
+
+@param[1] path A string representing the directory path where the simulation file is located
+@param[2] sim_number The simulation number used to identify the correct file
+
+@return void
+*/
+void open_gui(const char* path, int sim_number) {
+
+    FILE* data_file = open_file_r(path, sim_number);
+
+    // load initial dataset
+    int current_dataset = 0;
+    int size            = get_simulation_length(data_file);
+    float *dataset      = calloc(size, sizeof(float));
+    load_new_dataset(data_file, current_dataset, dataset, size);
+
+    char dataset_name[DATASET_TYPE][32] = {
+        "Parked Cars", "Avg. Time", "Queue Length", "Full Garage", "Cars Simulated"
+    };
+
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        SDL_Log("SDL init failed: %s", SDL_GetError());
+        return;
+    }
+
+    SDL_Window   *window   = SDL_CreateWindow("Hamster-Parkhouse-Output", WIDTH, HEIGHT, SDL_WINDOW_FULLSCREEN);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+    SDL_FRect     plot     = {0};
+
+    TTF_Font *font = open_font(FONT_PATH, FONT_SIZE);
+
+    if (!font) {
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return;
+    }
+
+    Button left_btn  = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
+    Button right_btn = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
+    Button close_btn = {{0,0,0,0}, FALSE, FALSE, 0.0f, 0.0f};
+
+    float y_min = 0.0f, y_max = 1.0f;
+
+    int running = TRUE;
+    SDL_Event event;
+    int last = 0;
+
+    while (running) {
+        int now = SDL_GetTicks();
+        float dt = 0.016f; // fallback delta time assuming 60 FPS
+
+        if (last != 0) {
+            dt = (float)(now - last) / 1000.0f;
+        }
+        last = now;
+
+        compute_layout(WIDTH, HEIGHT, &plot, &left_btn, &right_btn, &close_btn);
+
+        float mouse_x, mouse_y;
+        SDL_GetMouseState(&mouse_x, &mouse_y);
+
+        update_button_hover(&left_btn,  mouse_x, mouse_y);
+        update_button_hover(&right_btn, mouse_x, mouse_y);
+        update_button_hover(&close_btn, mouse_x, mouse_y);
+
+        int left_clicked = 0, right_clicked = 0;
+
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
+                running = FALSE;
+            }
+
+            // accumulate click state across multiple events in one frame
+            left_clicked  |= handle_nav_button_event(&left_btn,  &event);
+            right_clicked |= handle_nav_button_event(&right_btn, &event);
+
+            if (left_clicked) {
+                current_dataset--;
+                if (current_dataset < 0) {
+                    current_dataset = 4;
+                }
+                load_new_dataset(data_file, current_dataset, dataset, size);
+            }
+
+            if (right_clicked) {
+                current_dataset++;
+                if (current_dataset > 4) {
+                    current_dataset = 0;
+                }
+                load_new_dataset(data_file, current_dataset, dataset, size);
+            }
+
+            handle_close_button_event(&close_btn, &event, &running);
+
+            if (event.type == SDL_EVENT_KEY_UP && event.key.key == SDLK_ESCAPE) {
+                running = FALSE;
+            }
+        }
+
+        update_button_animation(&left_btn,  dt);
+        update_button_animation(&right_btn, dt);
+        update_button_animation(&close_btn, dt);
+
+        compute_y_range(dataset, size, &y_min, &y_max);
+
+        SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
+        SDL_RenderClear(renderer);
+
+        draw_background(renderer);
+
+        draw_y_ticks_and_grid(renderer, font, &plot, y_min, y_max);
+        draw_x_ticks_and_grid(renderer, font, &plot, size);
+
+        draw_axes_with_arrows(renderer, &plot);
+        draw_axis_labels(renderer, font, &plot, "Minutes", dataset_name[current_dataset]);
+
+        draw_graph(renderer, &plot, dataset, size, y_min, y_max);
+
+        draw_button(renderer, &left_btn);
+        draw_button(renderer, &right_btn);
+        draw_arrow(renderer, &left_btn.rect,  -1, left_btn.hoverAnim);
+        draw_arrow(renderer, &right_btn.rect,  1, right_btn.hoverAnim);
+
+        draw_button(renderer, &close_btn);
+        draw_x_icon(renderer, &close_btn.rect, close_btn.hoverAnim);
+
+        SDL_RenderPresent(renderer);
+    }
+
+    TTF_CloseFont(font);
+    TTF_Quit();
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
+    free(dataset);
+    fclose(data_file);
+
+    SDL_Quit();
 }
