@@ -13,23 +13,6 @@ int quit = FALSE;
 int start = FALSE;
 int file_nr = -1;
 
-// this function is just so I can try quitting.
-void return_quit() {
-    printf("Quitting...\n");
-    quit = TRUE;
-}
-
-void return_start() {
-    printf("Starting simulation...\n");
-    start = TRUE;
-}
-
-// this fucking ass bitch function got deleted I'm so fucking angry please don't do this again... also fuck you ben for calling me before my first coffeeeeeeeeeeeeeee and letting me fix YOUR bitch punk ass bugs ÒnÓ
-int open_file(char * file_nr_s) {
-    printf("Opening this fucking ass file ÒnÓ\n");
-    file_nr = atoi(file_nr_s);
-    return 69;
-} 
 
 // Map for print functions
 static struct print_map print_table[] = {
@@ -87,7 +70,6 @@ int handle_user_input(char *p_input) {
     for (int i = 0; i < (sizeof(print_table) / sizeof(print_table[0])); i++) {
         if (!strcmp(first_arg, print_table[i].print_name)) {
             print_table[i].p_print_fun();
-            printf("This works great until here right? \n");
             return 0;
         }
     }
@@ -157,6 +139,27 @@ void print_config() {
     max_car_cells, max_parking_time, simulation_time, 
     car_probability, random_seed, output_path, max_cars_per_ts
     );
+}
+
+// this fucking ass bitch function got deleted I'm so fucking angry please don't do this again... also fuck you ben for calling me before my first coffeeeeeeeeeeeeeee and letting me fix YOUR bitch punk ass bugs ÒnÓ
+int open_file(char * file_nr_s) {
+    printf("Opening this fucking ass file ÒnÓ\n");
+    if (!file_nr_s) {
+        return -1;
+    }
+    file_nr = atoi(file_nr_s);
+    return 0;
+} 
+
+// this function is just so I can try quitting. - I thought you had a lot of experience in old studies
+void return_quit() {
+    printf("Quitting...\n");
+    quit = TRUE;
+}
+
+void return_start() {
+    printf("Starting simulation...\n");
+    start = TRUE;
 }
 
 
