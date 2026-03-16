@@ -101,35 +101,22 @@ void create_new_file_with_head_data (char *path,int new_file_number, t_Time sim_
 /*
 @brief Appends the data for every simulated step to the file.
 
-@param[1] path The path to the directory of the file
-@param[2] new_file_number The number of the File to write in.
-@param[3] timestep The current timestep.
-@param[4] cars_parked The amount of cars currently parked.
-@param[5] avg_parking_time The average parking time of the cars.
-@param[6] q_len The current length of the queue.
-@param[7] full_house_steps The amount of steps the parking garage was full.
-@param[8] tot_cars_simulated The total amount of cars that was simulated.
-@param[9] most_brand The car brand that parked the most.
+@param[1] file The pointer to the file to Append the data in
+@param[2] timestep The current timestep.
+@param[3] cars_parked The amount of cars currently parked.
+@param[4] avg_parking_time The average parking time of the cars.
+@param[5] q_len The current length of the queue.
+@param[6] full_house_steps The amount of steps the parking garage was full.
+@param[7] tot_cars_simulated The total amount of cars that was simulated.
+@param[8] most_brand The car brand that parked the most.
 
 @return void
 */
-void append_data_per_timestep (char *path, int new_file_number, t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) {
-    char filename[60];
-
-    sprintf(filename, "%sSimulation_%d.txt", path, new_file_number);
-
-    FILE *fptr = fopen(filename, "a");
-    if (fptr == NULL) {
-        printf("Error opening file.\n");
-        return; // Fix: early return on error, fprintf/fclose moved outside
-    }
-
-    fprintf(fptr, "|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", 
+void append_data_per_timestep (FILE* file, t_Time timestep, int cars_parked, float avg_parking_time, int q_len, int full_house_steps, int tot_cars_simulated, Car_Brand most_brand) {
+    fprintf(file, "|%15i|%15i|%15.2f|%15i|%15i|%15i|%15s|\n", 
         timestep, cars_parked, avg_parking_time, q_len, 
         full_house_steps, tot_cars_simulated, 
         get_brand_by_number(most_brand));
-
-    fclose(fptr);
 }
 
 

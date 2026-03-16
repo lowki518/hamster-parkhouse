@@ -82,7 +82,11 @@ void clear_car_park(t_Car_Park *car_park) {
 
 @returns the number of the completed simulation
 */
-int *start_simulation () {
+int *start_simulation (const char * path) {
+
+    if(random_seed == 0) {
+        random_seed = time();
+    }
 
     srand(random_seed);
 
@@ -117,8 +121,9 @@ int *start_simulation () {
     
     print_head_data(*sim_nr, simulation_time, max_car_cells, max_parking_time, car_probability, max_cars_per_ts, random_seed);
 
-    for (*time = 0; *time <= simulation_time; (*time)++) {
+    FILE *file_d = open_file_a(output_path, *sim_nr);
 
+    for (*time = 0; *time <= simulation_time; (*time)++) {
         // checks if any cars in the park need to be unparked
         unpark_cars_in_park(park, *time);
 
@@ -131,6 +136,7 @@ int *start_simulation () {
             }
         }
 
+
         // as long as there are free parking cells and cars in the queue -> park the cars
         while(park->free_parking_cells > 0 && queue->q_length > 0) {
 
@@ -138,15 +144,17 @@ int *start_simulation () {
             park_car_in_park(car, park, *time);
         }
 
+
         // checks if the park is full and increases the counter
         if(park->free_parking_cells == 0) {
             (*full_house_steps)++;
         }
 
+
         // prints the data of the current timestep
-        // TODO print the data in the console
         float avg_parking_time = (float) (*tot_parking_time) / (float) ((*car_id) + 1);
 
+        
         Car_Brand brand = get_most_parked_brand(park);
 
         print_data_per_timestep(*time, 
@@ -157,8 +165,7 @@ int *start_simulation () {
             *(car_id) + 1, 
             brand);
 
-        append_data_per_timestep(output_path, 
-            *sim_nr, 
+        append_data_per_timestep(file_d, 
             *time, 
             (park->max_parking_cells - park->free_parking_cells), 
             avg_parking_time, queue->q_length, 
@@ -177,6 +184,8 @@ int *start_simulation () {
     free(time);
     free(full_house_steps);
     free(tot_parking_time);
+
+    fclose(file_d);
 
     return sim_nr;
 }

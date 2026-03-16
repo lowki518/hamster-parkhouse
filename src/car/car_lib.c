@@ -4,7 +4,6 @@
 
 #include "../../include/car_lib.h"
 #include "../../include/data_types.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 /*
@@ -54,6 +53,7 @@ void park_car_in_park (t_Car *car, t_Car_Park *park, t_Time time) {
     for (int i = 0; i < park->max_parking_cells; i++) {
         if(cell->p_car_in_cell == NULL) {
             park_car(car, cell, time);
+            park->free_parking_cells--;
             return;
         }
         cell = cell->pNext;

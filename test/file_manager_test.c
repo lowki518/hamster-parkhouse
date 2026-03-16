@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <errno.h>
+#include <unistd.h>
 
 #define TEST_OUTPUT_PATH "/workspaces/hamster-parkhouse/test/tmp/"
 
@@ -229,7 +230,11 @@ void test_append_data_per_timestep() {
     while (fgets(buf, sizeof(buf), f)) lines_before++;
     fclose(f);
 
-    append_data_per_timestep(TEST_OUTPUT_PATH, 7, 10, 15, 12.5f, 3, 2, 20, 0);
+    FILE *file = open_file_a(TEST_OUTPUT_PATH, 7);
+
+    append_data_per_timestep(file, 10, 15, 12.5f, 3, 2, 20, 0);
+
+    fclose(file);
 
     // count lines after appending
     f = fopen(filepath, "r");

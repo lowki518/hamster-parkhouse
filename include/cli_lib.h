@@ -78,4 +78,26 @@ void print_help();
  */
 void print_config();
 
+/**
+  @brief changes global quit to TRUE
+  
+  @return void
+ */
+void return_quit();
+
+/**
+  @brief changes global start to TRUE
+  
+  @return void
+ */
+void return_start();
+
+/**
+  @brief changes global file_nr to input file_nr_s
+  
+  @param[1] file_nr_s file_nr as a string
+  @return int return code 0 for allright, -1 for error
+ */
+int open_file(char * file_nr_s);
+
 #endif 

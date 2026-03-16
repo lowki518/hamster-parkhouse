@@ -1,6 +1,7 @@
 #include "../include/cli_lib.h"
 #include "../include/config_lib.h"
 #include <assert.h>
+#include <stdio.h>
 
 /*
 @brief tests handle_user_input function

@@ -2,9 +2,9 @@
 
 set -e
 
-echo "╔════════════════════════════════════════════╗"
-echo "║   SDL3 Codespaces Setup                    ║"
-echo "╚════════════════════════════════════════════╝"
+echo "========================================"
+echo "  SDL3 Codespaces Setup"
+echo "========================================"
 echo ""
 
 # ===== Fix Git Ownership Issue =====
@@ -31,9 +31,9 @@ echo ""
 # Cleanup function called on EXIT
 cleanup() {
     echo ""
-    echo "╔════════════════════════════════════════════╗"
-    echo "║   Shutting down...                         ║"
-    echo "╚════════════════════════════════════════════╝"
+    echo "========================================"
+    echo "  Shutting down..."
+    echo "========================================"
     echo ""
 
     echo "Stopping XFCE..."
@@ -151,33 +151,39 @@ chmod 700 $XDG_RUNTIME_DIR
 # Xvfb
 echo "  → Starting Xvfb..."
 nohup Xvfb :1 -screen 0 1200x900x24 > /tmp/xvfb.log 2>&1 &
-sleep 2
+sleep 3
 
 # x11vnc
 echo "  → Starting x11vnc..."
 nohup x11vnc -display :1 -nopw -forever -shared > /tmp/vnc.log 2>&1 &
-sleep 1
+sleep 2
 
 # websockify
 echo "  → Starting websockify..."
 nohup websockify --web=/usr/share/novnc/ 6080 localhost:5900 > /tmp/novnc.log 2>&1 &
-sleep 1
+sleep 2
 
-# XFCE
+# XFCE (mit besserer Error-Handling)
 echo "  → Starting XFCE..."
-nohup startxfce4 > /tmp/xfce4.log 2>&1 &
-sleep 3
+nohup bash -c 'startxfce4 2>&1' > /tmp/xfce4.log 2>&1 &
+XFCE_PID=$!
+sleep 5
+
+# Prüfe ob XFCE läuft
+if ps -p $XFCE_PID > /dev/null 2>&1; then
+    echo "✓ XFCE started successfully"
+else
+    echo "✗ XFCE failed to start"
+    cat /tmp/xfce4.log
+fi
 
 echo ""
-echo "╔════════════════════════════════════════════╗"
-echo "║   ✓ Setup Complete!                       ║"
-echo "╚════════════════════════════════════════════╝"
+echo "========================================"
+echo "  Setup Complete!"
+echo "========================================"
 echo ""
 echo "🌐 Access your desktop:"
 echo "   http://localhost:6080/vnc.html"
-echo ""
-echo "📁 Your app executable:"
-echo "   /workspaces/hamster-parkhouse/build/statistics"
 echo ""
 echo "Press Ctrl+C or type 'exit' to stop and shut down services..."
 echo ""
