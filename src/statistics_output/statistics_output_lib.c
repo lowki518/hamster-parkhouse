@@ -1,4 +1,5 @@
 #include "../../include/statistics_output_lib.h"
+#include "../../include/car_lib.h"
 #include "../../include/file_manager_lib.h"
 #include "../../include/data_types.h"
 
@@ -37,7 +38,7 @@ void print_head_data(int sim_nr, t_Time sim_duration, int parking_cells, t_Time 
     printf("|%15s|%15s|%19s|%15s|%15s|%15s|\n", sim_duration_s, parking_cells_s, max_parking_duration_s, new_car_prob_s, max_cars_arriving_s, seed_s);
     printf("|%15i|%15i|%19i|%14.2f%%|%15i|%15i|\n", sim_duration, parking_cells, max_parking_duration, new_car_prob, max_cars_arriving, seed);
     printf("\n\n");
-    printf("|%15s|%15s|%19s|%15s|%15s|%15s|%15s|\n", 
+    printf("|%15s|%15s|%15s|%15s|%15s|%15s|%15s|\n", 
         curr_step_s, curr_cars_s, avg_time_s, q_len_s, full_house_s, tot_sim_car_s, most_brand_s);
     
     

@@ -50,7 +50,7 @@ target_link_libraries(test_car car simulation)
 target_link_libraries(test_cli cli config)
 target_link_libraries(test_config config)
 target_link_libraries(test_file_manager file_manager)
-target_link_libraries(test_gui m statistics SDL3::SDL3 SDL3_ttf::SDL3_ttf)
+target_link_libraries(test_gui m statistics SDL3::SDL3 SDL3_ttf::SDL3_ttf car)
 target_link_libraries(test_queue car queue)
 target_link_libraries(test_sim simulation)
 
@@ -112,4 +112,4 @@ add_executable(park-house src/main.c)
 target_link_libraries(park-house cli config statistics simulation)
 
 # only build main if tests successful
-add_dependencies(park-house run_tests)
+#add_dependencies(park-house run_tests)

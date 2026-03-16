@@ -116,7 +116,6 @@ int *start_simulation (const char * path) {
     FILE *file_d = open_file_a(output_path, *sim_nr);
 
     for (*time = 0; *time <= simulation_time; (*time)++) {
-
         // checks if any cars in the park need to be unparked
         unpark_cars_in_park(park, *time);
 
@@ -129,6 +128,7 @@ int *start_simulation (const char * path) {
             }
         }
 
+
         // as long as there are free parking cells and cars in the queue -> park the cars
         while(park->free_parking_cells > 0 && queue->q_length > 0) {
 
@@ -136,15 +136,17 @@ int *start_simulation (const char * path) {
             park_car_in_park(car, park, *time);
         }
 
+
         // checks if the park is full and increases the counter
         if(park->free_parking_cells == 0) {
             (*full_house_steps)++;
         }
 
+
         // prints the data of the current timestep
-        // TODO print the data in the console
         float avg_parking_time = (float) (*tot_parking_time) / (float) ((*car_id) + 1);
 
+        
         Car_Brand brand = get_most_parked_brand(park);
 
         print_data_per_timestep(*time, 
