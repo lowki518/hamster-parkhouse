@@ -58,6 +58,9 @@ t_Car *de_queue(t_Queue *queue) {
 
     queue->q_length--;
 
+    if (queue->p_first_pos == NULL) {
+        queue->p_last_pos = NULL;
+    }
     free(pTmp);
     return car;
 }
@@ -82,6 +85,8 @@ void en_queue(t_Queue *queue, t_Car *car) {  //same thing here with t_Car_Node
         queue->p_last_pos->pNext = node;
         queue->p_last_pos = node;
     }
+
+    queue->q_length++;
 }
 
 

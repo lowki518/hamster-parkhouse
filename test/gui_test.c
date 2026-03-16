@@ -14,6 +14,9 @@
 #define TEST_TOL 0.0001
 
 
+/*
+@brief tests the nearly_equal function
+*/
 void test_nearly_equal() {
     // values within tolerance
     assert(nearly_equal(1.0f, 1.00005f, TEST_TOL) == 1);
@@ -27,7 +30,9 @@ void test_nearly_equal() {
     printf("test_nearly_equal passed\n");
 }
 
-
+/*
+@brief tests the lerp function
+*/
 void test_lerp() {
     // midpoint between 0 and 10 should be 5
     assert(nearly_equal(lerp(0.0f, 10.0f, 0.5f), 5.0f, TEST_TOL));
@@ -51,6 +56,9 @@ void test_lerp() {
 }
 
 
+/*
+@brief tests the is_point_inside-rect function
+*/
 void test_is_point_inside_rect() {
     //                  x      y    width   height
     SDL_FRect rect = {10.0f, 10.0f, 100.0f, 50.0f};
@@ -86,6 +94,9 @@ void test_is_point_inside_rect() {
 }
 
 
+/*
+@brief tests the map_y_value_to_pixel function
+*/
 void test_map_y_value_to_pixel() {
     float top    = 0.0f;
     float bottom = 100.0f;
@@ -106,6 +117,9 @@ void test_map_y_value_to_pixel() {
 }
 
 
+/*
+@brief tests the compute_y_range function
+*/
 void test_compute_y_range() {
     float out_min, out_max;
 
@@ -132,6 +146,9 @@ void test_compute_y_range() {
 }
 
 
+/*
+@brief tests the get_simulation_length function
+*/
 void test_get_simulation_length() {
     FILE *file = fopen(TMP_DATA, "w");
     assert(file != NULL);
@@ -152,6 +169,9 @@ void test_get_simulation_length() {
 }
 
 
+/*
+@brief tests the load_new_dataset function
+*/
 void test_load_new_dataset() {
     FILE *file = fopen(TMP_DATA, "w");
     assert(file != NULL);
@@ -187,6 +207,9 @@ void test_load_new_dataset() {
 }
 
 
+/*
+@brief tests the inner_bounds function
+*/
 void test_inner_bounds() {
     SDL_FRect plot = {100.0f, 50.0f, 800.0f, 600.0f};
     float left, right, top, bottom;

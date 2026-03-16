@@ -74,4 +74,6 @@ int main() {
     test_change_max_parking_time();
     test_change_car_probability();
     test_change_max_car_cells();
+
+    printf("All config_lib tests passed!\n");
 }

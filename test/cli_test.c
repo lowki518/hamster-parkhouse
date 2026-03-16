@@ -26,4 +26,6 @@ void test_handle_user_input() {
 
 int main() {
     test_handle_user_input();
+
+    printf("All cli_lib tests passed!\n");
 }

@@ -128,15 +128,6 @@ void load_new_dataset(FILE* file, int dataset_index, float* dataset, int size);
 
 
 /*
-@brief Returns the name of a car brand by its enum value
-
-@param[1] brand_numb The enum value of the car brand
-
-@return A string containing the name of the car brand
-*/
-char* get_brand_by_number(Car_Brand brand_numb);
-
-/*
 @brief A simple linear interpolation function
 
 @param[1] a The start value

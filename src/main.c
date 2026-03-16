@@ -1,16 +1,9 @@
 
-#include "../include/car_lib.h"
 #include "../include/cli_lib.h"
-#include "../include/config_lib.h"
 #include "../include/data_types.h"
-#include "../include/file_manager_lib.h"
 #include "../include/sim_lib.h"
-#include "../include/queue_lib.h"
-#include "../include/statistics_output_lib.h"
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 
 int main() {
