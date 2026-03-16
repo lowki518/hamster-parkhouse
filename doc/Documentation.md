@@ -21,7 +21,7 @@ Part 2:
     
     Main Work distributions:
 
-    Pamina: translating pseudo code, main functions
+    Pamina: translating pseudo code, main functions, documentation
     Ben:    Visualization, statistics, cook
     Lionel: Config. base data types
     -> Unit tests were made together and mixed
@@ -33,7 +33,7 @@ Functions have been written, unit tests almost done, CLI getting along.
 
 Functions and unit tests finished, CLI done. Cleaning up the final details and working on getting the simulation going. We hate seg faults. Got it built and eventually (finallllyyyyy) running!
 
-It's not running anymore :( Final unit tests are done (file tests were made with AI as it's annoying), hoping to get this thing running. Motivation has left the chat. It runs. It doesn't. It runs. It doesn't. Do i need to continue? ITTTT WOOORRKKKSSSS
+It's not running anymore :( Final unit tests are done (file tests were made with AI as it's annoying), hoping to get this thing running. Motivation has left the chat. It runs. It doesn't. It runs. It doesn't. Do i need to continue? ITTTT WOOORRKKKSSSS. Finishing last touches
 
 ## What different options did we have regarding the structure and implementation? 
 >Naming of parking...:
