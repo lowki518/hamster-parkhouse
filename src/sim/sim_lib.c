@@ -80,6 +80,10 @@ void clear_car_park(t_Car_Park *car_park) {
 */
 int *start_simulation (const char * path) {
 
+    if(random_seed == 0) {
+        random_seed = time();
+    }
+
     srand(random_seed);
 
     // allocates all the needed variables for the simulation
