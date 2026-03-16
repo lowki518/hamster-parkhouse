@@ -1,6 +1,5 @@
 #include "../../include/car_lib.h"
 #include "../../include/data_types.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 /*
