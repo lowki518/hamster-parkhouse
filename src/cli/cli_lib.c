@@ -141,8 +141,13 @@ void print_config() {
     );
 }
 
-// this fucking ass bitch function got deleted I'm so fucking angry please don't do this again... also fuck you ben for calling me before my first coffeeeeeeeeeeeeeee and letting me fix YOUR bitch punk ass bugs ÒnÓ
-int open_file(char * file_nr_s) {
+/**
+  @brief changes global file_nr to input file_nr_s
+  
+  @param[1] file_nr_s file_nr as a string
+  @return int return code 0 for allright, -1 for error
+ */
+ int open_file(char * file_nr_s) {
     printf("Opening this fucking ass file ÒnÓ\n");
     if (!file_nr_s) {
         return -1;
@@ -151,12 +156,21 @@ int open_file(char * file_nr_s) {
     return 0;
 } 
 
-// this function is just so I can try quitting. - I thought you had a lot of experience in old studies
+/**
+  @brief changes global quit to TRUE
+  
+  @return void
+ */
 void return_quit() {
     printf("Quitting...\n");
     quit = TRUE;
 }
 
+/**
+  @brief changes global start to TRUE
+  
+  @return void
+ */
 void return_start() {
     printf("Starting simulation...\n");
     start = TRUE;
