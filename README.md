@@ -1,15 +1,32 @@
-# Plan
-1. I/O Modules for configurations [(link to docs)](doc/cli.md)
-   - CLI to choose config and run the simulation
-2. Simulation [(link to docs)](doc/simulation.md)
-   - Simulate data and output per timestep
-3. Statistics Outputgit [(link to docs)](doc/statistics_overview.md)
-   - open GUI with data
+# Hamster Parkhaus
+> Ben Hibinger, Lionel Keilhack, Pamina Lessle
 
-## TODO: 
-- Uniform naming
-- Part II (to be continued)
+## Description
+Welcome to our students project of a car park simulation. 
 
-The minmal amount of timesteps needs to be 4, or else the visualization breaks
+## How to Run 
+ 1. Start Codespaces
 
-This is only part I of the given task, so nothing compiles or works, so thers nothing to instruct yet.
+ 2. Run in Terminal:
+ ```bash 
+ ./run.sh
+ ```
+
+ 3. Wait a couple of moments until you see "Setup Complete!"
+
+ 4. Go to the "PORTS" menu
+
+ 5. Click on the link with "noVNC"
+
+ 6. Click on "VNC.html"
+
+ 7. Click on "connect"
+
+ 8. Open Terminal
+
+ 9. Run in Terminal: 
+ 
+ ```bash
+ ./park-house
+ ```
+10. Run the simulation as many times as you please 

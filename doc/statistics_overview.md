@@ -55,3 +55,32 @@ Hence the console output and the file are identical and structured for the best 
 
 We decided that a better visualization for long simulations would also be nice. So we searched across the web for a good solution
 to visualize a graph for the data. We found the method of using Dear ImGui, but we didn't like the looks of it, so we decided to use the very basic libraries SDL3 and SDL3_TTF for fonts. This made the Visualization a bit harder, since we needed our own functions for __everything__. The given GUI is also just a basic version, since it was done as fast as possible, to just get an idea of how it will look.
+
+
+# Documentation
+The statistics first had to be split up into visualization and data processing.
+## Data Processing
+- The values had to be computed and interpolated to the size of the plotted graph. This belonged to the mathematical process of it all.
+- Furthermore the data had to be read out of the files again.
+
+## Visualization
+- Consists of a graphic window with navigation options (x-> Exit (duh), > right (obv), < left (there were the thumb is on the right))
+- Coordinate graph with a graph plotted in the middle 
+---
+- Why SDL? Cause Ben said so
+- Why did Ben do it? Cause half psycho and cause he had done something similar before
+- How was it tested? Using SDL local
+## Biggest Problem + Solution
+Due to codespace only using vscode, the window to the graph was everything but easy :(
+
+With the use of lovely Youtube and Claude AI (<3) the idea of using Shell scripts and Docker to plot a whole Ubuntu desktop environment (WTF??? That workssss?!?!?!) (using vnc btw for those actually interested in the functionality of it all) in codespaces.
+
+## Result
+We have a graph :)
+
+---
+The whole graphic output took way too long. Would Ben do it again? Yes but using way more AI. Coding this whole thing robs you from every bit of happiness left in your soul
+
+Anywayss...
+
+The library is fucking huge as it needs to be that big. The GUI function is humungous, but that's due to the fact that it handles the whole entire GUI (makes sense right?).
