@@ -35,33 +35,33 @@ target_link_libraries(simulation m car cli config file_manager queue statistics)
 
 
 # ===== Add Tests =====
-#add_executable(test_car test/car_test.c)
+add_executable(test_car test/car_test.c)
 add_executable(test_cli test/cli_test.c)
 add_executable(test_config test/config_test.c)
-#add_executable(test_file_manager test/file_manager_test.c)
+add_executable(test_file_manager test/file_manager_test.c)
 add_executable(test_gui test/gui_test.c)
-#add_executable(test_queue test/queue_test.c)
-#add_executable(test_sim test/sim_test.c)
+add_executable(test_queue test/queue_test.c)
+add_executable(test_sim test/sim_test.c)
 
 
 
 # ===== Link Test Libraries =====
-#target_link_libraries(test_car car simulation)
+target_link_libraries(test_car car simulation)
 target_link_libraries(test_cli cli config)
 target_link_libraries(test_config config)
-#target_link_libraries(test_file_manager file_manager)
+target_link_libraries(test_file_manager file_manager)
 target_link_libraries(test_gui m statistics SDL3::SDL3 SDL3_ttf::SDL3_ttf)
-#target_link_libraries(test_queue car queue)
-#target_link_libraries(test_sim simulation)
+target_link_libraries(test_queue car queue)
+target_link_libraries(test_sim simulation)
 
 
 # ===== Activate Unit Tests =====
 enable_testing()
 
-#add_test(
-#    NAME CarUnitTest
-#    COMMAND test_car
-#)
+add_test(
+    NAME CarUnitTest
+    COMMAND test_car
+)
 
 add_test(
     NAME CliUnitTest
@@ -73,36 +73,36 @@ add_test(
     COMMAND test_config
 )
 
-#add_test(
-#    NAME FileManagerUnitTest
-#    COMMAND test_file_manager
-#)
+add_test(
+    NAME FileManagerUnitTest
+    COMMAND test_file_manager
+)
 
 add_test(
     NAME GUIUnitTest
     COMMAND test_gui
 )
 
-#add_test(
-#    NAME QueueUnitTest
-#    COMMAND test_queue
-#)
+add_test(
+    NAME QueueUnitTest
+    COMMAND test_queue
+)
 
-#add_test(
-#    NAME SimUnitTest
-#    COMMAND test_sim
-#)
+add_test(
+    NAME SimUnitTest
+    COMMAND test_sim
+)
 
 # ===== Add Target For Tests =====
 add_custom_target(run_tests
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-#    DEPENDS test_car
+    DEPENDS test_car
     DEPENDS test_cli
     DEPENDS test_config
-#    DEPENDS test_file_manager
+    DEPENDS test_file_manager
     DEPENDS test_gui
-#    DEPENDS test_queue
-#    DEPENDS test_sim
+    DEPENDS test_queue
+    DEPENDS test_sim
     COMMENT "Running unit tests"
 )
 
@@ -112,4 +112,4 @@ add_executable(park-house src/main.c)
 target_link_libraries(park-house m cli config file_manager statistics SDL3::SDL3 SDL3_ttf::SDL3_ttf car simulation)
 
 # only build main if tests successful
-#add_dependencies(park-house)
+add_dependencies(park-house run_tests)

@@ -9,10 +9,9 @@
 @brief tests the new_node function
 */
 void test_new_node() {
-    unsigned int *id;
-    *id = 0;
+    unsigned int id = 0; 
 
-    t_Car *car = car_arrives(100.00f, id, 50);
+    t_Car *car = car_arrives(100.00f, &id, 50);
 
     t_Car_Node *node = new_Node(car);
 
@@ -29,6 +28,7 @@ void test_new_node() {
 void test_init_queue() {
     t_Queue *queue = init_queue();
 
+    assert(queue != NULL);
     assert(queue->q_length == 0);
     assert(queue->p_first_pos == NULL);
     assert(queue->p_last_pos == NULL);
@@ -39,118 +39,105 @@ void test_init_queue() {
 /*
 @brief tests the en_queue function
 */
-
 void test_en_queue() {
-    unsigned int *id;
-    *id = 0;
+    unsigned int id = 0;
 
     t_Queue *queue = init_queue();
 
-    t_Car *car_1 = car_arrives(100.00f, id, 50);
-    t_Car_Node *node_1 = new_Node(car_1);
+    t_Car *car_1 = car_arrives(100.00f, &id, 50);
+    t_Car *car_2 = car_arrives(100.00f, &id, 50);
 
-    t_Car *car_2 = car_arrives(100.00f, id, 50);
-    t_Car_Node *node_2 = new_Node(car_2);
-
-    en_queue(queue, node_1);
+    en_queue(queue, car_1);
 
     assert(queue->q_length == 1);
-    assert(queue->p_first_pos == node_1);
-    assert(queue->p_last_pos == node_1);
+    assert(queue->p_first_pos->pCar == car_1);
+    assert(queue->p_last_pos->pCar == car_1);
 
-    en_queue(queue, node_2);
+    en_queue(queue, car_2);
 
     assert(queue->q_length == 2);
-    assert(queue->p_first_pos == node_1);
-    assert(queue->p_first_pos->pNext == node_2);
-    assert(queue->p_last_pos == node_2);
+    assert(queue->p_first_pos->pCar == car_1);
+    assert(queue->p_first_pos->pNext->pCar == car_2);
+    assert(queue->p_last_pos->pCar == car_2);
 
-    free(queue);
-    free(car_1);
-    free(car_2);
-    free(node_1);
-    free(node_2);
-
+    clear_queue(queue);
 }
-
 
 /*
 @brief tests the de_queue function
 */
 void test_de_queue() {
-    unsigned int *id;
-    *id = 0;
+    unsigned int id = 0;
+
     t_Queue *queue = init_queue();
 
-    t_Car *car_1 = car_arrives(100.00f, id, 50);
-    t_Car_Node *node_1 = new_Node(car_1);
+    t_Car *car_1 = car_arrives(100.00f, &id, 50);
+    t_Car *car_2 = car_arrives(100.00f, &id, 50);
 
-    t_Car *car_2 = car_arrives(100.00f, id, 50);
-    t_Car_Node *node_2 = new_Node(car_2);
+    en_queue(queue, car_1);
+    en_queue(queue, car_2);
 
-    en_queue(queue, node_1);
-    en_queue(queue, node_2);
-
-    t_Car *c_from_queue = de_queue(queue);
+    t_Car *c_from_queue_1 = de_queue(queue);
 
     assert(queue->q_length == 1);
-    assert(queue->p_first_pos == node_2);
-    assert(queue->p_last_pos == node_2);
-    assert(c_from_queue == car_1);
+    assert(queue->p_first_pos->pCar == car_2);
+    assert(queue->p_last_pos->pCar == car_2);
+    assert(c_from_queue_1 == car_1);
 
-    t_Car *c_from_queue = de_queue(queue);
+    t_Car *c_from_queue_2 = de_queue(queue);
 
     assert(queue->q_length == 0);
     assert(queue->p_first_pos == NULL);
     assert(queue->p_last_pos == NULL);
-    assert(c_from_queue == car_2);
+    assert(c_from_queue_2 == car_2);
 
-
-    free(queue);
     free(car_1);
     free(car_2);
-    free(node_1);
-    free(node_2);
-
+    free(queue);
 }
 
 /*
-@brief tests the clear_queue function 
-(only one unit test makes sense here, since after the queue is cleared, it should be gone)
-
+@brief tests de_queue on an empty queue
 */
-void test_clear_queue() {
-    unsigned int *id;
-    *id = 0;
+void test_de_queue_empty() {
     t_Queue *queue = init_queue();
 
-    t_Car *car_1 = car_arrives(100.00f, id, 50);
-    t_Car_Node *node_1 = new_Node(car_1);
-
-    t_Car *car_2 = car_arrives(100.00f, id, 50);
-    t_Car_Node *node_2 = new_Node(car_2);
-
-    en_queue(queue, node_1);
-    en_queue(queue, node_2);
-
-    clear_queue(queue);
-    
-    assert(queue == NULL);
+    t_Car *result = de_queue(queue);
+    assert(result == NULL); // empty queue -> NULL
 
     free(queue);
-    free(car_1);
-    free(car_2);
-    free(node_1);
-    free(node_2);
+}
+
+/*
+@brief tests the clear_queue function
+*/
+void test_clear_queue() {
+    unsigned int id = 0;
+
+    t_Queue *queue = init_queue();
+
+    t_Car *car_1 = car_arrives(100.00f, &id, 50);
+    t_Car *car_2 = car_arrives(100.00f, &id, 50);
+
+    en_queue(queue, car_1);
+    en_queue(queue, car_2);
+
+    clear_queue(queue);
 }
 
 /*
 @brief tests the entire queue library
 */
-void test_queue() {
+int main() {
     test_new_node();
     test_init_queue();
     test_en_queue();
     test_de_queue();
+    test_de_queue_empty();
     test_clear_queue();
+
+    printf("All queue_lib tests passed!\n");
+
+    return 0;
 }
+
