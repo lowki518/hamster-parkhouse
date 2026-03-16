@@ -78,7 +78,7 @@ void clear_car_park(t_Car_Park *car_park) {
 
 @returns the number of the completed simulation
 */
-int *start_simulation () {
+int *start_simulation (const char * path) {
 
     srand(random_seed);
 
@@ -112,6 +112,8 @@ int *start_simulation () {
         max_cars_per_ts, random_seed);
     
     print_head_data(*sim_nr, simulation_time, max_car_cells, max_parking_time, car_probability, max_cars_per_ts, random_seed);
+
+    FILE *file_d = open_file_a(output_path, *sim_nr);
 
     for (*time = 0; *time <= simulation_time; (*time)++) {
 
@@ -153,8 +155,7 @@ int *start_simulation () {
             *(car_id) + 1, 
             brand);
 
-        append_data_per_timestep(output_path, 
-            *sim_nr, 
+        append_data_per_timestep(file_d, 
             *time, 
             (park->max_parking_cells - park->free_parking_cells), 
             avg_parking_time, queue->q_length, 
@@ -173,6 +174,8 @@ int *start_simulation () {
     free(time);
     free(full_house_steps);
     free(tot_parking_time);
+
+    fclose(file_d);
 
     return sim_nr;
 }
