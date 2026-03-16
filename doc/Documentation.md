@@ -104,6 +104,16 @@ It's not running anymore :( Final unit tests are done (file tests were made with
 
 -> Nr. 2: Mainly cause it just needs to be (?)
 
+## What could/would we do differently next time?
+No GUI planning from the first day on (Lionel's opinion)
+
+Start with a Flip Chart to explain evreyones perspective on how the parking house should work and look like.
+
+Not using Codespaces and instead using Docker. Would it take longer? Yes. Would it save us from depressions? Also yes.
+
+Cry more often (self car(e) is important).
+
+Protect the "main" branch from day 1 (BENNNNNNN)
 
 ## Were there any issues regarding the Team?
 As we mainly met up in person to discuss the progress, most issues were resolved pretty quickly. And when we needed a break, a movie and Ben's cooking (btw fcking great) usually helped.
