@@ -10,6 +10,7 @@
 #include "../../include/statistics_output_lib.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 /*
@@ -85,7 +86,7 @@ void clear_car_park(t_Car_Park *car_park) {
 int *start_simulation (const char * path) {
 
     if(random_seed == 0) {
-        random_seed = time();
+        random_seed = time(NULL);
     }
 
     srand(random_seed);
@@ -106,6 +107,12 @@ int *start_simulation (const char * path) {
 
     *car_id = 0;
     *sim_nr = get_new_file_number(output_path);
+
+    if(*sim_nr == -1) {
+        printf("Error opening directory\n");
+        return -1;
+    }
+
     *tot_parking_time = 0;
     *full_house_steps = 0;
 

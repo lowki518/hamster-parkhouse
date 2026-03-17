@@ -5,9 +5,13 @@
 #include "../../include/data_types.h"
 #include "../../include/file_manager_lib.h"
 #include "../../include/car_lib.h"
+#include "../../include/config_lib.h"
 #include <stdlib.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <errno.h>
+#include <string.h>
 
 /*
 @brief Gets the number (Simulation_X.txt) of the last file in results.
@@ -24,8 +28,15 @@ int get_new_file_number(char *folder) {
     int max_file_nr = 0;
 
     if (dir == NULL) {
-        printf("The given directory could not be opened");
-        return -1;
+        // if the directory was not found creates standard directory
+        if (mkdir("../data/", 0777) != 0 && errno != EEXIST) { // if directory couldn't be created exits simulation with error
+        printf("ERROR: Could not create test directory: %s\n", "../data/");
+        exit(1);
+        }
+        // sets the output path to the standard
+        folder = "../data/";
+        strcpy(output_path, folder);
+        dir = opendir(folder);
     }
 
     while ((past_sim = readdir(dir)) != NULL) {     //goes through all files in "data"

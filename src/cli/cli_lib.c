@@ -80,7 +80,7 @@ int handle_user_input(char *p_input) {
             return 0;
         }
     }
-    printf(" \"\"\" %s \"\"\" did not fit any known command. uwu\n", first_arg);
+    printf(" \"\"\" %s \"\"\" did not fit any known command.\n", first_arg);
     return -1;
 }
 
@@ -97,7 +97,7 @@ void print_help() {
     "> config           print all configs and their values\n" // why does this not align in the terminal? 
     "> start            start the simulation with chosen configs\n"
     "> quit             quits this program\n"
-    "> open <file_nr>   open the GUI representation for data from input file_nr\n"
+    "> open <file_nr>   open the GUI representation of data from input file_nr\n"
     "To change configs: \n"
     "> $config_name $new_value\n"
     "Allowed types for configurations: \n"
@@ -181,7 +181,7 @@ void return_start() {
 void start_menu() {
     // Standard text visualisation
     printf("-------------- Space Hamster Parkhouse -------------- \n");
-    printf("Credits: Paminer Lesle, Ben Hibinger, Lionel Keilhack\n\n\n");
+    printf("Credits: Pamina Lessle, Ben Hibinger, Lionel Keilhack\n\n\n");
     print_help();
 }
 

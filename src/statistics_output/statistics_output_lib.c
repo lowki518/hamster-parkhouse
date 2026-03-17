@@ -799,7 +799,9 @@ void compute_layout(int width, int height, SDL_FRect *plot,
 void open_gui(const char* path, int sim_number) {
 
     FILE* data_file = open_file_r(path, sim_number);
-
+    if (data_file == NULL)  {
+        return;
+    }
     // load initial dataset
     int current_dataset = 0;
     int size            = get_simulation_length(data_file);
