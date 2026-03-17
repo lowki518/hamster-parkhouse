@@ -23,8 +23,6 @@ int main() {
 
         }
         if (file_nr != -1) {
-            printf("file number != -1\n");
-
             open_gui(output_path, file_nr);
 
             file_nr = -1;
