@@ -39,7 +39,7 @@ void unpark_car(t_Parking_Cell *cell, t_Car_Park *park) {
 }
 
 /*
-@brief unparks all cars that need to be unparked based on the time
+@brief parks the car in the park and sets the parking time
 
 @param[1] car A pointer to the car to park
 @param[2] park A pointer to the car park
@@ -167,7 +167,6 @@ Car_Brand get_most_parked_brand(t_Car_Park *park) {
     free(brand);
 
     return max_index;
-
 }
 
 /*
@@ -238,6 +237,5 @@ char* get_brand_by_number(Car_Brand brand_numb) {
     
         default:
             return "";
-    
     }
 }

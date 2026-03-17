@@ -12,13 +12,13 @@
 
 // ------- global config variable declarations --------- //
 // can add default values also btw
-uint8_t max_car_cells = 100;
+uint max_car_cells = 100;
 t_Time max_parking_time = 10;
 t_Time simulation_time = 100;
 float car_probability = 50.0;
 int random_seed = 0;
 char output_path[256] = "../data/";
-uint8_t max_cars_per_ts = 5;
+uint max_cars_per_ts = 5;
 
 
 /*
@@ -47,7 +47,7 @@ int change_sim_time(char* new_simulation_time) {
 @return -1 for error
 */
 int change_max_car_cells(char * new_max_car_cells){
-    uint8_t new_value = (uint8_t)atoi(new_max_car_cells);
+    uint new_value = (uint)atoi(new_max_car_cells);
     if (!new_value) {
         return -1;
     }

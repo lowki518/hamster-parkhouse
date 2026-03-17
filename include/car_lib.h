@@ -29,7 +29,7 @@ void park_car (t_Car *car, t_Parking_Cell *cell, t_Time time);
 void unpark_car(t_Parking_Cell *cell, t_Car_Park *park);
 
 /*
-@brief unparks all cars that need to be unparked based on the time
+@brief parks the car in the park and sets the parking time
 
 @param[1] car A pointer to the car to park
 @param[2] park A pointer to the car park
