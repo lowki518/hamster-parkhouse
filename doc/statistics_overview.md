@@ -75,11 +75,13 @@ Due to codespace only using vscode, the window to the graph was everything but e
 
 With the use of lovely Youtube and Claude AI (<3) the idea of using Shell scripts and Docker to plot a whole Ubuntu desktop environment (WTF??? That workssss?!?!?!) (using vnc btw for those actually interested in the functionality of it all) in codespaces.
 
+The visualization breaks down with too many data points, due to the capabilities of codespaces. We decided not to limit it too mouch, because if you have a machine capable of handling the data and memory, you can simulate well over 5,000,000 time steps.
+
 ## Result
 We have a graph :)
 
 ---
-The whole graphic output took way too long. Would Ben do it again? Yes but using way more AI. Coding this whole thing robs you from every bit of happiness left in your soul
+The whole graphic output took way too long. Would Ben do it again? Yes but using way more AI. Coding this whole thing robs you from every bit of happiness left in your soul.
 
 Anywayss...
 
