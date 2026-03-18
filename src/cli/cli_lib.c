@@ -94,10 +94,9 @@ int handle_user_input(char *p_input) {
  */
 void print_help() {
     // Print all the possible commands and usage
-    // TODO: is everything complete?
     printf("How to use: \n"
     "> help             print help menu (this menu)\n"
-    "> config           print all configs and their values\n" // why does this not align in the terminal? 
+    "> config           print all configs and their values\n"
     "> start            start the simulation with chosen configs\n"
     "> quit             quits this program\n"
     "> open <file_nr>   open the GUI representation of data from input file_nr\n"
@@ -184,7 +183,7 @@ void return_start() {
 void start_menu() {
     // Standard text visualisation
     printf("-------------- Space Hamster Parkhouse -------------- \n");
-    printf("Credits: Paminer Lessle, Ben Hibinger, Lionel Keilhack\n\n\n");
+    printf("Credits: Pamina Lessle, Ben Hibinger, Lionel Keilhack\n\n\n");
     print_help();
 }
 
