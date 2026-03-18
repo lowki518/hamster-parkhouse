@@ -10,6 +10,8 @@ void test_change_sim_time() {
     assert(change_sim_time("13") == 0);
     assert(simulation_time == 13);
     assert(change_sim_time("invalid") != 0);
+    assert(change_sim_time("-123") != 0);
+    assert(change_sim_time("2000000001") != 0);
 }
 
 /* 
@@ -19,6 +21,8 @@ void test_change_max_car_cells() {
     assert(change_max_car_cells("23") == 0);
     assert(max_car_cells == 23);
     assert(change_max_car_cells("invalid") != 0);
+    assert(change_max_car_cells("-123") != 0);
+    assert(change_max_car_cells("2000000001") != 0);
 }
 
 /* 
@@ -28,6 +32,8 @@ void test_change_max_parking_time() {
     assert(change_max_parking_time("123") == 0);
     assert(max_parking_time == 123);
     assert(change_max_parking_time("invalid") != 0);
+    assert(change_max_parking_time("-123") != 0);
+    assert(change_max_parking_time("2000000001") != 0);
 }
 
 /* 
@@ -37,8 +43,13 @@ void test_change_car_probability() {
     // Does this work? since floating point comparison might be 
     // a little fucked
     assert(change_car_probability("14.6") == 0);
-    assert((int)car_probability == (int)14.6);
+    assert((int) car_probability == (int)14.6);
     assert(change_car_probability("invalid") != 0);
+    assert(change_car_probability("-123") != 0);
+
+    assert(change_car_probability("120") == 0);
+    assert((int) car_probability == 100);
+
 }
 
 /* 
@@ -48,6 +59,7 @@ void test_input_random_seed() {
     assert(input_random_seed("1234") == 0);
     assert(random_seed == 1234);
     assert(input_random_seed("invalid") != 0);
+    assert(input_random_seed("-123") != 0);
 }
 
 /* 
@@ -65,6 +77,8 @@ void test_change_max_cars_per_ts() {
     assert(change_max_cars_per_ts("123") == 0);
     assert(max_cars_per_ts == 123);
     assert(change_max_cars_per_ts("invalid") != 0);
+    assert(change_max_cars_per_ts("-123") != 0);
+    assert(change_max_cars_per_ts("2000000001") != 0);
 }
 
 int main() {

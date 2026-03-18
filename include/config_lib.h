@@ -11,13 +11,13 @@
 
 
 // ------- global config variable declarations --------- //
-extern uint max_car_cells;
+extern unsigned int max_car_cells;
 extern t_Time max_parking_time;
 extern t_Time simulation_time;
 extern float car_probability;
-extern int random_seed;
+extern unsigned int random_seed;
 extern char output_path[256];
-extern uint max_cars_per_ts;
+extern unsigned int max_cars_per_ts;
 
 /*
  @brief Change global variable g_simulation_time

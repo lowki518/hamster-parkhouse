@@ -17,7 +17,9 @@ int main() {
         looped_menu();
         if (start) {
             int *sim_nr = start_simulation();
-            open_gui(output_path, *sim_nr);
+            if(sim_nr != NULL) {
+                open_gui(output_path, *sim_nr);
+            }
             free(sim_nr);
             start = FALSE;
 
