@@ -35,6 +35,8 @@ Functions and unit tests finished, CLI done. Cleaning up the final details and w
 
 It's not running anymore :( Final unit tests are done (file tests were made with AI as it's annoying), hoping to get this thing running. Motivation has left the chat. It runs. It doesn't. It runs. It doesn't. Do i need to continue? ITTTT WOOORRKKKSSSS. Finishing last touches
 
+Oops. Mistakes were found. Mistakes were corrected. Forgot to catch invalid user inputs for the configs. Happy we found the mistakes and fixed them.
+
 ## What different options did we have regarding the structure and implementation? 
 >Naming of parking...:
 
@@ -115,6 +117,8 @@ Cry more often (self car(e) is important).
 
 Protect the "main" branch from day 1 (BENNNNNNN)
 
+Truly check that everything works. Give the program to friends or family without any directions. If they get the program to work, great! But chances are they will find a way to break the program, also great because you've found a problem :).
+
 ## Were there any issues regarding the Team?
 As we mainly met up in person to discuss the progress, most issues were resolved pretty quickly. And when we needed a break, a movie and Ben's cooking (btw fcking great) usually helped.
 
@@ -139,8 +143,6 @@ Hopefully our humor :)
 
 "Awwww you want a cookie?" - Lionel
 
-"TEAM - Toll Ein Anderer Machts" - Ben
-
 "You are to incompetent for anything and everythig" - Lionel (talking to his laptop)
 
 "YOU DON'T NEED TO DEREFRENCE THE POINTER!!!!!!" - Lionel
@@ -158,7 +160,5 @@ Hopefully our humor :)
 "Cetero censio Github Codespaces esse delendam" - Lionel 
 
 "Your commit messages are way to boring" - Lionel
-
-"That pink looks gay" - Pamina 
 
 "Ha! GUIIIIIII" - Lionel
