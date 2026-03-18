@@ -42,8 +42,12 @@ struct configure_map config_table[] = {
   @return 0 if successful, otherwise 1
  */
 int read_user_input(char *p_input) {
-    if (!fgets(p_input, 255, stdin)) {
-        printf("Invalid user inpuwut\n");
+    fgets(p_input, 255, stdin);
+
+    // Fuck this shit. Safeguard read input because fgets reads newline chars as well
+    // as whitespaces without giving errors. So check for first char to be either \n or space
+    if (*p_input == '\n' || *p_input == ' ') {
+        printf("Invalid user input\n");
         return 1;
     }
     return 0;
@@ -62,7 +66,6 @@ int handle_user_input(char *p_input) {
     char *first_arg = strtok(p_input, " ");
     char *second_arg = strtok(NULL, "");
 
-
     // Function pointers are fucking awesome lol
     // iterate first over table of print functions, then over table of config changers
     for (int i = 0; i < (sizeof(print_table) / sizeof(print_table[0])); i++) {
@@ -72,7 +75,7 @@ int handle_user_input(char *p_input) {
         }
     }
     for (int i = 0; i < (sizeof(config_table) / sizeof(config_table[0])); i++) {
-        if (!strcmp(first_arg, config_table[i].config_name)) {
+        if (!strcmp(first_arg, config_table[i].config_name) && second_arg) {
             if (config_table[i].p_config_change(second_arg)) {
                 printf("Input value \" %s \" for config %s could not be parsed. \n"
                 "No changes were made. Please try again.\n", second_arg, first_arg);
@@ -80,7 +83,7 @@ int handle_user_input(char *p_input) {
             return 0;
         }
     }
-    printf(" \"\"\" %s \"\"\" did not fit any known command.\n", first_arg);
+    printf(" \"\"\" %s %s \"\"\" did not fit any known command.\n", first_arg, second_arg);
     return -1;
 }
 
@@ -120,11 +123,11 @@ void print_config() {
     // print all name and values of config_variables in a nice fashion
     printf("Overview of all configurables: \n"
     "max_car_cells - defines how big the carpark is:\n"
-    "value: %i\n"
+    "value: %u\n"
     "max_parking_time - defines how long cars are allowed to stay \n"
-    "value: %i\n"
+    "value: %u\n"
     "simulation_time - how many simulation steps are calculated, minimum 4\n"
-    "value: %i\n"
+    "value: %u\n"
     "car_probability - probability for a car to appear each simulation step\n"
     "value: %.2f\n"
     "random_seed - seed for randomness. defaults to timestamp\n"
@@ -132,7 +135,7 @@ void print_config() {
     "output_path - path of output directory for result file(s)\n"
     "value: %s\n"
     "max_cars_per_ts - max amount of cars coming in per time step\n"
-    "value: %i\n", 
+    "value: %u\n", 
     max_car_cells, max_parking_time, simulation_time, 
     car_probability, random_seed, output_path, max_cars_per_ts
     );
@@ -181,7 +184,7 @@ void return_start() {
 void start_menu() {
     // Standard text visualisation
     printf("-------------- Space Hamster Parkhouse -------------- \n");
-    printf("Credits: Pamina Lessle, Ben Hibinger, Lionel Keilhack\n\n\n");
+    printf("Credits: Paminer Lessle, Ben Hibinger, Lionel Keilhack\n\n\n");
     print_help();
 }
 
@@ -195,10 +198,10 @@ void looped_menu() {
     // read and handle user input
     char user_input[256]; // do we need to m/calloc?
     printf("Please enter your command: \n> ");
-    read_user_input(user_input);
+    if (!read_user_input(user_input)) {
+        // Removing the newline char with end of string:
+        user_input[strcspn(user_input, "\n")] = '\0';
 
-    // Removing the newline char with end of string:
-    user_input[strcspn(user_input, "\n")] = '\0';
-
-    handle_user_input(user_input);
+        handle_user_input(user_input);
+    }
 }
