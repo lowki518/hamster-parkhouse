@@ -30,3 +30,10 @@ Welcome to our students project of a car park simulation.
  ./park-house
  ```
 10. Run the simulation as many times as you please 
+
+11. Change specific configurations by their name and the new value, e.g.:
+```bash
+max_car_cells 500
+```
+This sets the max_car_cells to 500. 
+For calculation reasons all integer values cannot get bigger than 2000000000 - 1, but I believe, that should be more than enough to simulate a wide range of hamster parkhouses ;)
