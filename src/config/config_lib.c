@@ -100,6 +100,9 @@ int input_random_seed(char * new_seed) {
     if (!new_value) {
         return -1;
     }
+    if(new_value > 100.0f) {
+        new_value = 100.00f;
+    }
     random_seed = new_value;
     return 0;
 }
@@ -128,7 +131,7 @@ int change_output_path(char * new_path) {
 */
 int change_max_cars_per_ts(char * new_max_cars) {
     int new_value = atoi(new_max_cars);
-    if (!new_value) {
+    if (!new_value || new_value > 2000000000) {
         return -1;
     }
     max_cars_per_ts = new_value;
