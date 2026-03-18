@@ -12,13 +12,13 @@
 
 // ------- global config variable declarations --------- //
 // can add default values also btw
-uint max_car_cells = 100;
+unsigned int max_car_cells = 100;
 t_Time max_parking_time = 10;
 t_Time simulation_time = 100;
 float car_probability = 50.0;
 int random_seed = 0;
 char output_path[256] = "../data/";
-uint max_cars_per_ts = 5;
+unsigned int max_cars_per_ts = 5;
 
 
 /*
@@ -30,7 +30,7 @@ uint max_cars_per_ts = 5;
 */
 int change_sim_time(char* new_simulation_time) {
     t_Time new_value = (t_Time)atoi(new_simulation_time);
-    if (!new_value || new_value < 4) {
+    if (!new_value || new_value < 4 || new_value > 2000000000) {
         return -1;
     }
     simulation_time = new_value;
@@ -47,8 +47,8 @@ int change_sim_time(char* new_simulation_time) {
 @return -1 for error
 */
 int change_max_car_cells(char * new_max_car_cells){
-    uint new_value = (uint)atoi(new_max_car_cells);
-    if (!new_value) {
+    unsigned int new_value = (unsigned int)atoi(new_max_car_cells);
+    if (!new_value || new_value > 2000000000) {
         return -1;
     }
     max_car_cells = new_value;
@@ -64,7 +64,7 @@ int change_max_car_cells(char * new_max_car_cells){
 */
 int change_max_parking_time(char * new_max_parking_time) {
     t_Time new_value = (t_Time) atoi(new_max_parking_time);
-    if (!new_value) {
+    if (!new_value || new_value > 2000000000) {
         return -1;
     }
     max_parking_time = new_value;
