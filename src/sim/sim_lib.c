@@ -110,7 +110,7 @@ int *start_simulation (const char * path) {
 
     if(*sim_nr == -1) {
         printf("Error opening directory\n");
-        return -1;
+        return NULL;
     }
 
     *tot_parking_time = 0;

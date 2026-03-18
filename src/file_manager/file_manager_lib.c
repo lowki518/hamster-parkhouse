@@ -28,13 +28,11 @@ int get_new_file_number(char *folder) {
     int max_file_nr = 0;
 
     if (dir == NULL) {
-        // if the directory was not found creates standard directory
-        if (mkdir("../data/", 0777) != 0 && errno != EEXIST) { // if directory couldn't be created exits simulation with error
-        printf("ERROR: Could not create test directory: %s\n", "../data/");
+        // if the directory was not creates the directory
+        if (mkdir(folder, 0777) != 0 && errno != EEXIST) { // if directory couldn't be created exits simulation with error
+        printf("ERROR: Could not create folder: %s\n", folder);
         exit(1);
         }
-        // sets the output path to the standard
-        folder = "../data/";
         strcpy(output_path, folder);
         dir = opendir(folder);
     }

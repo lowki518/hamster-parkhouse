@@ -16,7 +16,7 @@ unsigned int max_car_cells = 100;
 t_Time max_parking_time = 10;
 t_Time simulation_time = 100;
 float car_probability = 50.0;
-int random_seed = 0;
+unsigned int random_seed = 0;
 char output_path[256] = "../data/";
 unsigned int max_cars_per_ts = 5;
 
@@ -30,7 +30,7 @@ unsigned int max_cars_per_ts = 5;
 */
 int change_sim_time(char* new_simulation_time) {
     t_Time new_value = (t_Time)atoi(new_simulation_time);
-    if (!new_value || new_value < 4 || new_value > 2000000000) {
+    if (!new_value || new_value < 4 || new_value > 2000000000) { // the simulation time needs to be at least 4 or else the GUI breaks
         return -1;
     }
     simulation_time = new_value;
@@ -47,11 +47,11 @@ int change_sim_time(char* new_simulation_time) {
 @return -1 for error
 */
 int change_max_car_cells(char * new_max_car_cells){
-    unsigned int new_value = (unsigned int)atoi(new_max_car_cells);
-    if (!new_value || new_value > 2000000000) {
+    int new_value = atoi(new_max_car_cells);
+    if (!new_value || new_value > 2000000000 || new_value < 1) {
         return -1;
     }
-    max_car_cells = new_value;
+    max_car_cells = (unsigned int) new_value;
     return 0;
 }
 
@@ -63,11 +63,11 @@ int change_max_car_cells(char * new_max_car_cells){
 @return -1 for error
 */
 int change_max_parking_time(char * new_max_parking_time) {
-    t_Time new_value = (t_Time) atoi(new_max_parking_time);
-    if (!new_value || new_value > 2000000000) {
+    int new_value = atoi(new_max_parking_time);
+    if (!new_value || new_value > 2000000000 || new_value < 1) {
         return -1;
     }
-    max_parking_time = new_value;
+    max_parking_time = (t_Time) new_value;
     return 0;
 }
 
@@ -80,8 +80,11 @@ int change_max_parking_time(char * new_max_parking_time) {
 */
 int change_car_probability(char * new_car_probability) {
     float new_value = atof(new_car_probability);
-    if (!new_value) {
+    if (!new_value || new_value < 0) {
         return -1;
+    }
+    if(new_value > 100.00f) {
+        new_value = 100.00f;
     }
     car_probability = new_value;
     return 0;
@@ -97,13 +100,10 @@ int change_car_probability(char * new_car_probability) {
 int input_random_seed(char * new_seed) {
     // might also just typecast? then it will always be okay? 
     int new_value = atoi(new_seed);
-    if (!new_value) {
+    if (!new_value || new_value < 0) {
         return -1;
     }
-    if(new_value > 100.0f) {
-        new_value = 100.00f;
-    }
-    random_seed = new_value;
+    random_seed = (unsigned int) new_value;
     return 0;
 }
 
@@ -131,9 +131,9 @@ int change_output_path(char * new_path) {
 */
 int change_max_cars_per_ts(char * new_max_cars) {
     int new_value = atoi(new_max_cars);
-    if (!new_value || new_value > 2000000000) {
+    if (!new_value || new_value > 2000000000 || new_value < 1) {
         return -1;
     }
-    max_cars_per_ts = new_value;
+    max_cars_per_ts = (unsigned int) new_value;
     return 0;
 }
